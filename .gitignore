@@ -1,0 +1,9 @@
+node_modules/
+.env
+
+postgres_data/
+economos_data/
+pgadmin_data/
+
+build/
+dist/
