@@ -1,12 +1,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import { connectDB, sequelize } from './database/db.js';
+import './database/models/User.js'
 
 dotenv.config()
 const app = express();
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-    res.send('Server is workin\'');
-})
+app.use(cors());
+app.use(express.json());
 
-app.listen(PORT, console.log(`Server is running on: http://localhost:${PORT}`))
+const startServer = async () => {
+    await connectDB();
+    await sequelize.sync({ alter: true });
+    app.listen(PORT, console.log(`Serverul ruleaza pe: http://localhost:${PORT}`));
+}
+
+startServer()
+
