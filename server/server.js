@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB, sequelize } from './database/db.js';
-import './database/models/User.js'
+import './database/associations.js';
 
 dotenv.config()
 const app = express();
