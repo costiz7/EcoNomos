@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectDB, sequelize } from './database/db.js';
 import './database/associations.js';
 import { seedCategories } from './database/seed.js';
+import authRouter from './routes/authRoutes.js';
 
 dotenv.config()
 const app = express();
@@ -11,6 +12,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/auth', authRouter);
 
 const startServer = async () => {
     await connectDB();

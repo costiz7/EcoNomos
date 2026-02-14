@@ -33,7 +33,7 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        icon_file: {
+        iconFile: {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: 'default_avatar.png'
