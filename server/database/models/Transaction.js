@@ -23,7 +23,8 @@ Transaction.init({
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
+        defaultValue: ''
     },
     userId: {
         type: DataTypes.INTEGER,

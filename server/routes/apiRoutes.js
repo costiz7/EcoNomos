@@ -19,5 +19,6 @@ router.delete('/categories/:id', categoriesController.deleteCategory);
 
 //Transactions routes
 router.get('/transactions', transactionsController.getTransactions);
+router.post('/transactions', transactionsController.addTransaction);
 
 export default router;

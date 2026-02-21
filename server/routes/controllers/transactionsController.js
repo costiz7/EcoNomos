@@ -1,4 +1,4 @@
-import { Category, Transaction } from "../../database/associations";
+import { Category, Transaction } from "../../database/associations.js";
 import { Op } from "sequelize";
 
 const getTransactions = async (req, res) => {
@@ -7,6 +7,11 @@ const getTransactions = async (req, res) => {
 
         const whereClause = {
             userId: req.user.id
+        };
+
+        const categoryInclude = {
+            model: Category,
+            attributes: ['name', 'iconFile', 'type']
         };
 
         if(month && year) {
@@ -22,15 +27,13 @@ const getTransactions = async (req, res) => {
             whereClause.categoryId = categoryId;
         }
 
+        if(type) {
+            categoryInclude.where = { type: type };
+        }
+
         const transactions = await Transaction.findAll({
             where: whereClause,
-            include: [
-                {
-                    model: Category,
-                    attributes: ['name', 'iconFile', 'type'],
-                    where: type ? { type } : undefined
-                }
-            ],
+            include: [categoryInclude],
             order: [['date', 'DESC'], ['createdAt', 'DESC']]
         });
 
@@ -40,4 +43,44 @@ const getTransactions = async (req, res) => {
     }
 }
 
-export default { getTransactions };
+const addTransaction = async (req, res) => {
+    try {
+        const { amount, date, description, categoryId } = req.body;
+
+        if(!amount) {
+            return res.status(400).json({ message: 'You have to input an amount' });
+        }
+
+        if(!categoryId) {
+            return res.status(400).json({ message: 'You have to select a category' });
+        }
+
+        const category = await Category.findOne({
+            where: {
+                id: categoryId,
+                [Op.or]: [
+                    { userId: req.user.id },
+                    { userId: null }
+                ]
+            }
+        });
+
+        if(!category) {
+            return res.status(404).json({ message: 'This category does not exist' });
+        }
+
+        const newTransaction = await Transaction.create({
+            amount,
+            date,
+            description,
+            userId: req.user.id,
+            categoryId
+        });
+
+        res.status(201).json(newTransaction);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+export default { getTransactions, addTransaction };
