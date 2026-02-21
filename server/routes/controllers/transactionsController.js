@@ -83,4 +83,82 @@ const addTransaction = async (req, res) => {
     }
 }
 
-export default { getTransactions, addTransaction };
+const deleteTransaction = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const transaction = await Transaction.findOne({
+            where: {
+                id: id,
+                userId: req.user.id
+            }
+        });
+
+        if (!transaction) {
+            return res.status(404).json({ message: "This transaction was not found or you can't delete it" });
+        }
+
+        await transaction.destroy();
+
+        res.status(200).json({ message: "The transaction was successfully deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+const getMonthlyTotals = async (req, res) => {
+    try {
+        const { month, year } = req.query;
+
+        const currentDate = new Date();
+        const targetMonth = month ? parseInt(month) : currentDate.getMonth() + 1;
+        const targetYear = year ? parseInt(year) : currentDate.getFullYear();
+
+        const startDate = new Date(targetYear, targetMonth - 1, 1);
+        const endDate = new Date(targetYear, targetMonth, 0);
+
+        const transactions = await Transaction.findAll({
+            where: {
+                userId: req.user.id,
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
+            include: [
+                {
+                    model: Category,
+                    attributes: ['type']
+                }
+            ]
+        });
+
+        let totalIncome = 0;
+        let totalExpense = 0;
+
+        transactions.forEach(transaction => {
+            const amount = parseFloat(transaction.amount);
+            if(transaction.Category.type === 'income') {
+                totalIncome += amount;
+            } else if(transaction.Category.type === 'expense') {
+                totalExpense += amount;
+            }
+        });
+
+        const balance = totalIncome - totalExpense;
+
+        res.status(200).json({
+            income: totalIncome,
+            expense: totalExpense,
+            balance: balance
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+export default { 
+    getTransactions, 
+    addTransaction, 
+    deleteTransaction, 
+    getMonthlyTotals
+ };
