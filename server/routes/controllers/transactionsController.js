@@ -343,6 +343,116 @@ const getMonthOverMonthComparison = async (req, res) => {
     }
 }
 
+const getTopExpenses = async (req, res) => {
+    try {
+        const { month, year } = req.query;
+
+        const currentDate = new Date();
+        const targetMonth = month ? parseInt(month) : currentDate.getMonth() + 1;
+        const targetYear = year ? parseInt(year) : currentDate.getFullYear();
+
+        const startDate = new Date(targetYear, targetMonth - 1, 1);
+        const endDate = new Date(targetYear, targetMonth, 0);
+
+        const topExpenses = await Transaction.findAll({
+            where: {
+                userId: req.user.id,
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
+            include: [
+                {
+                    model: Category,
+                    attributes: ['name', 'iconFile', 'type'],
+                    where: { type: 'expense' }
+                }
+            ],
+            order: [
+                ['amount', 'DESC']
+            ],
+            limit: 5
+        });
+
+        res.status(200).json(topExpenses);
+
+    } catch (error) {
+        res.status(500).json({ message: "Can not generate top expenses", error: error.message });
+    }
+};
+
+const getRecentTransactions = async (req, res) => {
+    try {
+        const transactions = await Transaction.findAll({
+            where: {
+                userId: req.user.id
+            },
+            include: [
+                {
+                    model: Category,
+                    attributes: ['name', 'iconFile', 'type']
+                }
+            ],
+            order: [
+                ['date', 'DESC'],
+                ['createdAt', 'DESC']
+            ],
+            limit: 5
+        });
+
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(500).json({ message: 'Could not obtain last transactions', error: error.message });
+    }
+}
+
+export const getDailyAverage = async (req, res) => {
+    try {
+        const { month, year } = req.query;
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1;
+        const currentYear = currentDate.getFullYear();
+
+        const targetMonth = month ? parseInt(month) : currentMonth;
+        const targetYear = year ? parseInt(year) : currentYear;
+
+        const startDate = new Date(targetYear, targetMonth - 1, 1);
+        const endDate = new Date(targetYear, targetMonth, 0);
+
+        const expenses = await Transaction.findAll({
+            where: {
+                userId: req.user.id,
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
+            include: [{
+                model: Category,
+                where: { type: 'expense' },
+                attributes: []
+            }]
+        });
+
+        const totalExpense = expenses.reduce((acc, curr) => acc + parseFloat(curr.amount), 0);
+
+        let daysToDivide;
+        if (targetMonth === currentMonth && targetYear === currentYear) {
+            daysToDivide = currentDate.getDate();
+        } else {
+            daysToDivide = endDate.getDate();
+        }
+
+        let dailyAverage = totalExpense / daysToDivide;
+        dailyAverage = Math.round(dailyAverage * 100) / 100;
+
+        res.status(200).json({ dailyAverage });
+
+    } catch (error) {
+        res.status(500).json({ message: "Can't calculate average", error: error.message });
+    }
+};
+
 export default { 
     getTransactions, 
     addTransaction, 
@@ -350,5 +460,8 @@ export default {
     getMonthlyTotals,
     getExpenseBreakdown,
     getSixMonthsTrend,
-    getMonthOverMonthComparison
+    getMonthOverMonthComparison,
+    getTopExpenses,
+    getRecentTransactions,
+    getDailyAverage
  };

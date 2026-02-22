@@ -24,6 +24,10 @@ router.get('/transactions/totals', transactionsController.getMonthlyTotals);
 router.get('/transactions/breakdown', transactionsController.getExpenseBreakdown);
 router.get('/transactions/trend', transactionsController.getSixMonthsTrend);
 router.get('/transactions/mom', transactionsController.getMonthOverMonthComparison);
+router.get('/transactions/top', transactionsController.getTopExpenses);
+router.get('/transactions/recent', transactionsController.getRecentTransactions);
+router.get('/transactions/average', transactionsController.getDailyAverage);
 router.delete('/transactions/:id', transactionsController.deleteTransaction);
+
 
 export default router;
