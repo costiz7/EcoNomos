@@ -20,6 +20,10 @@ router.delete('/categories/:id', categoriesController.deleteCategory);
 //Transactions routes
 router.get('/transactions', transactionsController.getTransactions);
 router.post('/transactions', transactionsController.addTransaction);
-router.delete('/transactions/:id', transactionsController.deleteTransaction);
 router.get('/transactions/totals', transactionsController.getMonthlyTotals);
+router.get('/transactions/breakdown', transactionsController.getExpenseBreakdown);
+router.get('/transactions/trend', transactionsController.getSixMonthsTrend);
+router.get('/transactions/mom', transactionsController.getMonthOverMonthComparison);
+router.delete('/transactions/:id', transactionsController.deleteTransaction);
+
 export default router;
