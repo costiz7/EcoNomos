@@ -47,6 +47,36 @@ const createCategory = async (req, res) => {
     }
 }
 
+const updateCategory = async (req, res) => {
+    try {
+        const { name, iconFile } = req.body;
+        const { id } = req.params;
+
+        const category = await Category.findByPk(id);
+
+        if(!category) {
+            return res.status(404).json({ message: 'Category not found.' });
+        }
+
+        if(category.userId === null) {
+            return res.status(403).json({ message: 'You can\'t modify this category' });
+        }
+
+        if(category.userId !== req.user.id) {
+            return res.status(403).json({ message: 'You are not authorized to modify this category.' });
+        }
+
+        if(name) category.name = name;
+        if(iconFile) category.iconFile = iconFile;
+
+        await category.save();
+
+        res.json(category);
+    } catch (error) {
+        res.status(500).json({ message: 'Could not modify the category', error: error.message });
+    }
+}
+
 const deleteCategory = async (req, res) => {
     try {
         const { id } = req.params;
@@ -73,4 +103,4 @@ const deleteCategory = async (req, res) => {
     }
 }
 
-export default { getAllCategories, createCategory, deleteCategory };
+export default { getAllCategories, createCategory, deleteCategory, updateCategory };

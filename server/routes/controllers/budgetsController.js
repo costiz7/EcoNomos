@@ -1,9 +1,17 @@
-import { Budget } from "../../database/associations.js";
+import { Budget, Category } from "../../database/associations.js";
 import { Op } from "sequelize";
 
 const createBudget = async (req, res) => {
     try {
-        //TO-DO
+        try {
+            const { amount, period, categoryId } = req.body;
+
+            if(!amount) {
+                return res.status(400).json({ message: 'You have to input an amount.' });
+            }
+        } catch (error) {
+            
+        }
     } catch (error) {
         res.status(500).json({ message: 'Could not create budget', error: error.message });
     }

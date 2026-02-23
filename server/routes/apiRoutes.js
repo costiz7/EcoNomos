@@ -3,6 +3,7 @@ import tokenCheck from "../middleware/tokenCheck.js";
 import usersController from "./controllers/usersController.js";
 import categoriesController from "./controllers/categoriesController.js";
 import transactionsController from "./controllers/transactionsController.js";
+import budgetsController from "./controllers/budgetsController.js";
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.put('/user', usersController.updateProfile);
 //Categories routes
 router.get('/categories', categoriesController.getAllCategories);
 router.post('/categories', categoriesController.createCategory);
+router.put('/categories/:id', categoriesController.updateCategory);
 router.delete('/categories/:id', categoriesController.deleteCategory);
 
 //Transactions routes
@@ -28,6 +30,12 @@ router.get('/transactions/top', transactionsController.getTopExpenses);
 router.get('/transactions/recent', transactionsController.getRecentTransactions);
 router.get('/transactions/average', transactionsController.getDailyAverage);
 router.delete('/transactions/:id', transactionsController.deleteTransaction);
+
+//Budget Routes
+router.post('/budgets', budgetsController.createBudget);
+router.get('/budgets', budgetsController.getMyBudgets);
+router.get('/budgets/status', budgetsController.checkBudgetStatus);
+router.delete('/budgets/:id', budgetsController.deleteBudget);
 
 
 export default router;
