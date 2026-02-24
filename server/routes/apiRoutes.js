@@ -35,6 +35,7 @@ router.delete('/transactions/:id', transactionsController.deleteTransaction);
 router.post('/budgets', budgetsController.createBudget);
 router.get('/budgets', budgetsController.getMyBudgets);
 router.get('/budgets/status', budgetsController.checkBudgetStatus);
+router.put('/budgets/:id', budgetsController.modifyBudget);
 router.delete('/budgets/:id', budgetsController.deleteBudget);
 
 
