@@ -4,6 +4,7 @@ import usersController from "./controllers/usersController.js";
 import categoriesController from "./controllers/categoriesController.js";
 import transactionsController from "./controllers/transactionsController.js";
 import budgetsController from "./controllers/budgetsController.js";
+import savingsController from "./controllers/savingsController.js";
 
 const router = Router();
 
@@ -39,5 +40,9 @@ router.put('/budgets/:id', budgetsController.modifyBudget);
 router.delete('/budgets/:id', budgetsController.deleteBudget);
 
 //Saving Goals Routes
+router.post('/savings', savingsController.createGoal);
+router.get('/savings', savingsController.getGoals);
+router.patch('/savings/:id/add', savingsController.addFunds);
+router.delete('/savings/:id', savingsController.deleteGoal);
 
 export default router;
