@@ -1,6 +1,28 @@
 import { Category, Transaction } from "../../database/associations.js";
 import { Op } from "sequelize";
 
+/**
+ * Retrieves a list of transactions for the authenticated user with optional filtering.
+ * 
+ * The function fetches transactions from the database and allows filtering by 
+ * a specific month and year, a specific category ID, or a transaction type 
+ * (e.g., 'income' or 'expense'). The results are sorted by date and creation 
+ * time in descending order.
+ *
+ * @async
+ * @function getTransactions
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters for filtering.
+ * @param {string|number} [req.query.month] - (Optional) The month to filter transactions by (1-12). Must be used with year.
+ * @param {string|number} [req.query.year] - (Optional) The year to filter transactions by.
+ * @param {string|number} [req.query.categoryId] - (Optional) The ID of a specific category to filter by.
+ * @param {string} [req.query.type] - (Optional) The type of transaction to filter by (e.g., 'income' or 'expense').
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array of transaction objects that match the filters (status 200),
+ *                            or a server error message if the query fails (status 500).
+ */
 const getTransactions = async (req, res) => {
     try {
         const { month, year, categoryId, type } = req.query;
@@ -39,10 +61,33 @@ const getTransactions = async (req, res) => {
 
         res.status(200).json(transactions);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
+/**
+ * Creates a new transaction for the authenticated user.
+ * 
+ * The function validates that the required amount and category ID are provided. 
+ * It then verifies that the selected category exists and is accessible to the user 
+ * (either a custom user category or a global default category) before creating 
+ * the transaction record in the database.
+ *
+ * @async
+ * @function addTransaction
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.body - The request body containing transaction details.
+ * @param {number|string} req.body.amount - The monetary amount of the transaction.
+ * @param {number|string} req.body.categoryId - The ID of the category associated with the transaction.
+ * @param {string|Date} [req.body.date] - (Optional) The date of the transaction.
+ * @param {string} [req.body.description] - (Optional) A brief description or note for the transaction.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with the newly created transaction data (status 201),
+ *                            an error message for missing fields (status 400) or invalid category (status 404),
+ *                            or a server error message (status 500).
+ */
 const addTransaction = async (req, res) => {
     try {
         const { amount, date, description, categoryId } = req.body;
@@ -79,10 +124,29 @@ const addTransaction = async (req, res) => {
 
         res.status(201).json(newTransaction);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Server Error: ", error: error.message });
     }
 }
 
+/**
+ * Deletes a specific transaction for the authenticated user.
+ * 
+ * The function looks for a transaction by its ID, ensuring that it belongs 
+ * to the currently authenticated user. If the transaction is found, it is 
+ * permanently removed from the database.
+ *
+ * @async
+ * @function deleteTransaction
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.params - The route parameters.
+ * @param {number|string} req.params.id - The ID of the transaction to be deleted.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with a success message (status 200),
+ *                            an error message if the transaction is not found or unauthorized (status 404),
+ *                            or a server error message (status 500).
+ */
 const deleteTransaction = async (req, res) => {
     try {
         const { id } = req.params;
@@ -102,10 +166,30 @@ const deleteTransaction = async (req, res) => {
 
         res.status(200).json({ message: "The transaction was successfully deleted" });
     } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
+        res.status(500).json({ message: "Server Error: ", error: error.message });
     }
 };
 
+/**
+ * Calculates the total income, total expenses, and net balance for a specific month.
+ * 
+ * The function determines the target month and year (defaulting to the current 
+ * date if not provided), fetches all transactions for the authenticated user 
+ * within that timeframe, and sums up the amounts based on the category type 
+ * ('income' vs 'expense'). Finally, it calculates the overall balance.
+ *
+ * @async
+ * @function getMonthlyTotals
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters for timeframe selection.
+ * @param {string|number} [req.query.month] - (Optional) The target month (1-12). Defaults to the current month.
+ * @param {string|number} [req.query.year] - (Optional) The target year. Defaults to the current year.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response containing the calculated `income`, `expense`, and `balance` (status 200),
+ *                            or a server error message if the calculation fails (status 500).
+ */
 const getMonthlyTotals = async (req, res) => {
     try {
         const { month, year } = req.query;
@@ -152,10 +236,30 @@ const getMonthlyTotals = async (req, res) => {
             balance: balance
         });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Server Error: ", error: error.message });
     }
 }
 
+/**
+ * Retrieves a breakdown of expenses by category for a specific month and year.
+ * 
+ * The function fetches all expense transactions for the authenticated user 
+ * within the specified timeframe. It then groups these expenses by category, 
+ * calculates the total amount spent per category, and returns the results 
+ * sorted in descending order by the total amount spent.
+ *
+ * @async
+ * @function getExpenseBreakdown
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters for timeframe selection.
+ * @param {string|number} [req.query.month] - (Optional) The target month (1-12). Defaults to the current month.
+ * @param {string|number} [req.query.year] - (Optional) The target year. Defaults to the current year.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array of categorized expense objects sorted by total spent (status 200),
+ *                            or a server error message if the query fails (status 500).
+ */
 const getExpenseBreakdown = async (req, res) => {
     try {
         const { month, year } = req.query;
@@ -206,10 +310,28 @@ const getExpenseBreakdown = async (req, res) => {
 
         res.status(200).json(breakdownArray);
     } catch (error) {
-        res.status(500).json({ message: "Can\'t generate graph.", error: error.message });
+        res.status(500).json({ message: "Server Error: ", error: error.message });
     }
 }
 
+/**
+ * Retrieves income and expense trends for the past six months.
+ * 
+ * The function generates a timeline covering the current month and the five 
+ * preceding months. It fetches all transactions for the authenticated user 
+ * within this period, categorizes them as income or expense, and aggregates 
+ * the total amounts for each month.
+ *
+ * @async
+ * @function getSixMonthsTrend
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array containing six objects (one for each month) 
+ *                            with aggregated `income` and `expense` data (status 200),
+ *                            or a server error message if the query fails (status 500).
+ */
 const getSixMonthsTrend = async (req, res) => {
     try {
         const currentDate = new Date();
@@ -265,10 +387,30 @@ const getSixMonthsTrend = async (req, res) => {
         res.status(200).json(trendData);
 
     } catch (error) {
-        res.status(500).json({ message: 'Could not retrieve trending data', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
+/**
+ * Calculates a month-over-month comparison of the user's expenses.
+ * 
+ * The function determines the target month and the preceding month, fetches all 
+ * expense transactions for both periods, and sums them up. It then calculates the 
+ * percentage change between the two months and identifies the spending trend 
+ * ('up', 'down', or 'flat').
+ *
+ * @async
+ * @function getMonthOverMonthComparison
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters for timeframe selection.
+ * @param {string|number} [req.query.month] - (Optional) The target month (1-12). Defaults to the current month.
+ * @param {string|number} [req.query.year] - (Optional) The target year. Defaults to the current year.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response containing `currentExpense`, `previousExpense`, the percentage change, and the `trend` (status 200),
+ *                            or a server error message if the query/calculation fails (status 500).
+ */
 const getMonthOverMonthComparison = async (req, res) => {
     try {
         const { month, year } = req.query;
@@ -339,10 +481,30 @@ const getMonthOverMonthComparison = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Can not calculate comparisons', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
+/**
+ * Retrieves the top 5 highest expenses for a specific month and year.
+ * 
+ * The function fetches expense transactions for the authenticated user within 
+ * the specified timeframe (defaulting to the current month if not provided). 
+ * It orders the transactions by amount in descending order and limits the 
+ * result to the top 5 largest expenses.
+ *
+ * @async
+ * @function getTopExpenses
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters for timeframe selection.
+ * @param {string|number} [req.query.month] - (Optional) The target month (1-12). Defaults to the current month.
+ * @param {string|number} [req.query.year] - (Optional) The target year. Defaults to the current year.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array containing up to 5 of the highest expense transaction objects (status 200),
+ *                            or a server error message if the database query fails (status 500).
+ */
 const getTopExpenses = async (req, res) => {
     try {
         const { month, year } = req.query;
@@ -377,10 +539,27 @@ const getTopExpenses = async (req, res) => {
         res.status(200).json(topExpenses);
 
     } catch (error) {
-        res.status(500).json({ message: "Can not generate top expenses", error: error.message });
+        res.status(500).json({ message: "Server Error: ", error: error.message });
     }
 };
 
+/**
+ * Retrieves the 5 most recent transactions for the authenticated user.
+ * 
+ * The function fetches the user's latest transactions from the database, 
+ * including their associated category details. The results are sorted primarily 
+ * by transaction date and secondarily by creation time in descending order, 
+ * limiting the output to the 5 most recent entries.
+ *
+ * @async
+ * @function getRecentTransactions
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array containing up to 5 of the most recent transaction objects (status 200),
+ *                            or a server error message if the database query fails (status 500).
+ */
 const getRecentTransactions = async (req, res) => {
     try {
         const transactions = await Transaction.findAll({
@@ -402,10 +581,30 @@ const getRecentTransactions = async (req, res) => {
 
         res.status(200).json(transactions);
     } catch (error) {
-        res.status(500).json({ message: 'Could not obtain last transactions', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
+/**
+ * Calculates the user's daily spending average for a specific month and year.
+ * 
+ * The function determines the total expenses for the selected timeframe and divides 
+ * them by the number of days elapsed. If the target is the current month, it divides 
+ * by the current day of the month; otherwise, it divides by the total number of 
+ * days in that month.
+ *
+ * @async
+ * @function getDailyAverage
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters for timeframe selection.
+ * @param {string|number} [req.query.month] - (Optional) The target month (1-12). Defaults to the current month.
+ * @param {string|number} [req.query.year] - (Optional) The target year. Defaults to the current year.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with the calculated `dailyAverage` (status 200),
+ *                            or a server error message if the calculation fails (status 500).
+ */
 export const getDailyAverage = async (req, res) => {
     try {
         const { month, year } = req.query;
@@ -449,7 +648,7 @@ export const getDailyAverage = async (req, res) => {
         res.status(200).json({ dailyAverage });
 
     } catch (error) {
-        res.status(500).json({ message: "Can't calculate average", error: error.message });
+        res.status(500).json({ message: "Server Error: ", error: error.message });
     }
 };
 

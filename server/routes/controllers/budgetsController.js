@@ -1,6 +1,26 @@
 import { Budget, Category } from "../../database/associations.js";
 import { Op } from "sequelize";
 
+/**
+ * Creates a new budget for a specific category and period.
+ * 
+ * The function validates the required fields (amount and categoryId), checks if a 
+ * budget already exists for the user in the specified category and period, and 
+ * creates a new budget record in the database.
+ *
+ * @async
+ * @function createBudget
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.body - The request body containing budget details.
+ * @param {number} req.body.amount - The monetary amount for the budget.
+ * @param {number|string} req.body.categoryId - The ID of the category associated with the budget.
+ * @param {string} [req.body.period='monthly'] - (Optional) The time period for the budget. Defaults to 'monthly'.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with the newly created budget data (status 201),
+ *                            or an error message for missing fields/duplicate budgets (status 400) or server errors (status 500).
+ */
 const createBudget = async (req, res) => {
     try {
         const { amount, period, categoryId } = req.body;
@@ -36,10 +56,30 @@ const createBudget = async (req, res) => {
         res.status(201).json(newBudget);
 
     } catch (error) {
-        res.status(500).json({ message: 'Could not create budget', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 };
 
+/**
+ * Creates a new budget for a specific category and period.
+ * 
+ * The function validates the required fields (amount and categoryId), checks if a 
+ * budget already exists for the user in the specified category and period, and 
+ * creates a new budget record in the database.
+ *
+ * @async
+ * @function createBudget
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.body - The request body containing budget details.
+ * @param {number} req.body.amount - The monetary amount for the budget.
+ * @param {number|string} req.body.categoryId - The ID of the category associated with the budget.
+ * @param {string} [req.body.period='monthly'] - (Optional) The time period for the budget. Defaults to 'monthly'.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with the newly created budget data (status 201),
+ *                            or an error message for missing fields/duplicate budgets (status 400) or server errors (status 500).
+ */
 const modifyBudget = async (req, res) => {
     try {
         const { id } = req.params;
@@ -63,10 +103,26 @@ const modifyBudget = async (req, res) => {
 
         res.status(200).json(budget);
     } catch (error) {
-        res.status(500).json({ message: 'Could not modify this budget', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
+/**
+ * Retrieves all budgets for the authenticated user.
+ * 
+ * The function fetches the user's budget records from the database, sorted by 
+ * creation date in descending order. It also includes associated category details 
+ * (name, icon, and type) for each budget.
+ *
+ * @async
+ * @function getMyBudgets
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array of the user's budget objects (status 200),
+ *                            or an error message if a server error occurs (status 500).
+ */
 const getMyBudgets = async (req, res) => {
     try {
         const budgets = await Budget.findAll({
@@ -86,10 +142,29 @@ const getMyBudgets = async (req, res) => {
 
         res.status(200).json(budgets);
     } catch (error) {
-        res.status(500).json({ message: 'Could not retrieve budgets', error: error.message });
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 }
 
+/**
+ * Deletes a specific budget for the authenticated user.
+ * 
+ * The function looks for a budget by its ID, ensuring that it belongs to 
+ * the currently authenticated user. If found, it permanently removes the 
+ * budget record from the database.
+ *
+ * @async
+ * @function deleteBudget
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.params - The route parameters.
+ * @param {number|string} req.params.id - The ID of the budget to be deleted.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with a success message (status 200),
+ *                            an error message if the budget is not found or unauthorized (status 404),
+ *                            or a server error message (status 500).
+ */
 const deleteBudget = async (req, res) => {
     try {
         const { id } = req.params;
@@ -109,10 +184,30 @@ const deleteBudget = async (req, res) => {
 
         res.status(200).json({ message: 'The budget was successfully deleted.' });
     } catch (error) {
-        res.status(500).json({ message: 'Could not delete budget', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
+/**
+ * Calculates and retrieves the status of the user's budgets for a specific month and year.
+ * 
+ * The function fetches the user's budgets and corresponding expense transactions 
+ * within the given timeframe. It then calculates the total spent per category, 
+ * the remaining amount, the percentage of the budget used, and assigns a status 
+ * ('untouched', 'safe', 'warning', or 'exceeded') to each budget.
+ *
+ * @async
+ * @function checkBudgetStatus
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.query - The URL query parameters.
+ * @param {string|number} [req.query.month] - (Optional) The target month (1-12). Defaults to the current month.
+ * @param {string|number} [req.query.year] - (Optional) The target year. Defaults to the current year.
+ * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON array containing the status objects for each budget (status 200),
+ *                            or a server error message if something goes wrong (status 500).
+ */
 const checkBudgetStatus = async (req, res) => {
     try {
         const { month, year } = req.query;
@@ -196,7 +291,7 @@ const checkBudgetStatus = async (req, res) => {
         res.status(200).json(budgetStatuses);
 
     } catch (error) {
-        res.status(500).json({ message: 'Could not retrieve budget status', error: error.message });
+        res.status(500).json({ message: 'Server Error: ', error: error.message });
     }
 }
 
