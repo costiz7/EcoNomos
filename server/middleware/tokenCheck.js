@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 
+//This middleware decodes the received token when trying to make a request
+//and attaches 'user' property to every request body so the frontend knows who made the request
 const tokenCheck = (req, res, next) => {
     let token;
 

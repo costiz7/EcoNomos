@@ -1,5 +1,6 @@
 import Category from "./models/Category.js";
 
+//This async function seeds the database at the 1st start with all the system categories
 export const seedCategories = async () => {
     try {
         const defaultCategories = [
@@ -27,10 +28,10 @@ export const seedCategories = async () => {
                     iconFile: cat.iconFile,
                     userId: null
                 });
-                console.log(`Categorie adaugata: ${cat.name}`);
+                console.log(`Added category: ${cat.name}`);
             }
         }
     } catch (error) {
-        console.error("Eroare la seed:", error);
+        console.error("Seeding error:", error);
     }
 };

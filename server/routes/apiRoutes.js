@@ -6,8 +6,12 @@ import transactionsController from "./controllers/transactionsController.js";
 import budgetsController from "./controllers/budgetsController.js";
 import savingsController from "./controllers/savingsController.js";
 
+//Check the README for a in-depth guide to these endpoints
+
+//This router 'routes' all the api requests
 const router = Router();
 
+//Before fulfilling requests, we check who the user is and if it is authorized (by case)
 router.use(tokenCheck);
 
 //User routes

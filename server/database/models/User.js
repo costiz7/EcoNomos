@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db.js";
 
+//User entity table configuration
 class User extends Model {};
 
 User.init(

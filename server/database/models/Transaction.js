@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db.js";
 
+//Transaction entity table configuration
 class Transaction extends Model {};
 
 Transaction.init({

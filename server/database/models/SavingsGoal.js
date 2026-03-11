@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db.js";
 
+//SavingsGoal entity table configuration
 class SavingsGoal extends Model {};
 
 SavingsGoal.init({

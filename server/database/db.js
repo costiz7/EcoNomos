@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+//Database instance
 const sequelize = new Sequelize(
     process.env.POSTGRES_DB,
     process.env.POSTGRES_USER,
@@ -14,12 +15,13 @@ const sequelize = new Sequelize(
     }
 );
 
+//Connection to database
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('Conectat la baza de date')
+        console.log('Successfully connected to database.')
     } catch (error) {
-        console.error('Nu s-a reusit conexiunea la baza de date: ', error)
+        console.error('DB Connection Error: ', error)
     }
 };
 

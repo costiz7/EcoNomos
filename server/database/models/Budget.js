@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db.js";
 
+//Budget entity table configuration
 class Budget extends Model{};
 
 Budget.init({

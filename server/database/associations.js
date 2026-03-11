@@ -4,6 +4,8 @@ import SavingsGoal from "./models/SavingsGoal.js";
 import Transaction from "./models/Transaction.js";
 import User from "./models/User.js";
 
+//This script associates all the entities between them
+
 //An user creates many categories
 User.hasMany(Category, {
     foreignKey: 'userId',
@@ -36,6 +38,7 @@ Transaction.belongsTo(Category, {
     foreignKey: 'categoryId'
 });
 
+
 //An user has many budgets
 User.hasMany(Budget, {
     foreignKey: 'userId',
@@ -46,6 +49,7 @@ Budget.belongsTo(User, {
     foreignKey: 'userId'
 });
 
+
 //A category has many budgets
 Category.hasMany(Budget, {
     foreignKey: 'categoryId',
@@ -55,6 +59,7 @@ Category.hasMany(Budget, {
 Budget.belongsTo(Category, {
     foreignKey: 'categoryId'
 });
+
 
 //An user has many savings goals
 User.hasMany(SavingsGoal, {
