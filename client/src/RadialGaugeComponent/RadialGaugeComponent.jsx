@@ -1,114 +1,132 @@
 import React, { useMemo, useState, useEffect } from 'react';
 
-const RadialGaugeComponent = ({ percentage = 70, totalTicks = 65 }) => {
-  const [displayPercentage, setDisplayPercentage] = useState(0);
+const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) => {
+  const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
 
-  // Păstrăm dimensiunile interne originale pentru calcule
-  const INTERNAL_WIDTH = 350;
-  const INTERNAL_HEIGHT = 250; 
-  const center = { x: INTERNAL_WIDTH / 2, y: 220 }; 
-  const outerR = 150;
-  const innerR = 125;
-  const startAngleDegrees = -180; 
-  const endAngleDegrees = 0;
-  const ARC_TOTAL_DEGREES = Math.abs(endAngleDegrees - startAngleDegrees); 
-  const degreesPerTick = ARC_TOTAL_DEGREES / (totalTicks - 1);
-  const toRadians = (deg) => deg * (Math.PI / 180);
+  // --- 1. GEOMETRIC CONFIGURATION ---
+  // The center coordinates and radii control the entire drawing
+  const centerCoordinateX = 175;
+  const centerCoordinateY = 175; 
+  const outerRadius = 150;
+  const innerRadius = 125;
+  
+  const startingAngleInDegrees = -180; 
+  const endingAngleInDegrees = 0;
+  
+  const totalAngleSpanInDegrees = Math.abs(endingAngleInDegrees - startingAngleInDegrees); 
+  const degreesPerSegment = totalAngleSpanInDegrees / (totalSegments - 1);
+  
+  // Helper function to convert degrees to radians (required by Math.sin/Math.cos)
+  const convertDegreesToRadians = (angleInDegrees) => {
+    return angleInDegrees * (Math.PI / 180);
+  };
 
+  // --- 2. ANIMATION ENGINE ---
   useEffect(() => {
-    let animationFrameId;
-    const startValue = displayPercentage;
-    const endValue = percentage;
-    
-    if (startValue === endValue) return;
+    // If we have already reached the target percentage, do not start the animation
+    if (currentAnimatedPercentage === targetPercentage) return;
 
-    let startTime = null;
-    const duration = 600;
+    let animationFrameIdentifier;
+    let animationStartTime = null;
+    const animationDurationInMilliseconds = 600;
+    const startingPercentageValue = currentAnimatedPercentage;
 
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const currentValue = startValue + (endValue - startValue) * easeOut;
+    const executeAnimationStep = (currentTimestamp) => {
+      if (!animationStartTime) {
+        animationStartTime = currentTimestamp;
+      }
       
-      setDisplayPercentage(currentValue);
+      // Raw time progress (from 0.00 to 1.00)
+      const rawAnimationProgress = Math.min((currentTimestamp - animationStartTime) / animationDurationInMilliseconds, 1);
+      
+      // Smoothed progress (cubic ease-out deceleration effect at the end)
+      const smoothedAnimationProgress = 1 - Math.pow(1 - rawAnimationProgress, 3);
+      
+      // Calculate the intermediate percentage value for the current frame
+      const newlyCalculatedPercentage = startingPercentageValue + (targetPercentage - startingPercentageValue) * smoothedAnimationProgress;
+      
+      setCurrentAnimatedPercentage(newlyCalculatedPercentage);
 
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animate);
+      // If the animation is not complete, request the next frame
+      if (rawAnimationProgress < 1) {
+        animationFrameIdentifier = requestAnimationFrame(executeAnimationStep);
       }
     };
 
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
+    // Start the animation loop
+    animationFrameIdentifier = requestAnimationFrame(executeAnimationStep);
     
-  }, [percentage]);
-
-  const ticks = useMemo(() => {
-    const activeTicksCount = Math.round((displayPercentage / 100) * totalTicks);
-    const calculatedTicks = [];
+    // Cleanup on component unmount to prevent memory leaks or state updates on unmounted components
+    return () => cancelAnimationFrame(animationFrameIdentifier);
     
-    for (let i = 0; i < totalTicks; i++) {
-      const currentAngleDegrees = startAngleDegrees + i * degreesPerTick;
-      const angleRad = toRadians(currentAngleDegrees);
-      
-      const x1 = center.x + innerR * Math.cos(angleRad);
-      const y1 = center.y + innerR * Math.sin(angleRad);
-      const x2 = center.x + outerR * Math.cos(angleRad);
-      const y2 = center.y + outerR * Math.sin(angleRad);
-      
-      const isActive = i < activeTicksCount;
-      const color = isActive ? "rgb(0, 0, 0)" : "#d2d2d2"; 
+  }, [targetPercentage]); 
 
-      calculatedTicks.push({
-        id: i,
-        coords: { x1, y1, x2, y2 },
-        color
+  // --- 3. SEGMENTS (TICKS) CALCULATION ---
+  const lineSegments = useMemo(() => {
+    // Determine how many segments should be active (colored) based on the current animated percentage
+    const activeSegmentsCount = Math.round((currentAnimatedPercentage / 100) * totalSegments);
+    const calculatedSegmentsArray = [];
+    
+    for (let segmentIndex = 0; segmentIndex < totalSegments; segmentIndex++) {
+      const currentAngleInDegrees = startingAngleInDegrees + segmentIndex * degreesPerSegment;
+      const currentAngleInRadians = convertDegreesToRadians(currentAngleInDegrees);
+      
+      const isSegmentActive = segmentIndex < activeSegmentsCount;
+
+      calculatedSegmentsArray.push({
+        identifier: segmentIndex,
+        // Calculate X and Y coordinates for the start and end of each segment using trigonometry
+        startX: centerCoordinateX + innerRadius * Math.cos(currentAngleInRadians),
+        startY: centerCoordinateY + innerRadius * Math.sin(currentAngleInRadians),
+        endX: centerCoordinateX + outerRadius * Math.cos(currentAngleInRadians),
+        endY: centerCoordinateY + outerRadius * Math.sin(currentAngleInRadians),
+        segmentColor: isSegmentActive ? "rgb(0, 0, 0)" : "#d2d2d2"
       });
     }
-    return calculatedTicks;
-  }, [displayPercentage, totalTicks, degreesPerTick, center.x, center.y, innerR, outerR, startAngleDegrees]);
+    return calculatedSegmentsArray;
+  }, [currentAnimatedPercentage, totalSegments, degreesPerSegment]);
 
-  if (ticks.length === 0) return null;
+  // Prevent rendering if segments haven't been calculated yet
+  if (lineSegments.length === 0) return null;
 
-  const firstTick = ticks[0].coords;
-  const lastTick = ticks[ticks.length - 1].coords;
+  const firstSegment = lineSegments[0];
+  const lastSegment = lineSegments[lineSegments.length - 1];
 
-  // --- CALCULUL PENTRU TRIM ---
-  // Definim o fereastră strânsă în jurul elementelor desenate
-  // Am adăugat un mic padding (10, 15) ca să nu tăiem marginile liniilor rotunjite
-  const trimParams = {
-    x: 15,    // min-x (Left - padding)
-    y: 60,    // min-y (Top - padding)
-    width: 320,  // Latimea totală decupată
-    height: 190  // Inaltimea totală decupată
-  };
+  // --- 4. AUTO-ADAPTIVE CROPPING (DYNAMIC VIEWBOX) ---
+  const viewBoxPadding = 15; 
+  const bottomTextSpacing = 30; 
+
+  // Calculate a tight bounding box around the gauge to eliminate unnecessary whitespace
+  const viewBoxCoordinateX = centerCoordinateX - outerRadius - viewBoxPadding;
+  const viewBoxCoordinateY = centerCoordinateY - outerRadius - viewBoxPadding;
+  const viewBoxTotalWidth = (outerRadius * 2) + (viewBoxPadding * 2);
+  const viewBoxTotalHeight = outerRadius + viewBoxPadding + bottomTextSpacing;
 
   return (
-    // Containerul Responsive
     <div className="gauge-frame" style={{ width: '100%', position: 'relative', overflow: 'hidden' }}>
       <svg 
-        // AICI ESTE MODIFICAREA: Am aplicat noul viewBox calculat pentru 'trim'
-        viewBox={`${trimParams.x} ${trimParams.y} ${trimParams.width} ${trimParams.height}`} 
+        viewBox={`${viewBoxCoordinateX} ${viewBoxCoordinateY} ${viewBoxTotalWidth} ${viewBoxTotalHeight}`} 
         preserveAspectRatio="xMidYMid meet"
         style={{ width: '100%', height: 'auto', display: 'block' }} 
       >
-        {ticks.map((tick) => (
+        {lineSegments.map((segment) => (
           <line
-            key={tick.id}
-            x1={tick.coords.x1}
-            y1={tick.coords.y1}
-            x2={tick.coords.x2}
-            y2={tick.coords.y2}
-            stroke={tick.color}
+            key={segment.identifier}
+            x1={segment.startX}
+            y1={segment.startY}
+            x2={segment.endX}
+            y2={segment.endY}
+            stroke={segment.segmentColor}
             strokeWidth="4"
             strokeLinecap="round" 
-            style={{ transition: 'stroke 0.1s ease' }} 
+            style={{ transition: 'stroke 0s ease' }} 
           />
         ))}
         
+        {/* Main Percentage Text */}
         <text 
-          x={center.x} 
-          y={center.y - 40}
+          x={centerCoordinateX} 
+          y={centerCoordinateY - 30}
           textAnchor="middle" 
           dominantBaseline="middle"
           fontSize="3rem" 
@@ -116,12 +134,13 @@ const RadialGaugeComponent = ({ percentage = 70, totalTicks = 65 }) => {
           fill="#333"
           style={{ fontFamily: 'sans-serif' }}
         >
-          {Math.round(displayPercentage)}%
+          {Math.round(currentAnimatedPercentage)}%
         </text>
         
+        {/* "0" Label */}
         <text 
-          x={firstTick.x2 + 13} 
-          y={firstTick.y2 + 20} 
+          x={firstSegment.endX + 10} 
+          y={firstSegment.endY + 20} 
           textAnchor="middle" 
           fontSize="14px" 
           fill="#a0aab0"
@@ -130,9 +149,10 @@ const RadialGaugeComponent = ({ percentage = 70, totalTicks = 65 }) => {
           0
         </text>
 
+        {/* "100" Label */}
         <text 
-          x={lastTick.x2 - 13} 
-          y={lastTick.y2 + 20} 
+          x={lastSegment.endX - 10} 
+          y={lastSegment.endY + 20} 
           textAnchor="middle" 
           fontSize="14px" 
           fill="#a0aab0"
