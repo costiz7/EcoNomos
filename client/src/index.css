@@ -6,6 +6,10 @@
 
 body {
   min-height: 100vh;
+
+  font-family: "IBM Plex Serif", serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {

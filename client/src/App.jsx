@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <RadialGaugeComponent />
+      <h1 style={{fontSize: '4rem'}}>EcoNomos</h1>
     </>
   )
 }

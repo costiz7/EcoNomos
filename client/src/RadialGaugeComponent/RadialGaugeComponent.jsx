@@ -1,4 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import './RadialGaugeComponent.css';
 
 const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) => {
   const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
@@ -103,7 +104,7 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
   const viewBoxTotalHeight = outerRadius + viewBoxPadding + bottomTextSpacing;
 
   return (
-    <div className="gauge-frame" style={{ width: '100%', position: 'relative', overflow: 'hidden' }}>
+    <div className="gauge-frame">
       <svg 
         viewBox={`${viewBoxCoordinateX} ${viewBoxCoordinateY} ${viewBoxTotalWidth} ${viewBoxTotalHeight}`} 
         preserveAspectRatio="xMidYMid meet"
