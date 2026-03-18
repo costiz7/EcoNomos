@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import RadialGaugeComponent from "./RadialGaugeComponent/RadialGaugeComponent.jsx"
-
+import Home from "./Home/Home.jsx"
 function App() {
 
   return (
     <>
-      <h1 style={{fontSize: '4rem'}}>EcoNomos</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={ < Home/> } />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
