@@ -4,7 +4,7 @@
     overflow-x: hidden;
 
     display: flex;
-    background-color: var(--primary-background-color);
+    background-color: var(--white-color);
 }
 
 .upper-section-wrapper > .left-section {
