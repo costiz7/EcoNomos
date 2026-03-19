@@ -1,0 +1,23 @@
+.login-form-wrapper {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-card-wrapper {
+    position: relative;
+    width: 350px;
+    height: 400px;
+
+    display: flex;
+    
+
+    border: solid 4px var(--black-color);
+    border-radius: 10px;
+    background-color: var(--white-color);
+    overflow: hidden;
+}

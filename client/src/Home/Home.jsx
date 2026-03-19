@@ -4,6 +4,7 @@ import './Home.css';
 import LoginForm from "./LoginForm/LoginForm.jsx";
 import RegisterForm from "./RegisterForm/RegisterForm.jsx";
 import SuccessForm from "./SuccessForm/SuccessForm.jsx";
+import FoodIcon from "../Icons/FoodIcon.jsx";
 
 //Home component. Depending on 'currentForm' it changes the forms between login and register
 function Home() {
@@ -53,13 +54,13 @@ function Home() {
                         </p>
                     </div>
                 </div>
-                <div className="vertical-divider"></div>
                 <div className="right-section">
                     {currentForm === 'login' && <LoginForm onSwitchToRegister={() => setCurrentForm('register')}/>}
                     {currentForm === 'register' && <RegisterForm onSwitchToLogin={() => setCurrentForm('login')}
                                                                 onSwitchToSuccess={() => setCurrentForm('success')}/>}
                     {currentForm === 'success' && <SuccessForm onSwitchToLogin={() => setCurrentForm('login')} />}
                 </div>
+                <FoodIcon className="background-icon-1"/>
             </div>
             <div className="lower-section-wrapper">
 
