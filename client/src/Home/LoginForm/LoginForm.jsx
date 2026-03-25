@@ -16,31 +16,34 @@ function LoginForm({ onSwitchToRegister }) {
             <div className="login-form-wrapper">
                 <h1>Welcome!</h1>
                 <div className="login-card-wrapper">
-                    <form onSubmit={handleSubmit}>
+                    <div className="form-header">
+                        <h1>Login</h1>
+                    </div>
+                    <form className="login-form" onSubmit={handleSubmit}>
                         <div className="form-input">
-                            <label htmlFor="email">Email</label>
                             <input type="text" 
                                     id="email" 
                                     value={email}
-                                    onChange={ (e) => setEmail(e.target.value) } />
+                                    onChange={ (e) => setEmail(e.target.value) }
+                                    placeholder=' ' />
+                            <label htmlFor="email">Email</label>
                         </div>
                         <div className="form-input">
-                            <label htmlFor="password">Password</label>
                             <input type="password"  
                                     id="password"
                                     value={password}
-                                    onChange={ (e) => setPassword(e.target.value) } />
+                                    onChange={ (e) => setPassword(e.target.value) }
+                                    placeholder=' ' />
+                            <label htmlFor="password">Password</label>
                         </div>
-                        <button type="submit" className="login-btn">
+                        <button type="submit" className="login-form-btn">
                             Login
                         </button>
-                    </form>
-                    <div className="switch-form-text">
-                        Don't have an account?{' '}
-                        <span className="switch-link" onClick={onSwitchToRegister}>
+                        <div className="horizontal-login-form-line"><span>OR</span></div>
+                        <button onClick={onSwitchToRegister} className="login-form-btn">
                             Register
-                        </span>
-                    </div>
+                        </button>
+                    </form>
                 </div>
                 
             </div>

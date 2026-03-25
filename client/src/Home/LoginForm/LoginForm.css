@@ -6,18 +6,140 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
+}
+
+.login-form-wrapper > h1 {
+    position: relative;
+    letter-spacing: 2px;
 }
 
 .login-card-wrapper {
     position: relative;
-    width: 350px;
-    height: 400px;
+    min-width: 350px;
+    min-height: 400px;
 
     display: flex;
-    
+    flex-direction: column;
+    align-items: center;
 
     border: solid 4px var(--black-color);
-    border-radius: 10px;
+    border-radius: 20px;
     background-color: var(--white-color);
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.3);
+    padding: 5px 25px 25px 25px;
     overflow: hidden;
 }
+
+.login-card-wrapper > .login-form {
+    margin-top: 30px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px
+    
+}
+
+.login-form > .form-input {
+    position: relative;
+    width: 100%;
+    height: 45px;
+}
+
+.form-input > label {
+    position: absolute;
+    z-index: 1;
+    top: 7px;
+    left: 15px;
+
+    background-color: var(--white-color);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.form-input > input:focus + label,
+.form-input > input:not(:placeholder-shown) + label {
+    top: -12px;       
+    left: 10px;       
+    font-size: 0.9rem; 
+    opacity: 1;       
+     
+}
+
+.form-input > input {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0px 10px;
+
+    font-family: "IBM Plex Serif", serif;
+    font-size: 1rem;
+    outline: none;
+    border: solid 3px var(--black-color);
+    border-radius: 5px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+}
+
+.login-form-btn {
+    position: relative;
+    width: 100%;
+    height: 45px;
+    padding: 0px 10px;
+
+    font-family: "IBM Plex Serif", serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    outline: none;
+    border: solid 3px var(--black-color);
+    border-radius: 5px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    background-color: var(--white-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.login-form-btn:nth-child(3):hover {
+    filter:brightness(0.7);
+}
+
+.login-form-btn:nth-child(5):hover {
+    filter:brightness(0.7);
+}
+
+
+.login-form-btn:nth-child(5) {
+    background-color: var(--black-color);
+    color: var(--white-color)
+}
+
+.horizontal-login-form-line {
+    position: relative;
+    width: 100%;
+    background-color: var(--black-color);
+    height: 3.5px;
+    border-radius: 10px;
+    opacity: 0.8;
+}
+
+.horizontal-login-form-line > span {
+    position: absolute;
+    width: 38px;
+    display: flex;
+    justify-content: center;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    font-weight: 500;
+    opacity: 1;
+    background-color: var(--white-color);
+}
+
