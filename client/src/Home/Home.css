@@ -16,6 +16,7 @@
 .upper-section-wrapper > .right-section {
     position: relative;
     flex: 1;
+    overflow: hidden;
 }
 
 .title-section {
@@ -41,6 +42,10 @@
     letter-spacing: 0px;
     margin-top: 10px;
     color: var(--black-color);
+
+    line-height: 1.2;
+    min-height: 4.8rem;
+    display: block;
 }
 
 

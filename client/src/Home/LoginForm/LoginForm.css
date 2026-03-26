@@ -1,12 +1,14 @@
 .login-form-wrapper {
-    position: relative;
+    position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    width: 100%;
 }
 
 .login-form-wrapper > h1 {
@@ -16,7 +18,7 @@
 
 .login-card-wrapper {
     position: relative;
-    min-width: 350px;
+    min-width: 370px;
     min-height: 400px;
 
     display: flex;
@@ -30,16 +32,18 @@
     padding: 5px 25px 25px 25px;
     overflow: hidden;
 }
+.login-card-wrapper > .form-header {
+    margin-bottom: 20px;
+}
 
 .login-card-wrapper > .login-form {
-    margin-top: 30px;
+    margin-top: 5px;
     width: 100%;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 30px
-    
 }
 
 .login-form > .form-input {
@@ -69,7 +73,6 @@
     left: 10px;       
     font-size: 0.9rem; 
     opacity: 1;       
-     
 }
 
 .form-input > input {
@@ -143,3 +146,38 @@
     background-color: var(--white-color);
 }
 
+.form-error-message {
+    color: var(--red-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.slide-out-up {
+    animation: slideUpFade 300ms ease-in forwards;
+}
+
+@keyframes slideUpFade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%); 
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -85%); 
+    }
+}
+
+.slide-in-up {
+    animation: slideInFade 300ms ease-out forwards;
+}
+
+@keyframes slideInFade {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -15%); 
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%); 
+    }
+}

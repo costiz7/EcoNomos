@@ -1,0 +1,36 @@
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    
+    background-color: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(4px); 
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--black-color);
+    font-family: "IBM Plex Serif", serif;
+    
+    animation: spinWithPause 800ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spinWithPause {
+    0% {
+        transform: rotate(0deg);
+    }
+    90% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
