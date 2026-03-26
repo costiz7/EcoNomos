@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingOverlay from '../../LoadingOverlay/LoadingOverlay.jsx';
 import './LoginForm.css';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 
 function LoginForm({ onSwitchToRegister }) {
+    const { t } = useLanguage();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -60,10 +62,10 @@ function LoginForm({ onSwitchToRegister }) {
         <>
             {isLoading && <LoadingOverlay />}
             <div className={`login-form-wrapper ${isExiting ? 'slide-out-up' : 'slide-in-up'}`}>
-                <h1>Welcome!</h1>
+                <h1>{t('login.welcome')}</h1>
                 <div className="login-card-wrapper">
                     <div className="form-header">
-                        <h1>Login</h1>
+                        <h1>{t('login.title')}</h1>
                     </div>
                     {errorMessage && (
                         <div className="form-error-message">
@@ -77,7 +79,7 @@ function LoginForm({ onSwitchToRegister }) {
                                     value={email}
                                     onChange={ (e) => setEmail(e.target.value) }
                                     placeholder=' ' />
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="email">{t('login.email')}</label>
                         </div>
                         <div className="form-input">
                             <input type="password"  
@@ -85,14 +87,14 @@ function LoginForm({ onSwitchToRegister }) {
                                     value={password}
                                     onChange={ (e) => setPassword(e.target.value) }
                                     placeholder=' ' />
-                            <label htmlFor="password">Password</label>
+                            <label htmlFor="password">{t('login.password')}</label>
                         </div>
                         <button type="submit" className="login-form-btn">
-                            Login
+                            {t('login.loginBtn')}
                         </button>
-                        <div className="horizontal-login-form-line"><span>OR</span></div>
+                        <div className="horizontal-login-form-line"><span>{t('login.or')}</span></div>
                         <button onClick={handleSwitchClick} className="login-form-btn">
-                            Register
+                            {t('login.registerBtn')}
                         </button>
                     </form>
                 </div>

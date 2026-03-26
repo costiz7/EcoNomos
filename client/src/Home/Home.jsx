@@ -4,6 +4,7 @@ import './Home.css';
 import LoginForm from "./LoginForm/LoginForm.jsx";
 import RegisterForm from "./RegisterForm/RegisterForm.jsx";
 import SuccessForm from "./SuccessForm/SuccessForm.jsx";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher.jsx";
 import FoodIcon from "../Icons/FoodIcon.jsx";
 
 //Home component. Depending on 'currentForm' it changes the forms between login and register
@@ -44,6 +45,7 @@ function Home() {
     return (
         <>
             <div className="upper-section-wrapper">
+                <LanguageSwitcher className="home-lang-switcher" />
                 <div className="left-section">
                     <div className="title-section">
                         <h1 className="main-title">

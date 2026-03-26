@@ -69,3 +69,10 @@
     transform: rotate(-45deg);
     opacity: 0.6;
 }
+
+.home-lang-switcher {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    z-index: 10; /* Să fim siguri că stă deasupra fundalului */
+}

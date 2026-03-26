@@ -1,0 +1,12 @@
+{
+  "login": {
+    "welcome": "Welcome!",
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "loginBtn": "Login",
+    "or": "OR",
+    "registerBtn": "Register",
+    "serverError": "Can't connect to server. Try again later!"
+  }
+}
