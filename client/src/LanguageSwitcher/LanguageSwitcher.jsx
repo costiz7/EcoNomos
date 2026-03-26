@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './LanguageSwitcher.css';
 import { useLanguage } from '../context/LanguageContext';
+import EnIcon from '../Icons/EnIcon.jsx';
+import RoIcon from '../Icons/RoIcon.jsx';
 
 function LanguageSwitcher({ className }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -64,26 +66,19 @@ function LanguageSwitcher({ className }) {
     return (
         <div className={`language-switcher-wrapper ${className}`}>
             
-            {/* Butonul principal cu imagine în loc de emoji */}
             <div className="current-language-btn" onClick={toggleDropdown}>
-                <img 
-                    src={currentLang === 'en' ? 'https://flagcdn.com/w40/gb.png' : 'https://flagcdn.com/w40/ro.png'} 
-                    width="24" 
-                    alt="Current Language Flag" 
-                    style={{ borderRadius: '2px', display: 'block' }}
-                />
+                {/* Trimitem clasa icon-large pentru cerculețul mare */}
+                {currentLang === 'en' ? <EnIcon className="icon-large" /> : <RoIcon className="icon-large" />}
             </div>
 
-            {/* Dropdown-ul cu imagini mici lângă text */}
             {isOpen && (
                 <div className="language-dropdown slide-in-top">
                     <div className="language-option" onClick={() => selectLanguage('en')}>
-                        <img src="https://flagcdn.com/w20/gb.png" width="20" alt="UK Flag" /> 
-                        English
+                        {/* Trimitem clasa icon-small pentru meniul dinamic */}
+                        <EnIcon className="icon-small" />
                     </div>
                     <div className="language-option" onClick={() => selectLanguage('ro')}>
-                        <img src="https://flagcdn.com/w20/ro.png" width="20" alt="RO Flag" /> 
-                        Română
+                        <RoIcon className="icon-small" />
                     </div>
                 </div>
             )}
