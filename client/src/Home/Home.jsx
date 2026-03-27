@@ -62,7 +62,6 @@ function Home() {
                                                                 onSwitchToSuccess={() => setCurrentForm('success')}/>}
                     {currentForm === 'success' && <SuccessForm onSwitchToLogin={() => setCurrentForm('login')} />}
                 </div>
-                <FoodIcon className="background-icon-1"/>
             </div>
             <div className="lower-section-wrapper">
 

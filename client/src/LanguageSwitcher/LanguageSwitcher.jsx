@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './LanguageSwitcher.css';
 import { useLanguage } from '../context/LanguageContext';
 import EnIcon from '../Icons/EnIcon.jsx';
@@ -34,12 +34,11 @@ function LanguageSwitcher({ className }) {
                 if (response.ok) {
                     const updatedUser = await response.json();
                     localStorage.setItem('user', JSON.stringify(updatedUser));
-                    console.log("Limba salvată cu succes în DB:", updatedUser.language);
                 } else {
-                    console.error("Eroare la actualizarea limbii pe server");
+                    console.error("Can't update language on server");
                 }
             } catch (error) {
-                console.error("Eroare de rețea la salvarea limbii:", error);
+                console.error("Server Error:", error);
             }
         }
     };
@@ -51,16 +50,14 @@ function LanguageSwitcher({ className }) {
                 {currentLang === 'en' ? <EnIcon className="icon-large" /> : <RoIcon className="icon-large" />}
             </div>
 
-            {isOpen && (
-                <div className="language-dropdown slide-in-top">
-                    <div className="language-option" onClick={() => selectLanguage('en')}>
-                        <EnIcon className="icon-small" />
-                    </div>
-                    <div className="language-option" onClick={() => selectLanguage('ro')}>
-                        <RoIcon className="icon-small" />
-                    </div>
+            <div className={`language-dropdown ${isOpen ? 'open' : ''}`}>
+                <div className="language-option" onClick={() => selectLanguage('en')}>
+                    <EnIcon className="icon-small" />
                 </div>
-            )}
+                <div className="language-option" onClick={() => selectLanguage('ro')}>
+                    <RoIcon className="icon-small" />
+                </div>
+            </div>
             
         </div>
     );
