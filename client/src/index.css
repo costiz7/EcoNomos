@@ -19,6 +19,7 @@
   --light-purple-color: #CB9DF0;
   --purple-color: #7846b5;
   --dark-purple-color: #624E88;
+  --text-font: "IBM Plex Serif", serif;
 }
 
 * {
