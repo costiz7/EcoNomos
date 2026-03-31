@@ -1,7 +1,9 @@
 import './Dropdown.css';
 import { useState, useEffect } from 'react';
 
-function Dropdown({ dataArr=[], width=200, height=50, displayLabel="Select", labelKey = 'label' }) {
+function Dropdown({ dataArr=[{ id: 1, denumire: 'București' },
+  { id: 2, denumire: 'Cluj' },
+  { id: 3, denumire: 'Timișoara' }], width=200, height=50, displayLabel="Select", labelKey = 'denumire' }) {
     const [ isOpen, setIsOpen ] = useState(false);
     return (
         <>
