@@ -32,7 +32,7 @@
     padding: 5px 25px 25px 25px;
     overflow: hidden;
 }
-.login-card-wrapper > .form-header {
+.login-card-wrapper > .login-form-header {
     margin-bottom: 20px;
 }
 
@@ -46,13 +46,13 @@
     gap: 30px
 }
 
-.login-form > .form-input {
+.login-form > .login-form-input {
     position: relative;
     width: 100%;
     height: 45px;
 }
 
-.form-input > label {
+.login-form-input > label {
     position: absolute;
     z-index: 1;
     top: 7px;
@@ -67,15 +67,15 @@
     transition: all 0.3s ease;
 }
 
-.form-input > input:focus + label,
-.form-input > input:not(:placeholder-shown) + label {
+.login-form-input > input:focus + label,
+.login-form-input > input:not(:placeholder-shown) + label {
     top: -12px;       
     left: 10px;       
     font-size: 0.9rem; 
     opacity: 1;       
 }
 
-.form-input > input {
+.login-form-input > input {
     position: relative;
     width: 100%;
     height: 100%;
@@ -147,7 +147,7 @@
     background-color: var(--white-color);
 }
 
-.form-error-message {
+.login-form-error-message {
     color: var(--red-color);
     font-weight: 600;
     margin-bottom: 10px;

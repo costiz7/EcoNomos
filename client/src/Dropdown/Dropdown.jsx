@@ -1,5 +1,5 @@
 import './Dropdown.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function Dropdown({ dataArr=[{ id: 1, denumire: 'București' },
   { id: 2, denumire: 'Cluj' },

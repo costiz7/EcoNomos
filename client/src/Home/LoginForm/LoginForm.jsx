@@ -1,19 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoadingOverlay from '../../LoadingOverlay/LoadingOverlay.jsx';
 import './LoginForm.css';
 import { useLanguage } from '../../context/LanguageContext.jsx';
+import { useLoading } from '../../context/LoadingContext.jsx';
 
 function LoginForm({ onSwitchToRegister }) {
     const { t } = useLanguage();
+    const { setIsLoading } = useLoading(); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    //state for sliding-animation when the form appears
     const [isExiting, setIsExiting] = useState(false);
-
     const [errorMessage, setErrorMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -21,9 +18,8 @@ function LoginForm({ onSwitchToRegister }) {
         setErrorMessage('');
         setIsLoading(true);
 
-        //BACKEND CALL
         try {
-            const response = await fetch('http://localhost:3000/auth/login', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -60,20 +56,19 @@ function LoginForm({ onSwitchToRegister }) {
 
     return (
         <>
-            {isLoading && <LoadingOverlay />}
             <div className={`login-form-wrapper ${isExiting ? 'slide-out-up' : 'slide-in-up'}`}>
                 <h1>{t('login.welcome')}</h1>
                 <div className="login-card-wrapper">
-                    <div className="form-header">
+                    <div className="login-form-header">
                         <h1>{t('login.title')}</h1>
                     </div>
                     {errorMessage && (
-                        <div className="form-error-message">
+                        <div className="login-form-error-message">
                             {errorMessage}
                         </div>
                     )}
                     <form className="login-form" onSubmit={handleSubmit}>
-                        <div className="form-input">
+                        <div className="login-form-input">
                             <input type="text" 
                                     id="email" 
                                     value={email}
@@ -81,7 +76,7 @@ function LoginForm({ onSwitchToRegister }) {
                                     placeholder=' ' />
                             <label htmlFor="email">{t('login.email')}</label>
                         </div>
-                        <div className="form-input">
+                        <div className="login-form-input">
                             <input type="password"  
                                     id="password"
                                     value={password}
@@ -98,7 +93,6 @@ function LoginForm({ onSwitchToRegister }) {
                         </button>
                     </form>
                 </div>
-                
             </div>
         </>
     );
