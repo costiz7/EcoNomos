@@ -13,6 +13,7 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const [language, setLanguage] = useState('en'); 
     const [currency, setCurrency] = useState('RON');
@@ -33,11 +34,28 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
-        
-        if(!language || !currency) {
-            setErrorMessage(t('register.error_dropdowns'));
+
+        if (!firstName.trim() || !lastName.trim() || !username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+            setErrorMessage(t('errors.MISSING_FIELDS'));
             return;
         }
+
+        if (password.length < 6) {
+            setErrorMessage(t('errors.PASSWORD_TOO_SHORT'));
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setErrorMessage(t('errors.PASSWORDS_DONT_MATCH'));
+            return;
+        }
+
+        if (!language || !currency) {
+            setErrorMessage(t('errors.MISSING_DROPDOWNS'));
+            return;
+        }
+
+        setIsLoading(true);
 
         const registerData = {
             firstName,
@@ -48,6 +66,30 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
             language,
             currency
         };
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                const code = data.errorCode || 'SERVER_ERROR';
+                setErrorMessage(t(`errors.${code}`));
+                return;
+            }
+
+            onSwitchToSuccess();
+        } catch (error) {
+            setErrorMessage(t('errors.NETWORK_ERROR'));
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const handleSwitchToLoginClick = (e) => {
@@ -62,8 +104,7 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
     return (
         <>
             <div className={`register-form-wrapper ${isExiting ? 'register-slide-out-up' : 'register-slide-in-up'}`}>
-                <h1>{t('register.welcome')}</h1>
-                <div className="register-card-wrapper">
+                <div className="register-card-wrapper" style={{padding: '5px 20px 20px 20px'}}>
                     <div className="register-form-header">
                         <h1>{t('register.title')}</h1>
                     </div>
@@ -72,52 +113,54 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
                             {errorMessage}
                         </div>
                     )}
-                    <form className="register-form" onSubmit={handleSubmit}>
+                    <form className="register-form" noValidate onSubmit={handleSubmit} style={{gap: '20px'}}>
                         <div className="register-form-row">
                             <div className="register-form-input">
-                                <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' required />
+                                <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder=' ' />
                                 <label htmlFor="firstName">{t('register.firstName')}</label>
                             </div>
                             <div className="register-form-input">
-                                <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder=' ' required />
+                                <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder=' ' />
                                 <label htmlFor="lastName">{t('register.lastName')}</label>
                             </div>
                         </div>
 
                         <div className="register-form-input">
-                            <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder=' ' required />
+                            <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder=' ' />
                             <label htmlFor="username">{t('register.username')}</label>
                         </div>
 
                         <div className="register-form-input">
-                            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' required />
+                            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=' ' />
                             <label htmlFor="email">{t('register.email')}</label>
                         </div>
                         
-                        <div className="register-form-input">
-                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' required />
-                            <label htmlFor="password">{t('register.password')}</label>
+                        <div className="register-form-row">
+                            <div className="register-form-input">
+                                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder=' ' />
+                                <label htmlFor="password">{t('register.password')}</label>
+                            </div>
+                            <div className="register-form-input">
+                                <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder=' ' />
+                                <label htmlFor="confirmPassword">{t('register.confirmPassword')}</label>
+                            </div>
                         </div>
 
-                        {/* Grupul Language/Currency - Dropdown-uri învelite orizontal */}
                         <div className="register-form-row">
-                            {/* Fiecare Dropdown este învelit într-un div pentru a respecta regula de stilizare a inputurilor */}
                             <div className="register-form-input dropdown-input-group">
-                                <label className="dropdown-label-fix">{t('register.language')}</label>
                                 <Dropdown 
                                     dataArr={languageData}
-                                    width="100%" // Ocupă tot spațiul wrapper-ului
+                                    width="100%"
                                     displayLabel={t('register.select_lang')}
-                                    onSelect={(id) => setLanguage(id)} // Salvăm ID-ul ('en'/'ro')
+                                    onSelect={(id) => setLanguage(id)}
                                 />
                             </div>
                             <div className="register-form-input dropdown-input-group">
-                                <label className="dropdown-label-fix">{t('register.currency')}</label>
                                 <Dropdown 
                                     dataArr={currencyData}
                                     width="100%"
                                     displayLabel={t('register.select_curr')}
-                                    onSelect={(id) => setCurrency(id)} // Salvăm ID-ul ('RON'/'EUR')
+                                    onSelect={(id) => setCurrency(id)}
                                 />
                             </div>
                         </div>

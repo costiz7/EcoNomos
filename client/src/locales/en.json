@@ -26,6 +26,41 @@
     "registerBtn": "Create Account",
     "or": "or",
     "loginBtn": "Back to Login",
-    "error_dropdowns": "Please select language and currency."
+    "error_dropdowns": "Please select language and currency.",
+    "confirmPassword": "Confirm Password"
+  },
+  "errors": {
+    "SERVER_ERROR": "An internal server error occurred. Please try again later.",
+    "NETWORK_ERROR": "Cannot connect to the server. Please check your internet connection.",
+    
+    "USERNAME_TAKEN": "This username is already taken.",
+    "EMAIL_TAKEN": "An account with this email already exists.",
+    "INVALID_CREDENTIALS": "Invalid email or password.",
+    "PASSWORD_TOO_SHORT": "Password must be at least 6 characters long.",
+    "MISSING_DROPDOWNS": "Please select your preferred language and currency.",
+    "USER_NOT_FOUND": "User profile not found.",
+    "PASSWORDS_DONT_MATCH": "Passwords do not match.",
+    
+    "MISSING_AMOUNT": "Please enter an amount.",
+    "INVALID_AMOUNT": "The amount must be greater than zero.",
+    "MISSING_CATEGORY": "Please select a category.",
+    "MISSING_FIELDS": "You missed some fields.",
+    
+    "BUDGET_ALREADY_EXISTS": "A budget already exists for this category and period.",
+    "BUDGET_NOT_FOUND": "Budget not found.",
+    "BUDGET_NOT_FOUND_OR_UNAUTHORIZED": "Budget not found or you are not authorized to access it.",
+    
+    "MISSING_CATEGORY_NAME": "Please enter a name for the category.",
+    "INVALID_CATEGORY_TYPE": "Invalid category type. Must be 'income' or 'expense'.",
+    "CATEGORY_NOT_FOUND": "Category not found.",
+    "FORBIDDEN_GLOBAL_CATEGORY_MODIFICATION": "You cannot modify default global categories.",
+    "UNAUTHORIZED_CATEGORY_MODIFICATION": "You are not authorized to modify this category.",
+    "FORBIDDEN_GLOBAL_CATEGORY_DELETION": "You cannot delete default global categories.",
+    "UNAUTHORIZED_CATEGORY_DELETION": "You are not authorized to delete this category.",
+    
+    "MISSING_GOAL_FIELDS": "Please fill in all goal fields (title, target amount, deadline).",
+    "GOAL_NOT_FOUND_OR_UNAUTHORIZED": "Goal not found or you do not have permission to access it.",
+    
+    "TRANSACTION_NOT_FOUND_OR_UNAUTHORIZED": "Transaction not found or you do not have permission to access it."
   }
 }

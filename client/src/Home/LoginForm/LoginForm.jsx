@@ -7,8 +7,10 @@ import { useLoading } from '../../context/LoadingContext.jsx';
 function LoginForm({ onSwitchToRegister }) {
     const { t } = useLanguage();
     const { setIsLoading } = useLoading(); 
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const [isExiting, setIsExiting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
@@ -30,7 +32,9 @@ function LoginForm({ onSwitchToRegister }) {
             const data = await response.json();
 
             if(!response.ok) {
-                setErrorMessage(data.message);
+                const code = data.errorCode || 'SERVER_ERROR';
+                
+                setErrorMessage(t(`errors.${code}`));
                 return;
             }
 
@@ -39,7 +43,7 @@ function LoginForm({ onSwitchToRegister }) {
 
             navigate('/dashboard');
         } catch (error) {
-            setErrorMessage('Can\'t connect to server. Try again later!');
+            setErrorMessage(t('errors.NETWORK_ERROR'));
         } finally {
             setIsLoading(false);
         }

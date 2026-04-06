@@ -26,6 +26,41 @@
     "registerBtn": "Creează cont!",
     "or": "SAU",
     "loginBtn": "Înapoi la logare",
-    "error_dropdowns": "Te rog selectează limba și moneda"
+    "error_dropdowns": "Te rog selectează limba și moneda",
+    "confirmPassword": "Confirmă Parolă"
+  },
+  "errors": {
+    "SERVER_ERROR": "A apărut o eroare la server. Te rugăm să încerci mai târziu.",
+    "NETWORK_ERROR": "Nu mă pot conecta la server. Verifică conexiunea la internet.",
+    
+    "USERNAME_TAKEN": "Acest nume de utilizator este deja folosit.",
+    "EMAIL_TAKEN": "Există deja un cont cu acest email.",
+    "INVALID_CREDENTIALS": "Email sau parolă incorecte.",
+    "PASSWORD_TOO_SHORT": "Parola trebuie să aibă minim 6 caractere.",
+    "MISSING_DROPDOWNS": "Te rog să alegi limba și moneda preferată.",
+    "USER_NOT_FOUND": "Profilul utilizatorului nu a fost găsit.",
+    "PASSWORDS_DONT_MATCH": "Parolele nu coincid.",
+    
+    "MISSING_AMOUNT": "Te rog să introduci o sumă.",
+    "INVALID_AMOUNT": "Suma trebuie să fie mai mare decât zero.",
+    "MISSING_CATEGORY": "Te rog să selectezi o categorie.",
+    "MISSING_FIELDS": "Completează toate rândurile.",
+    
+    "BUDGET_ALREADY_EXISTS": "Există deja un buget pentru această categorie și perioadă.",
+    "BUDGET_NOT_FOUND": "Bugetul nu a fost găsit.",
+    "BUDGET_NOT_FOUND_OR_UNAUTHORIZED": "Bugetul nu a fost găsit sau nu ai permisiunea necesară.",
+    
+    "MISSING_CATEGORY_NAME": "Te rog să introduci un nume pentru categorie.",
+    "INVALID_CATEGORY_TYPE": "Tipul categoriei este invalid. Trebuie să fie 'income' sau 'expense'.",
+    "CATEGORY_NOT_FOUND": "Categoria nu a fost găsită.",
+    "FORBIDDEN_GLOBAL_CATEGORY_MODIFICATION": "Nu poți modifica categoriile standard (globale).",
+    "UNAUTHORIZED_CATEGORY_MODIFICATION": "Nu ești autorizat să modifici această categorie.",
+    "FORBIDDEN_GLOBAL_CATEGORY_DELETION": "Nu poți șterge categoriile standard (globale).",
+    "UNAUTHORIZED_CATEGORY_DELETION": "Nu ești autorizat să ștergi această categorie.",
+    
+    "MISSING_GOAL_FIELDS": "Te rog să completezi toate câmpurile (titlu, sumă, termen limită).",
+    "GOAL_NOT_FOUND_OR_UNAUTHORIZED": "Obiectivul nu a fost găsit sau nu ai permisiunea necesară.",
+    
+    "TRANSACTION_NOT_FOUND_OR_UNAUTHORIZED": "Tranzacția nu a fost găsită sau nu ai permisiunea necesară."
   }
 }
