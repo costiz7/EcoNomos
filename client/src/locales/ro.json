@@ -8,5 +8,24 @@
     "or": "SAU",
     "registerBtn": "Înregistrare",
     "serverError": "Nu mă pot conecta la server. Încearcă mai târziu!"
+  },
+  "register": {
+    "welcome": "Creează un cont!",
+    "title": "Înregistrare",
+    "firstName": "Prenume",
+    "lastName": "Nume familie",
+    "username": "Nume utilizator",
+    "email": "Email",
+    "password": "Parolă",
+    "language": "Limbă preferată",
+    "currency": "Monedă preferată",
+    "select_lang": "Selectează limba",
+    "select_curr": "Selectează moneda",
+    "lang_en": "Engleză",
+    "lang_ro": "Română",
+    "registerBtn": "Creează cont!",
+    "or": "SAU",
+    "loginBtn": "Înapoi la logare",
+    "error_dropdowns": "Te rog selectează limba și moneda"
   }
 }

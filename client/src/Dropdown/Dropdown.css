@@ -1,3 +1,7 @@
+.dropdown-component-wrapper {
+    position: relative;
+}
+
 .dropdown-input-wrapper {
     position: relative;
     background-color: var(--white-color);
@@ -34,18 +38,44 @@
     border: solid 3px var(--black-color);
     border-radius: 5px;
     box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
-    padding: 5px 10px;
     font-family: var(--text-font);
     color: var(--black-color);
     font-size: 1.1rem;
     font-weight: 500;
 }
 
-.slide-in-down {
-    animation: slideInFade 250ms ease-out;
+.dropdown-content-wrapper {
+    max-height: 200px;
+    overflow-y: auto;
 }
 
-@keyframes slideInFade {
+.dropdown-content-wrapper > .dropdown-item {
+    position: relative;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+    background-color: var(--white-color);
+    padding: 5px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dropdown-content-wrapper > .dropdown-item:hover {
+    filter: brightness(0.8);
+}
+
+.dropdown-input-wrapper .displayLabel {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 85%;
+    display: inline-block;
+}
+
+.dropdown-slide-in {
+    animation: dropdownSlideIn 250ms ease-out;
+}
+
+@keyframes dropdownSlideIn {
     0% {
         opacity: 0;
         transform: translateY(-100%); 

@@ -8,5 +8,24 @@
     "or": "OR",
     "registerBtn": "Register",
     "serverError": "Can't connect to server. Try again later!"
+  },
+  "register": {
+    "welcome": "Welcome to EcoNomos",
+    "title": "Register",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "language": "Preferred Language",
+    "currency": "Preferred Currency",
+    "select_lang": "Select Language",
+    "select_curr": "Select Currency",
+    "lang_en": "English",
+    "lang_ro": "Romanian",
+    "registerBtn": "Create Account",
+    "or": "or",
+    "loginBtn": "Back to Login",
+    "error_dropdowns": "Please select language and currency."
   }
 }

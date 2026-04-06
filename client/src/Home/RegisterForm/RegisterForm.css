@@ -1,0 +1,203 @@
+.register-form-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.register-form-wrapper > h1 {
+    position: relative;
+    letter-spacing: 2px;
+}
+
+.register-card-wrapper {
+    position: relative;
+    min-width: 370px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border: solid 4px var(--black-color);
+    border-radius: 20px;
+    background-color: var(--white-color);
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.3);
+    padding: 5px 25px 25px 25px; /* Identic Login */
+    overflow: hidden;
+}
+
+.register-card-wrapper > .register-form-header {
+    margin-bottom: 20px;
+}
+
+.register-card-wrapper > .register-form-header > h1 {
+    font-size: 2rem;
+}
+
+.register-card-wrapper > .register-form {
+    margin-top: 5px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.register-form-row {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+}
+
+.register-form > .register-form-input,
+.register-form-row > .register-form-input {
+    position: relative;
+    width: 100%;
+    height: 45px;
+}
+
+.register-form-input > label {
+    position: absolute;
+    z-index: 1;
+    top: 7px;
+    left: 15px;
+
+    background-color: var(--white-color);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.register-form-input > input:focus + label,
+.register-form-input > input:not(:placeholder-shown) + label {
+    top: -12px;       
+    left: 10px;       
+    font-size: 0.9rem; 
+    opacity: 1;       
+}
+
+.register-form-input > input {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0px 10px;
+
+    font-family: "IBM Plex Serif", serif;
+    font-size: 1rem;
+    outline: none;
+    border: solid 3px var(--black-color);
+    border-radius: 5px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-input-group > .dropdown-label-fix {
+    top: -20px;
+    left: 5px;
+    font-size: 0.9rem;
+    opacity: 1;
+}
+
+.register-form-row > .dropdown-input-group {
+    height: 60px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.register-form-btn {
+    position: relative;
+    width: 100%;
+    height: 45px;
+    padding: 0px 10px;
+
+    font-family: "IBM Plex Serif", serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    outline: none;
+    border: solid 3px var(--black-color);
+    border-radius: 5px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    background-color: var(--white-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.register-form-btn:hover {
+    filter: brightness(0.7);
+}
+
+.register-form-btn.primary-btn {
+    background-color: var(--black-color);
+    color: var(--white-color);
+}
+
+.horizontal-register-form-line {
+    position: relative;
+    width: 100%;
+    background-color: var(--black-color);
+    height: 3.5px;
+    border-radius: 10px;
+    opacity: 0.8;
+}
+
+.horizontal-register-form-line > span {
+    position: absolute;
+    width: 38px;
+    display: flex;
+    justify-content: center;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+    padding: 0px 35px;
+    opacity: 1;
+    background-color: var(--white-color);
+}
+
+.register-form-error-message {
+    color: var(--red-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.register-slide-out-up {
+    animation: registerSlideUpFade 300ms ease-in forwards;
+}
+
+@keyframes registerSlideUpFade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%); 
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -85%); 
+    }
+}
+
+.register-slide-in-up {
+    animation: registerSlideInFade 300ms ease-out forwards;
+}
+
+@keyframes registerSlideInFade {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -15%); 
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%); 
+    }
+}
