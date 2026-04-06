@@ -26,11 +26,11 @@ const createBudget = async (req, res) => {
         const { amount, period, categoryId } = req.body;
 
         if (!amount) {
-            return res.status(400).json({ message: 'You have to input an amount.' });
+            return res.status(400).json({ errorCode: 'MISSING_AMOUNT' });
         }
 
         if (!categoryId) {
-            return res.status(400).json({ message: 'You have to select a category.' });
+            return res.status(400).json({ errorCode: 'MISSING_CATEGORY' });
         }
 
         const existingBudget = await Budget.findOne({
@@ -42,7 +42,7 @@ const createBudget = async (req, res) => {
         });
 
         if (existingBudget) {
-            return res.status(400).json({ message: 'This budget already exists for this period' });
+            return res.status(400).json({ errorCode: 'BUDGET_ALREADY_EXISTS' });
         }
 
         const newBudget = await Budget.create({
@@ -56,7 +56,7 @@ const createBudget = async (req, res) => {
         res.status(201).json(newBudget);
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
@@ -93,7 +93,7 @@ const modifyBudget = async (req, res) => {
         });
 
         if (!budget) {
-            return res.status(404).json({ message: 'Could not modify or find this budget.' });
+            return res.status(404).json({ errorCode: 'BUDGET_NOT_FOUND' });
         }
 
         if (amount) budget.amount = amount;
@@ -103,7 +103,7 @@ const modifyBudget = async (req, res) => {
 
         res.status(200).json(budget);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -142,7 +142,7 @@ const getMyBudgets = async (req, res) => {
 
         res.status(200).json(budgets);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -177,14 +177,14 @@ const deleteBudget = async (req, res) => {
         });
 
         if (!budget) {
-            return res.status(404).json({ message: 'Could not find budget or you are not authorized to delete it.' });
+            return res.status(404).json({ errorCode: 'BUDGET_NOT_FOUND_OR_UNAUTHORIZED' });
         }
 
         await budget.destroy();
 
         res.status(200).json({ message: 'The budget was successfully deleted.' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -291,7 +291,7 @@ const checkBudgetStatus = async (req, res) => {
         res.status(200).json(budgetStatuses);
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 

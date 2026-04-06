@@ -34,7 +34,7 @@ const getAllCategories = async (req, res) => {
 
         res.json(categories);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -63,11 +63,11 @@ const createCategory = async (req, res) => {
         const { name, type, iconFile } = req.body;
 
         if(!name) {
-            return res.status(400).json({ message: 'You forgot the name of the category.' });
+            return res.status(400).json({ errorCode: 'MISSING_CATEGORY_NAME' });
         }
 
         if(type !== 'income' && type !== 'expense') {
-            return res.status(400).json({ message: 'Invalid type! It has to be \'income\' or \'expense\'' });
+            return res.status(400).json({ errorCode: 'INVALID_CATEGORY_TYPE' });
         }
 
         const newCategory = await Category.create({
@@ -79,7 +79,7 @@ const createCategory = async (req, res) => {
 
         res.status(201).json(newCategory);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -114,15 +114,15 @@ const updateCategory = async (req, res) => {
         const category = await Category.findByPk(id);
 
         if(!category) {
-            return res.status(404).json({ message: 'Category not found.' });
+            return res.status(404).json({ errorCode: 'CATEGORY_NOT_FOUND' });
         }
 
         if(category.userId === null) {
-            return res.status(403).json({ message: 'You can\'t modify this category' });
+            return res.status(403).json({ errorCode: 'FORBIDDEN_GLOBAL_CATEGORY_MODIFICATION' });
         }
 
         if(category.userId !== req.user.id) {
-            return res.status(403).json({ message: 'You are not authorized to modify this category.' });
+            return res.status(403).json({ errorCode: 'UNAUTHORIZED_CATEGORY_MODIFICATION' });
         }
 
         if(name) category.name = name;
@@ -132,7 +132,7 @@ const updateCategory = async (req, res) => {
 
         res.json(category);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -162,22 +162,22 @@ const deleteCategory = async (req, res) => {
         const category = await Category.findByPk(id);
 
         if(!category) {
-            return res.status(404).json({ message: 'Category not found.' });
+            return res.status(404).json({ errorCode: 'CATEGORY_NOT_FOUND' });
         }
 
         if(category.userId === null) {
-            return res.status(403).json({ message: 'You can\'t delete this category!' });
+            return res.status(403).json({ errorCode: 'FORBIDDEN_GLOBAL_CATEGORY_DELETION' });
         }
 
         if(category.userId !== req.user.id) {
-            return res.status(403).json({ message: 'You are not authorized to delete this category.' });
+            return res.status(403).json({ errorCode: 'UNAUTHORIZED_CATEGORY_DELETION' });
         }
 
         await category.destroy();
 
         res.json({ message: 'Category deleted' });
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 

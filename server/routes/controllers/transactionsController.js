@@ -61,7 +61,7 @@ const getTransactions = async (req, res) => {
 
         res.status(200).json(transactions);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -93,11 +93,11 @@ const addTransaction = async (req, res) => {
         const { amount, date, description, categoryId } = req.body;
 
         if(!amount) {
-            return res.status(400).json({ message: 'You have to input an amount' });
+            return res.status(400).json({ errorCode: 'MISSING_AMOUNT' });
         }
 
         if(!categoryId) {
-            return res.status(400).json({ message: 'You have to select a category' });
+            return res.status(400).json({ errorCode: 'MISSING_CATEGORY' });
         }
 
         const category = await Category.findOne({
@@ -111,7 +111,7 @@ const addTransaction = async (req, res) => {
         });
 
         if(!category) {
-            return res.status(404).json({ message: 'This category does not exist' });
+            return res.status(404).json({ errorCode: 'CATEGORY_NOT_FOUND' });
         }
 
         const newTransaction = await Transaction.create({
@@ -124,7 +124,7 @@ const addTransaction = async (req, res) => {
 
         res.status(201).json(newTransaction);
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -159,14 +159,14 @@ const deleteTransaction = async (req, res) => {
         });
 
         if (!transaction) {
-            return res.status(404).json({ message: "This transaction was not found or you can't delete it" });
+            return res.status(404).json({ errorCode: 'TRANSACTION_NOT_FOUND_OR_UNAUTHORIZED' });
         }
 
         await transaction.destroy();
 
-        res.status(200).json({ message: "The transaction was successfully deleted" });
+        res.status(200).json({ message: "Transaction deleted successfully." });
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
@@ -236,7 +236,7 @@ const getMonthlyTotals = async (req, res) => {
             balance: balance
         });
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -310,7 +310,7 @@ const getExpenseBreakdown = async (req, res) => {
 
         res.status(200).json(breakdownArray);
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -387,7 +387,7 @@ const getSixMonthsTrend = async (req, res) => {
         res.status(200).json(trendData);
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -481,7 +481,7 @@ const getMonthOverMonthComparison = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -539,7 +539,7 @@ const getTopExpenses = async (req, res) => {
         res.status(200).json(topExpenses);
 
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
@@ -581,7 +581,7 @@ const getRecentTransactions = async (req, res) => {
 
         res.status(200).json(transactions);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
 
@@ -648,7 +648,7 @@ export const getDailyAverage = async (req, res) => {
         res.status(200).json({ dailyAverage });
 
     } catch (error) {
-        res.status(500).json({ message: "Server Error: ", error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 

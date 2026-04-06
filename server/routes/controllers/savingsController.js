@@ -1,5 +1,4 @@
 import { SavingsGoal } from "../../database/associations.js";
-import { Op } from "sequelize";
 
 /**
  * Creates a new savings goal for the authenticated user.
@@ -26,13 +25,11 @@ const createGoal = async (req, res) => {
         const { title, targetAmount, deadline } = req.body;
 
         if (!title || !targetAmount || !deadline) {
-            return res.status(400).json({ 
-                message: 'All the fields must be completed.' 
-            });
+            return res.status(400).json({ errorCode: 'MISSING_GOAL_FIELDS' });
         }
 
         if (parseFloat(targetAmount) <= 0) {
-            return res.status(400).json({ message: 'The amount has to be greater than 0.' });
+            return res.status(400).json({ errorCode: 'INVALID_AMOUNT' });
         }
 
         const newGoal = await SavingsGoal.create({
@@ -46,7 +43,7 @@ const createGoal = async (req, res) => {
         res.status(201).json(newGoal);
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
@@ -77,7 +74,7 @@ const addFunds = async (req, res) => {
         const { amountToAdd } = req.body;
 
         if (!amountToAdd || isNaN(amountToAdd) || parseFloat(amountToAdd) <= 0) {
-            return res.status(400).json({ message: 'The amount has to be greater than 0.' });
+            return res.status(400).json({ errorCode: 'INVALID_AMOUNT' });
         }
 
         const goal = await SavingsGoal.findOne({
@@ -88,7 +85,7 @@ const addFunds = async (req, res) => {
         });
 
         if (!goal) {
-            return res.status(404).json({ message: 'The goal was not found or you don\'t have permission to access it.' });
+            return res.status(404).json({ errorCode: 'GOAL_NOT_FOUND_OR_UNAUTHORIZED' });
         }
 
         const funds = parseFloat(amountToAdd);
@@ -112,7 +109,7 @@ const addFunds = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
@@ -166,7 +163,7 @@ const getGoals = async (req, res) => {
         res.status(200).json(goalsWithProgress);
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
@@ -201,7 +198,7 @@ export const deleteGoal = async (req, res) => {
         });
 
         if (!goal) {
-            return res.status(404).json({ message: 'The goal was not found or you don\'t have access to delete it..' });
+            return res.status(404).json({ errorCode: 'GOAL_NOT_FOUND_OR_UNAUTHORIZED' });
         }
 
         await goal.destroy();
@@ -209,7 +206,7 @@ export const deleteGoal = async (req, res) => {
         res.status(200).json({ message: 'Goal deleted.' });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error: ', error: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 };
 
