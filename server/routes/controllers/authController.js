@@ -57,7 +57,11 @@ const login = async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        res.status(200).json({ token, user });
+        const userData = user.toJSON();
+
+        delete userData.password;
+
+        res.status(200).json({ token, user: userData });
     } catch (error) {
         console.error("Error at login:", error);
         res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
