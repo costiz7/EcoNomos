@@ -1,5 +1,6 @@
-import { Category, Transaction } from "../../database/associations.js";
+import { Category, Transaction, User } from "../../database/associations.js";
 import { Op } from "sequelize";
+import { GoogleGenAI } from '@google/genai';
 
 /**
  * Retrieves a list of transactions for the authenticated user with optional filtering.
@@ -707,36 +708,103 @@ const generateMockBankData = () => {
 };
 
 /**
- * Controller endpoint to handle the simulation of importing bank transactions.
- * It verifies if the user has already imported data to prevent duplicates, 
- * generates the mock data, and (temporarily) returns it as a JSON response.
- * * @async
+ * Endpoint to import mock bank transactions and categorize them using the new Gemini AI SDK.
+ * It optimizes the AI prompt by only requesting categorization for unique merchants,
+ * mapping them to the user's available category IDs.
+ *
+ * @async
  * @function importBankTransactions
  * @param {Object} req - The Express request object.
  * @param {Object} res - The Express response object.
- * @returns {Promise<Object>} JSON response containing the generated transactions or an error code.
+ * @returns {Promise<Object>} JSON response confirming the successful import.
  */
 const importBankTransactions = async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id);
 
-        // Check if the user already triggered the bank import in the past
         if (user.hasImportedBankData) {
             return res.status(400).json({ errorCode: 'ALREADY_IMPORTED' });
         }
 
-        // Generate the raw list of transactions using our helper function
         const rawTransactions = generateMockBankData();
 
-        // TODO: Send 'rawTransactions' to Gemini AI for automatic categorization
-        // TODO: Save the categorized transactions to the database
-        // TODO: Update user.hasImportedBankData to true
+        // 1. Extract unique merchants to optimize the AI prompt payload
+        const uniqueMerchants = [...new Set(rawTransactions.map(tx => tx.description))];
 
-        // Temporarily return the data to the frontend to verify the generator works
+        // 2. Fetch all available categories for this user (both global and custom)
+        const categories = await Category.findAll({
+            where: {
+                [Op.or]: [
+                    { userId: req.user.id },
+                    { userId: null }
+                ]
+            }
+        });
+
+        const categoryMap = categories.map(cat => ({ id: cat.id, name: cat.name }));
+        const fallbackCategoryId = categories.length > 0 ? categories[0].id : null;
+
+        if (!fallbackCategoryId) {
+            return res.status(400).json({ errorCode: 'NO_CATEGORIES_FOUND' });
+        }
+
+        // 3. Initialize the new Google Gen AI client
+        // It automatically uses process.env.GEMINI_API_KEY if not explicitly passed, 
+        // but passing it explicitly is safer.
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+        const prompt = `
+        You are a financial API categorization tool.
+        I will provide a list of merchant names and a list of available categories with their IDs.
+        Your task is to match each merchant to the single most appropriate category ID.
+        
+        Merchants: ${JSON.stringify(uniqueMerchants)}
+        Categories: ${JSON.stringify(categoryMap)}
+        
+        Rules:
+        - Return ONLY a raw JSON object.
+        - The keys must be the exact merchant names.
+        - The values must be the integer category ID.
+        - Do NOT include markdown code blocks (\`\`\`json) or any conversational text.
+        `;
+
+        // 4. Send request to Gemini using the new SDK syntax
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+        });
+        
+        let responseText = response.text;
+        
+        // Strip markdown backticks in case the AI includes them despite instructions
+        responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        const merchantCategoryMapping = JSON.parse(responseText);
+
+        // 5. Apply the AI mapping to all raw transactions
+        const finalTransactions = rawTransactions.map(tx => {
+            const mappedCategoryId = merchantCategoryMapping[tx.description];
+            
+            return {
+                amount: tx.amount,
+                date: tx.date,
+                description: tx.description,
+                categoryId: mappedCategoryId || fallbackCategoryId, // Fallback if AI misses one
+                source: tx.source,
+                userId: req.user.id
+            };
+        });
+
+        // 6. Save everything to the database in one big batch query
+        await Transaction.bulkCreate(finalTransactions);
+
+        // 7. Lock the import feature for this user
+        user.hasImportedBankData = true;
+        await user.save();
+
         res.status(200).json({
-            message: "Bank data generated successfully.",
-            count: rawTransactions.length,
-            transactions: rawTransactions
+            message: "Bank data imported and categorized successfully.",
+            count: finalTransactions.length
         });
 
     } catch (error) {
