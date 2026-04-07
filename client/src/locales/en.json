@@ -62,5 +62,9 @@
     "GOAL_NOT_FOUND_OR_UNAUTHORIZED": "Goal not found or you do not have permission to access it.",
     
     "TRANSACTION_NOT_FOUND_OR_UNAUTHORIZED": "Transaction not found or you do not have permission to access it."
+  },
+  "success": {
+    "title": "Account created",
+    "loginBtn": "Go to login"
   }
 }

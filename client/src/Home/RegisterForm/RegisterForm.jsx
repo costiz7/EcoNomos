@@ -22,13 +22,13 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
     const [errorMessage, setErrorMessage] = useState('');
 
     const languageData = [
-        { id: 'en', denumire: t('register.lang_en') },
-        { id: 'ro', denumire: t('register.lang_ro') }
+        { id: 'en', name: t('register.lang_en') },
+        { id: 'ro', name: t('register.lang_ro') }
     ];
 
     const currencyData = [
-        { id: 'RON', denumire: 'RON' },
-        { id: 'EUR', denumire: 'EUR' }
+        { id: 'RON', name: 'RON' },
+        { id: 'EUR', name: 'EUR' }
     ];
 
     const handleSubmit = async (e) => {
@@ -153,6 +153,7 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
                                     width="100%"
                                     displayLabel={t('register.select_lang')}
                                     onSelect={(id) => setLanguage(id)}
+                                    labelKey="name"
                                 />
                             </div>
                             <div className="register-form-input dropdown-input-group">
@@ -161,6 +162,7 @@ function RegisterForm({ onSwitchToLogin, onSwitchToSuccess }) {
                                     width="100%"
                                     displayLabel={t('register.select_curr')}
                                     onSelect={(id) => setCurrency(id)}
+                                    labelKey="name"
                                 />
                             </div>
                         </div>
