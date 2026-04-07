@@ -35,6 +35,7 @@ router.get('/transactions/top', transactionsController.getTopExpenses);
 router.get('/transactions/recent', transactionsController.getRecentTransactions);
 router.get('/transactions/average', transactionsController.getDailyAverage);
 router.delete('/transactions/:id', transactionsController.deleteTransaction);
+router.post('/transactions/import-bank', transactionsController.importBankTransactions);
 
 //Budget Routes
 router.post('/budgets', budgetsController.createBudget);

@@ -42,12 +42,17 @@ User.init(
         language: {
             type: DataTypes.STRING(5),
             allowNull: false,
-            defaultValue: 'ro'
+            defaultValue: 'en'
         },
         currency: {
             type: DataTypes.STRING(3),
             allowNull: false,
             defaultValue: 'RON'
+        },
+        hasImportedBankData: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     },
     {

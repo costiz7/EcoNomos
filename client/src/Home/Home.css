@@ -48,13 +48,6 @@
     display: block;
 }
 
-
-/*TO BE CONTINUED*/
-.home-lower-section-wrapper {
-    min-height: 40vh;
-    background-color: var(--black-color);
-}
-
 .home-lang-switcher {
     position: absolute;
     top: 20px;

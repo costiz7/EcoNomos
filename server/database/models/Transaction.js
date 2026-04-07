@@ -34,6 +34,11 @@ Transaction.init({
     categoryId: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    source: {
+        type: DataTypes.ENUM('manual', 'bank'),
+        allowNull: false,
+        defaultValue: 'manual'
     }
 }, {
     sequelize,

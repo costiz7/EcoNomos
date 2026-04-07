@@ -652,6 +652,99 @@ export const getDailyAverage = async (req, res) => {
     }
 };
 
+/**
+ * Helper function to generate mock bank transactions for the last 6 months.
+ * It iterates through every single day of the past 6 months and generates 
+ * between 1 and 3 random transactions per day using a predefined list of merchants.
+ * * @returns {Array} An array of raw transaction objects sorted by date (newest first).
+ */
+const generateMockBankData = () => {
+    const merchants = [
+        'Lidl', 'Kaufland', 'Mega Image', 'Carrefour', 'Auchan',
+        'Uber', 'Bolt', 'OMV', 'Petrom', 'Rompetrol',
+        'Netflix', 'Spotify', 'Cinema City', 'Steam',
+        'E.ON', 'Enel', 'Digi', 'Vodafone', 'Orange',
+        'Zara', 'H&M', 'Nike', 'Emag', 'Altex',
+        'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz'
+    ];
+
+    const transactions = [];
+    const endDate = new Date();
+    const startDate = new Date();
+    
+    // Go back exactly 6 months from today
+    startDate.setMonth(startDate.getMonth() - 6);
+
+    // Loop through every single day from startDate to endDate
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        
+        // Generate between 1 and 3 transactions for the current day in the loop
+        const transactionsToday = Math.floor(Math.random() * 3) + 1;
+
+        for (let i = 0; i < transactionsToday; i++) {
+            // Pick a random merchant from the list
+            const merchant = merchants[Math.floor(Math.random() * merchants.length)];
+            
+            // Generate a random amount between 15.00 and 450.00
+            const amount = (Math.random() * (450 - 15) + 15).toFixed(2);
+            
+            // Set a random time (hour and minute) for the transaction
+            const txDate = new Date(d);
+            txDate.setHours(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60));
+
+            // Push the generated transaction to our array
+            transactions.push({
+                description: merchant,
+                amount: parseFloat(amount),
+                date: txDate,
+                source: 'bank' // Flag indicating this came from the "bank API"
+            });
+        }
+    }
+
+    // Return the array sorted descending (newest transactions first)
+    return transactions.sort((a, b) => b.date - a.date);
+};
+
+/**
+ * Controller endpoint to handle the simulation of importing bank transactions.
+ * It verifies if the user has already imported data to prevent duplicates, 
+ * generates the mock data, and (temporarily) returns it as a JSON response.
+ * * @async
+ * @function importBankTransactions
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} JSON response containing the generated transactions or an error code.
+ */
+const importBankTransactions = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+
+        // Check if the user already triggered the bank import in the past
+        if (user.hasImportedBankData) {
+            return res.status(400).json({ errorCode: 'ALREADY_IMPORTED' });
+        }
+
+        // Generate the raw list of transactions using our helper function
+        const rawTransactions = generateMockBankData();
+
+        // TODO: Send 'rawTransactions' to Gemini AI for automatic categorization
+        // TODO: Save the categorized transactions to the database
+        // TODO: Update user.hasImportedBankData to true
+
+        // Temporarily return the data to the frontend to verify the generator works
+        res.status(200).json({
+            message: "Bank data generated successfully.",
+            count: rawTransactions.length,
+            transactions: rawTransactions
+        });
+
+    } catch (error) {
+        console.error("Error at importBankTransactions:", error);
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
+    }
+};
+
 export default { 
     getTransactions, 
     addTransaction, 
@@ -662,5 +755,6 @@ export default {
     getMonthOverMonthComparison,
     getTopExpenses,
     getRecentTransactions,
-    getDailyAverage
+    getDailyAverage,
+    importBankTransactions
  };

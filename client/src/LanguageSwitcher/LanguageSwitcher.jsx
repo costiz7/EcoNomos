@@ -22,7 +22,7 @@ function LanguageSwitcher({ className }) {
 
         if (token && loggedInUser) {
             try {
-                const response = await fetch('http://localhost:3000/api/user', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user`, {
                     method: 'PUT', 
                     headers: {
                         'Content-Type': 'application/json',
