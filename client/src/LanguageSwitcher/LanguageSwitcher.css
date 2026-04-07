@@ -22,20 +22,23 @@
     position: absolute;
     top: 60px;
     left: 0px;
-    width: 100px;
-    height: 60px;
+    width: 50px;
+    height: 100px;
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    background-color: var(--white-color);
 
     border: solid 3px var(--black-color);
-    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 25px;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 30px;
 
     opacity: 0;
     transform: translateY(-15px);
     pointer-events: none;
     transition: all 75ms ease-out;
+    z-index: 10;
 }
 
 .language-dropdown.open {

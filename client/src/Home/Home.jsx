@@ -8,7 +8,7 @@ import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher.jsx";
 
 //Home component. Depending on 'currentForm' it changes the forms between login, register and success page
 function Home() {
-    const [currentForm, setCurrentForm] = useState('login');
+    const [currentForm, setCurrentForm] = useState('success');
     const mainTitle = useRef(null);
     const subTitle = useRef(null);
 
