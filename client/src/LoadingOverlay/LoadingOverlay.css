@@ -20,7 +20,7 @@
     color: var(--black-color);
     font-family: "IBM Plex Serif", serif;
     
-    animation: spinWithPause 800ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: spinWithPause 1000ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes spinWithPause {
@@ -33,4 +33,9 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.loading-spinner-text > svg {
+    width: 75px;
+    height: auto;
 }
