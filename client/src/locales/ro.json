@@ -66,5 +66,12 @@
   "success": {
     "title": "Cont creat",
     "loginBtn": "Spre login"
+  },
+  "layout": {
+    "titleDashboard": "Panou de control",
+    "titleSavings": "Obiective Economii",
+    "titleSettings": "Setări",
+    "menuDashboard": "Panou de control",
+    "menuSavings": "Economii"
   }
 }

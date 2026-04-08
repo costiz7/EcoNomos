@@ -1,0 +1,135 @@
+.main-layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    background-color: var(--white-color);
+}
+
+.main-layout-topbar {
+    height: 70px;
+    background-color: var(--white-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 24px;
+    box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.2);
+    border-bottom: solid 4px var(--black-color);
+    z-index: 100;
+}
+
+.topbar-left-side {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.topbar-left-side > .universal-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.topbar-left-side > .universal-content > h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    cursor: pointer;
+}
+
+.hamburger-menu .line {
+    width: 30px;
+    height: 4px;
+    background-color: var(--black-color);
+    border-radius: 05px;
+    transition: all 300ms ease-in-out;
+}
+
+.main-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.main-layout-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 280px;
+    background-color: var(--white-color);
+    border-right: solid 4px var(--black-color);
+
+    transform: translateX(-100%);
+    transition: transform 300ms ease-in-out;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.main-layout-sidebar.open {
+    transform: translateX(0);
+}
+
+.main-layout-sidebar a {
+    text-decoration: none;
+    color: var(--black-color);
+    font-size: 1.3rem;
+    font-weight: 500;
+    padding: 10px 15px;
+    background-color: var(--white-color);
+    border-bottom: solid 1px var(--black-color);
+    transition: all 300ms ease;
+}
+
+.main-layout-sidebar a:hover {
+    filter: brightness(0.9);
+}
+
+.main-layout-content {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    background-color: var(--white-color);
+    padding: 24px;
+}
+
+.sidebar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 90;
+    opacity: 0;
+    animation: fadeInOverlay 300ms forwards ease-in-out;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hamburger-menu.active .line:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+    /* background-color: var(--cloud-gray) !important; Dacă vrei să își schimbe și culoarea */
+}
+
+.hamburger-menu.active .line:nth-child(2) {
+    opacity: 0; /* Linia din mijloc dispare */
+}
+  
+.hamburger-menu.active .line:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}

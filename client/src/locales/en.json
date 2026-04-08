@@ -66,5 +66,12 @@
   "success": {
     "title": "Account created",
     "loginBtn": "Go to login"
+  },
+  "layout": {
+    "titleDashboard": "Dashboard",
+    "titleSavings": "Savings Goals",
+    "titleSettings": "Settings",
+    "menuDashboard": "Dashboard",
+    "menuSavings": "Savings"
   }
 }
