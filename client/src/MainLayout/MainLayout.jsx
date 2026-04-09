@@ -56,25 +56,25 @@ function MainLayout() {
             <div className="main-layout">
                 <div className={`main-layout-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                     {/* Links */}
-                    {<Link to="/dashboard">
+                    {<Link to="/dashboard" onClick={toggleSidebar}>
                         <DashboardIcon className="sidebar-icons" style={{ color: "var(--blue-color)" }}/>{t('layout.menuDashboard')}
                     </Link>}
-                    {<Link to="/transactions">
+                    {<Link to="/transactions" onClick={toggleSidebar}>
                         <TransactionsIcon className="sidebar-icons" style={{ color: "var(--green-color)" }}/>{t('layout.menuTransactions')}
                     </Link>}
-                    {<Link to="/statistics">
+                    {<Link to="/statistics" onClick={toggleSidebar}>
                         <StatisticsIcon className="sidebar-icons" style={{ color: "var(--dark-yellow-color)" }}/>{t('layout.menuStatistics')}
                     </Link>}
-                    {<Link to="/savings">
+                    {<Link to="/savings" onClick={toggleSidebar}>
                         <SavingsIcon className="sidebar-icons" style={{ color: "var(--light-red-color)" }}/>{t('layout.menuSavings')}
                     </Link>}
-                    {<Link to="/budgets">
+                    {<Link to="/budgets" onClick={toggleSidebar}>
                         <BudgetsIcon className="sidebar-icons" style={{ color: "var(--dark-green-color)" }}/>{t('layout.menuBudgets')}
                     </Link>}
-                    {<Link to="/myprofile">
+                    {<Link to="/myprofile" onClick={toggleSidebar}>
                         <ProfileIcon className="sidebar-icons" style={{ color: "var(--purple-color)" }}/>{t('layout.menuProfile')}
                     </Link>}
-                    {<Link to="/settings">
+                    {<Link to="/settings" onClick={toggleSidebar}>
                         <SettingsIcon className="sidebar-icons" style={{ color: "var(--black-color)" }}/>{t('layout.menuSettings')}
                     </Link>}
                 </div>
