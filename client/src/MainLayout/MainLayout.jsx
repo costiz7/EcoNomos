@@ -3,6 +3,13 @@ import { Outlet, useLocation, Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import './MainLayout.css';
 import LogoIcon from "../Icons/LogoIcon";
+import DashboardIcon from "../Icons/DashboardIcon";
+import TransactionsIcon from "../Icons/TransactionsIcon";
+import StatisticsIcon from "../Icons/StatisticsIcon";
+import SavingsIcon from "../Icons/SavingsIcon";
+import BudgetsIcon from "../Icons/BudgetsIcon";
+import ProfileIcon from "../Icons/ProfileIcon";
+import SettingsIcon from "../Icons/SettingsIcon";
 
 function MainLayout() {
     const location = useLocation();
@@ -16,9 +23,13 @@ function MainLayout() {
 
     const getPageTitle = () => {
         switch(location.pathname) {
-            case '/dashboard': return t('layout.titleDashboard');
-            case '/savings': return t('layout.titleSavings');
-            case '/settings': return t('layout.titleSettings');
+            case '/dashboard': return t('layout.menuDashboard');
+            case '/transactions': return t('layout.menuTransactions');
+            case '/savings': return t('layout.menuSavings');
+            case '/settings': return t('layout.menuSettings');
+            case '/statistics': return t('layout.menuStatistics');
+            case '/budgets': return t('layout.menuBudgets');
+            case '/myprofile': return t('layout.menuProfile');
             default: return 'EcoNomos';
         }
     };
@@ -45,7 +56,27 @@ function MainLayout() {
             <div className="main-layout">
                 <div className={`main-layout-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                     {/* Links */}
-                    {<Link to="/dashboard">{t('layout.menuDashboard')}</Link>}
+                    {<Link to="/dashboard">
+                        <DashboardIcon className="sidebar-icons" style={{ color: "var(--blue-color)" }}/>{t('layout.menuDashboard')}
+                    </Link>}
+                    {<Link to="/transactions">
+                        <TransactionsIcon className="sidebar-icons" style={{ color: "var(--green-color)" }}/>{t('layout.menuTransactions')}
+                    </Link>}
+                    {<Link to="/statistics">
+                        <StatisticsIcon className="sidebar-icons" style={{ color: "var(--dark-yellow-color)" }}/>{t('layout.menuStatistics')}
+                    </Link>}
+                    {<Link to="/savings">
+                        <SavingsIcon className="sidebar-icons" style={{ color: "var(--light-red-color)" }}/>{t('layout.menuSavings')}
+                    </Link>}
+                    {<Link to="/budgets">
+                        <BudgetsIcon className="sidebar-icons" style={{ color: "var(--dark-green-color)" }}/>{t('layout.menuBudgets')}
+                    </Link>}
+                    {<Link to="/myprofile">
+                        <ProfileIcon className="sidebar-icons" style={{ color: "var(--purple-color)" }}/>{t('layout.menuProfile')}
+                    </Link>}
+                    {<Link to="/settings">
+                        <SettingsIcon className="sidebar-icons" style={{ color: "var(--black-color)" }}/>{t('layout.menuSettings')}
+                    </Link>}
                 </div>
                 <div className="main-layout-content">
                     <Outlet />

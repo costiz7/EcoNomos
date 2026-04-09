@@ -14,7 +14,12 @@ function App() {
           <Route element={ <ProtectedRoute/> }>
             <Route element={ <MainLayout /> }>
               <Route path="/dashboard" element=""/>
-              <Route path="/savings" element="" />
+              <Route path="/transactions" element=""/>
+              <Route path="/statistics" element=""/>
+              <Route path="/savings" element=""/>
+              <Route path="/budgets" element="" />
+              <Route path="/myprofile" element=""/>
+              <Route path="/settings" element=""/>
             </Route>
           </Route>
         </Routes>

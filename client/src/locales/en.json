@@ -68,10 +68,12 @@
     "loginBtn": "Go to login"
   },
   "layout": {
-    "titleDashboard": "Dashboard",
-    "titleSavings": "Savings Goals",
-    "titleSettings": "Settings",
     "menuDashboard": "Dashboard",
-    "menuSavings": "Savings"
+    "menuSavings": "Savings",
+    "menuTransactions": "Transactions",
+    "menuStatistics": "Statistics",
+    "menuBudgets": "Budgets",
+    "menuProfile": "My Profile",
+    "menuSettings": "Settings"
   }
 }

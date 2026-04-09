@@ -68,10 +68,12 @@
     "loginBtn": "Spre login"
   },
   "layout": {
-    "titleDashboard": "Panou de control",
-    "titleSavings": "Obiective Economii",
-    "titleSettings": "Setări",
     "menuDashboard": "Panou de control",
-    "menuSavings": "Economii"
+    "menuSavings": "Economii",
+    "menuTransactions": "Tranzacții",
+    "menuStatistics": "Statistici",
+    "menuBudgets": "Bugete",
+    "menuProfile": "Profilul Meu",
+    "menuSettings": "Setări"
   }
 }

@@ -81,6 +81,8 @@
 }
 
 .main-layout-sidebar a {
+    display: flex;
+    align-items: center;
     text-decoration: none;
     color: var(--black-color);
     font-size: 1.3rem;
@@ -89,6 +91,12 @@
     background-color: var(--white-color);
     border-bottom: solid 1px var(--black-color);
     transition: all 300ms ease;
+}
+
+.sidebar-icons {
+    height: auto;
+    width: 30px;
+    margin-right: 20px;
 }
 
 .main-layout-sidebar a:hover {
