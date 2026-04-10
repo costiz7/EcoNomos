@@ -1,0 +1,92 @@
+.bar-chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px; /* Spațiul dintre coloane */
+    width: 100%;
+    height: 250px; /* Înălțimea fixă a graficului */
+    padding-top: 40px; /* Facem loc pentru tooltip-ul de sus */
+    font-family: inherit;
+}
+
+/* O singură coloană (Containerul ei) */
+.bar-column {
+    flex: 1; /* MAGIA: Asta face graficul să se scaleze indiferent câte coloane îi dai! */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    transition: opacity 0.3s ease; /* Animație fină la estompare */
+}
+
+/* Efectul de Focus-Out (estompare) */
+.bar-column.faded {
+    opacity: 0.3;
+}
+
+/* Zona invizibilă pe care crește bara */
+.bar-track {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+/* Bara desenată (cea cu culoare) */
+.bar-fill {
+    width: 100%;
+    max-width: 40px; /* Să nu se facă foarte groasă dacă sunt puține coloane */
+    border-radius: 6px 6px 0 0; /* Colțuri rotunjite sus */
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Animație fluidă când se schimbă datele */
+}
+
+/* Textul de sub grafic */
+.bar-label {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--black-color);
+    text-transform: capitalize;
+}
+
+/* ============================
+   TOOLTIP-UL (Informația Focusată)
+   ============================ */
+.bar-tooltip {
+    position: absolute;
+    top: -35px; /* Îl ridicăm deasupra coloanei */
+    background-color: var(--black-color); /* Negrul tău */
+    color: var(--white-color);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(10px); /* Stă puțin mai jos când e invizibil */
+    pointer-events: none; /* Să nu încurce mouse-ul */
+    transition: all 0.2s ease;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Săgeata mică sub tooltip */
+.bar-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0;
+    border-style: solid;
+    border-color: var(--black-color) transparent transparent transparent;
+}
+
+/* Când faci hover, tooltip-ul apare și se ridică fin */
+.bar-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}

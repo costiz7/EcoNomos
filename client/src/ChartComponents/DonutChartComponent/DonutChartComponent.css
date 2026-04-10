@@ -1,0 +1,59 @@
+.donut-chart-container {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Felia de grafic */
+.donut-segment {
+    transition: stroke-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    cursor: pointer;
+    pointer-events: stroke;
+}
+
+/* Când facem hover pe o felie, celelalte își pierd din vizibilitate */
+.donut-segment.faded {
+    opacity: 0.25;
+}
+
+/* Animația de intrare a întregului grafic (face un 'pop' fin) */
+.donut-chart-container svg {
+    animation: scaleUpDonut 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleUpDonut {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ============================
+   TEXTUL DIN CENTRU
+   ============================ */
+.donut-center-info {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* 'pointer-events: none' asigură că mouse-ul tău "trece" prin text 
+       și poți face hover pe grafic chiar dacă ești deasupra literelor */
+    pointer-events: none; 
+    text-align: center;
+    animation: fadeInText 0.3s ease;
+}
+
+.donut-label {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.donut-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--black-color, #101820);
+}
