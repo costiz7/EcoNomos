@@ -1,11 +1,15 @@
 import { useMemo, useState, useEffect } from 'react';
 import './RadialGaugeComponent.css';
 
-const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) => {
+const RadialGaugeComponent = ({ 
+  targetPercentage = 0, 
+  totalSegments = 60,
+  color = "var(--black-color)", // Adăugat: Culoarea dinamică pentru bara activă
+  inactiveColor = "#e2e8f0"     // Adăugat: Un gri fin pentru liniuțele inactive (tipic Tailwind/modern UI)
+}) => {
   const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
 
   // --- 1. GEOMETRIC CONFIGURATION ---
-  // The center coordinates and radii control the entire drawing
   const centerCoordinateX = 175;
   const centerCoordinateY = 175; 
   const outerRadius = 150;
@@ -17,14 +21,12 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
   const totalAngleSpanInDegrees = Math.abs(endingAngleInDegrees - startingAngleInDegrees); 
   const degreesPerSegment = totalAngleSpanInDegrees / (totalSegments - 1);
   
-  // Helper function to convert degrees to radians (required by Math.sin/Math.cos)
   const convertDegreesToRadians = (angleInDegrees) => {
     return angleInDegrees * (Math.PI / 180);
   };
 
   // --- 2. ANIMATION ENGINE ---
   useEffect(() => {
-    // If we have already reached the target percentage, do not start the animation
     if (currentAnimatedPercentage === targetPercentage) return;
 
     let animationFrameIdentifier;
@@ -37,34 +39,24 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
         animationStartTime = currentTimestamp;
       }
       
-      // Raw time progress (from 0.00 to 1.00)
       const rawAnimationProgress = Math.min((currentTimestamp - animationStartTime) / animationDurationInMilliseconds, 1);
-      
-      // Smoothed progress (cubic ease-out deceleration effect at the end)
       const smoothedAnimationProgress = 1 - Math.pow(1 - rawAnimationProgress, 3);
-      
-      // Calculate the intermediate percentage value for the current frame
       const newlyCalculatedPercentage = startingPercentageValue + (targetPercentage - startingPercentageValue) * smoothedAnimationProgress;
       
       setCurrentAnimatedPercentage(newlyCalculatedPercentage);
 
-      // If the animation is not complete, request the next frame
       if (rawAnimationProgress < 1) {
         animationFrameIdentifier = requestAnimationFrame(executeAnimationStep);
       }
     };
 
-    // Start the animation loop
     animationFrameIdentifier = requestAnimationFrame(executeAnimationStep);
-    
-    // Cleanup on component unmount to prevent memory leaks or state updates on unmounted components
     return () => cancelAnimationFrame(animationFrameIdentifier);
     
   }, [targetPercentage]); 
 
   // --- 3. SEGMENTS (TICKS) CALCULATION ---
   const lineSegments = useMemo(() => {
-    // Determine how many segments should be active (colored) based on the current animated percentage
     const activeSegmentsCount = Math.round((currentAnimatedPercentage / 100) * totalSegments);
     const calculatedSegmentsArray = [];
     
@@ -76,35 +68,40 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
 
       calculatedSegmentsArray.push({
         identifier: segmentIndex,
-        // Calculate X and Y coordinates for the start and end of each segment using trigonometry
         startX: centerCoordinateX + innerRadius * Math.cos(currentAngleInRadians),
         startY: centerCoordinateY + innerRadius * Math.sin(currentAngleInRadians),
         endX: centerCoordinateX + outerRadius * Math.cos(currentAngleInRadians),
         endY: centerCoordinateY + outerRadius * Math.sin(currentAngleInRadians),
-        segmentColor: isSegmentActive ? "rgb(0, 0, 0)" : "#d2d2d2"
+        // MODIFICAT: Folosim culorile primite din props în loc de RGB hardcodat
+        segmentColor: isSegmentActive ? color : inactiveColor 
       });
     }
     return calculatedSegmentsArray;
-  }, [currentAnimatedPercentage, totalSegments, degreesPerSegment]);
+  }, [currentAnimatedPercentage, totalSegments, degreesPerSegment, color, inactiveColor]);
 
-  // Prevent rendering if segments haven't been calculated yet
   if (lineSegments.length === 0) return null;
 
   const firstSegment = lineSegments[0];
   const lastSegment = lineSegments[lineSegments.length - 1];
 
-  // --- 4. AUTO-ADAPTIVE CROPPING (DYNAMIC VIEWBOX) ---
+  // --- 4. AUTO-ADAPTIVE CROPPING ---
   const viewBoxPadding = 15; 
   const bottomTextSpacing = 30; 
 
-  // Calculate a tight bounding box around the gauge to eliminate unnecessary whitespace
   const viewBoxCoordinateX = centerCoordinateX - outerRadius - viewBoxPadding;
   const viewBoxCoordinateY = centerCoordinateY - outerRadius - viewBoxPadding;
   const viewBoxTotalWidth = (outerRadius * 2) + (viewBoxPadding * 2);
   const viewBoxTotalHeight = outerRadius + viewBoxPadding + bottomTextSpacing;
 
   return (
-    <div className="gauge-frame">
+    <div 
+      className="gauge-frame"
+      // ACCESIBILITATE: Adăugăm rolul de grafic/meter pentru cititoarele de ecran
+      role="meter" 
+      aria-valuenow={Math.round(currentAnimatedPercentage)} 
+      aria-valuemin="0" 
+      aria-valuemax="100"
+    >
       <svg 
         viewBox={`${viewBoxCoordinateX} ${viewBoxCoordinateY} ${viewBoxTotalWidth} ${viewBoxTotalHeight}`} 
         preserveAspectRatio="xMidYMid meet"
@@ -120,20 +117,20 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
             stroke={segment.segmentColor}
             strokeWidth="4"
             strokeLinecap="round" 
-            style={{ transition: 'stroke 0s ease' }} 
+            style={{ transition: 'stroke 0.0s ease' }} 
           />
         ))}
         
         {/* Main Percentage Text */}
         <text 
           x={centerCoordinateX} 
-          y={centerCoordinateY - 30}
+          y={centerCoordinateY - 20}
           textAnchor="middle" 
           dominantBaseline="middle"
-          fontSize="3rem" 
-          fontWeight="700" 
-          fill="#333"
-          style={{ fontFamily: 'sans-serif' }}
+          fontSize="3.5rem" 
+          fontWeight="800" 
+          fill="var(--black-color)" // Textul principal să fie mereu contrastant
+          style={{ fontFamily: 'inherit' }}
         >
           {Math.round(currentAnimatedPercentage)}%
         </text>
@@ -144,8 +141,9 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
           y={firstSegment.endY + 20} 
           textAnchor="middle" 
           fontSize="14px" 
-          fill="#a0aab0"
-          style={{ fontFamily: 'sans-serif' }}
+          fontWeight="600"
+          fill="#94a3b8" // Un gri mai modern pentru etichete
+          style={{ fontFamily: 'inherit' }}
         >
           0
         </text>
@@ -156,8 +154,9 @@ const RadialGaugeComponent = ({ targetPercentage = 100, totalSegments = 60 }) =>
           y={lastSegment.endY + 20} 
           textAnchor="middle" 
           fontSize="14px" 
-          fill="#a0aab0"
-          style={{ fontFamily: 'sans-serif' }}
+          fontWeight="600"
+          fill="#94a3b8"
+          style={{ fontFamily: 'inherit' }}
         >
           100
         </text>

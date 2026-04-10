@@ -37,7 +37,7 @@ function DashboardContent() {
             <h3>Cheltuieli zilele trecute</h3>
             {/* O singură linie și ai un grafic animat și scalabil! */}
             <BarChartComponent data={cheltuieliSaptamana} /> 
-            <LineChartComponent data={evolutieSaseLuni} color="var(--black-color)" />
+            <LineChartComponent data={evolutieSaseLuni} color="var(--dark-red-color)" />
             <DonutChartComponent data={categoriiCheltuieli} />
             <ProgressBarComponent 
                 currentValue={2500} 
@@ -45,6 +45,7 @@ function DashboardContent() {
                 color="#4ECDC4" 
                 height="16px" 
             />
+            <RadialGaugeComponent targetPercentage={65} totalSegments={50}/>
         </div>
     );
 }

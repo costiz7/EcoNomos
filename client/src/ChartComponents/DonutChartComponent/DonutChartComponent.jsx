@@ -1,48 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './DonutChartComponent.css';
 
-function DonutChartComponent({ data, colors = ["var(--black-color)", "#4ECDC4", "#FF6B6B", "#FFD166", "#118AB2", "#06D6A0"] }) {
+function DonutChartComponent({ 
+    data, 
+    colors = ["var(--black-color)", "#4ECDC4", "#FF6B6B", "#FFD166", "#118AB2", "#06D6A0"],
+    size = 320
+}) {
     const [focusedIndex, setFocusedIndex] = useState(null);
+    const [isAnimated, setIsAnimated] = useState(false);
 
-    // Protecție
+    useEffect(() => {
+        const timeout = setTimeout(() => setIsAnimated(true), 50);
+        return () => clearTimeout(timeout);
+    }, []);
+
     if (!data || data.length === 0) return <p>Nu există date.</p>;
 
-    // Asigurăm formatul de array pentru culori
-    const colorArray = Array.isArray(colors) ? colors : [colors];
+    const colorArray = Array.isArray(colors) && colors.length > 0 ? colors : ["#000"];
+    
+    // PROTECȚIA 1: Ne asigurăm că adunăm numere, nu string-uri
+    const total = data.reduce((acc, item) => acc + (Number(item.value) || 0), 0);
+    
+    // PROTECȚIA 2: Evităm împărțirea la zero dacă totalul e 0
+    const safeTotal = total === 0 ? 1 : total;
 
-    // Calculăm suma totală a valorilor
-    const total = data.reduce((acc, item) => acc + item.value, 0);
+    const baseSize = 320; 
+    const scale = size / baseSize;
 
-    // Dimensiunile și matematica SVG-ului
-    const size = 250;               // Mărimea cutiei SVG
-    const center = size / 2;        // Centrul e la 125, 125
-    const strokeWidth = 35;         // Cât de "grasă" e felia
-    const radius = center - strokeWidth; // Raza cercului
+    const center = size / 2;
+    const strokeWidth = 35 * scale;
+    const radius = 100 * scale;
+    const hoverExpand = 12 * scale;
+    const maskThickness = 120 * scale; 
     const circumference = 2 * Math.PI * radius;
 
-    // Variabilă care ține minte unde s-a terminat felia anterioară pentru a o începe pe următoarea
     let cumulativeValue = 0;
 
     return (
-        <div className="donut-chart-container">
-            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-                {/* Rotim tot grupul la -90 de grade ca prima felie să înceapă fix de la "ora 12" */}
-                <g transform={`rotate(-90 ${center} ${center})`}>
+        <div 
+            className="donut-chart-container" 
+            style={{ width: `${size}px`, height: `${size}px` }}
+        >
+            <svg 
+                width={size} 
+                height={size} 
+                viewBox={`0 0 ${size} ${size}`} 
+                style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}
+            >
+                <defs>
+                    <mask id="sweep-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={size} height={size}>
+                        <circle
+                            cx={center}
+                            cy={center}
+                            r={radius}
+                            fill="transparent"
+                            stroke="white" 
+                            strokeWidth={maskThickness} 
+                            strokeDasharray={circumference}
+                            strokeDashoffset={isAnimated ? 0 : circumference}
+                            style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        />
+                    </mask>
+                </defs>
+
+                <g mask="url(#sweep-mask)">
                     {data.map((item, index) => {
                         const isFocused = focusedIndex === index;
                         const isFaded = focusedIndex !== null && focusedIndex !== index;
                         
-                        // ALGORITMUL DE CULORI (același de la BarChart)
                         const sliceColor = colorArray[index % colorArray.length];
 
-                        // Cât la sută din cerc reprezintă această felie
-                        const percentage = item.value / total;
+                        // Folosim safeTotal pentru a nu crăpa la împărțire
+                        const numericValue = Number(item.value) || 0;
+                        const percentage = numericValue / safeTotal;
                         const strokeLength = percentage * circumference;
-                        
-                        // De unde începe desenarea feliei (o împingem înapoi pe contur)
-                        const strokeDashoffset = - (cumulativeValue / total) * circumference;
+                        const strokeDashoffset = - (cumulativeValue / safeTotal) * circumference;
 
-                        cumulativeValue += item.value;
+                        cumulativeValue += numericValue;
 
                         return (
                             <circle
@@ -52,8 +86,7 @@ function DonutChartComponent({ data, colors = ["var(--black-color)", "#4ECDC4", 
                                 r={radius}
                                 fill="transparent"
                                 stroke={sliceColor}
-                                /* La hover, felia se face puțin mai groasă */
-                                strokeWidth={isFocused ? strokeWidth + 8 : strokeWidth}
+                                strokeWidth={isFocused ? strokeWidth + hoverExpand : strokeWidth}
                                 strokeDasharray={`${strokeLength} ${circumference}`}
                                 strokeDashoffset={strokeDashoffset}
                                 className={`donut-segment ${isFaded ? 'faded' : ''}`}
@@ -65,17 +98,25 @@ function DonutChartComponent({ data, colors = ["var(--black-color)", "#4ECDC4", 
                 </g>
             </svg>
 
-            {/* TEXTUL DIN CENTRU (Total sau informația feliei selectate) */}
             <div className="donut-center-info">
                 {focusedIndex !== null ? (
                     <>
-                        <span className="donut-label">{data[focusedIndex].label}</span>
-                        <span className="donut-value">{data[focusedIndex].value}</span>
+                        {/* PROTECȚIA 3: Am pus `?.` (Optional Chaining) în caz că indexul nu mai există */}
+                        <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
+                            {data[focusedIndex]?.label || "N/A"}
+                        </span>
+                        <span className="donut-value" style={{ fontSize: `${28 * scale}px` }}>
+                            {data[focusedIndex]?.value || 0}
+                        </span>
                     </>
                 ) : (
                     <>
-                        <span className="donut-label">Total</span>
-                        <span className="donut-value">{total}</span>
+                        <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
+                            Total
+                        </span>
+                        <span className="donut-value" style={{ fontSize: `${28 * scale}px` }}>
+                            {total}
+                        </span>
                     </>
                 )}
             </div>

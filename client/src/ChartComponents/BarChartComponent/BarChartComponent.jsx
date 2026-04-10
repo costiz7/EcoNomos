@@ -1,32 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './BarChartComponent.css';
 
-// Am schimbat 'color' în 'colors' și i-am dat un array default
-function BarChartComponent({ data, colors = ["var(--black-color)"] }) {
-    // Ținem minte ce coloană are mouse-ul deasupra ei
+function BarChartComponent({ data, colors = ["var(--black-color)"], width="100%", height="250px" }) {
     const [focusedIndex, setFocusedIndex] = useState(null);
+    const [isAnimated, setIsAnimated] = useState(false);
 
-    // Găsim cea mai mare valoare din date ca să știm cât de înaltă e coloana de 100%
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setIsAnimated(true);
+        }, 50);
+        
+        return () => clearTimeout(timeout);
+    }, []);
+
     const maxValue = Math.max(...data.map(item => item.value));
-
-    // Dacă nu avem date, nu randăm nimic să nu crape
-    if (!data || data.length === 0) return <p>Nu există date.</p>;
-
-    // Ne asigurăm că variabila colors este mereu un array (în caz că pe viitor trimiți un string din greșeală)
+    if (!data || data.length === 0) {
+         return <p>Nu există date.</p>;
+    }
     const colorArray = Array.isArray(colors) ? colors : [colors];
 
     return (
-        <div className="bar-chart-container">
+        <div className="bar-chart-container" style={{ width, height }}>
             {data.map((item, index) => {
-                // Verificăm starea curentă a coloanei
                 const isFocused = focusedIndex === index;
                 const isFaded = focusedIndex !== null && focusedIndex !== index;
-                
-                // Calculăm înălțimea procentual
                 const barHeightPercentage = (item.value / maxValue) * 100;
-
-                // MAGIA AICI: Alegem culoarea din array. 
-                // Dacă indexul depășește lungimea array-ului, o ia de la capăt!
                 const barColor = colorArray[index % colorArray.length];
 
                 return (
@@ -36,23 +34,21 @@ function BarChartComponent({ data, colors = ["var(--black-color)"] }) {
                         onMouseEnter={() => setFocusedIndex(index)}
                         onMouseLeave={() => setFocusedIndex(null)}
                     >
-                        {/* Tooltip-ul cu informații care apare deasupra */}
                         <div className={`bar-tooltip ${isFocused ? 'visible' : ''}`}>
                             <span className="tooltip-value">{item.value}</span>
                         </div>
 
-                        {/* Coloana efectivă (bara) */}
                         <div className="bar-track">
                             <div 
                                 className="bar-fill" 
                                 style={{ 
-                                    height: `${barHeightPercentage}%`,
-                                    backgroundColor: barColor // Folosim culoarea extrasă
+                                    height: isAnimated ? `${barHeightPercentage}%` : '0%',
+                                    backgroundColor: barColor,
+                                    transitionDelay: `${index * 50}ms`
                                 }}
                             ></div>
                         </div>
 
-                        {/* Eticheta de jos */}
                         <div className="bar-label">{item.label}</div>
                     </div>
                 );

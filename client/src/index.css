@@ -32,6 +32,7 @@ body {
   min-height: 100vh;
   color: var(--black-color);
   font-family: "IBM Plex Serif", serif;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
