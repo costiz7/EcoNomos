@@ -2,6 +2,7 @@ import BarChartComponent from "../ChartComponents/BarChartComponent/BarChartComp
 import LineChartComponent from "../ChartComponents/LineChartComponent/LineChartComponent";
 import RadialGaugeComponent from "../ChartComponents/RadialGaugeComponent/RadialGaugeComponent";
 import DonutChartComponent from "../ChartComponents/DonutChartComponent/DonutChartComponent";
+import ProgressBarComponent from "../ChartComponents/ProgressBarComponent/ProgressBarComponent";
 
 const cheltuieliSaptamana = [
     { label: 'Luni', value: 120 },
@@ -38,6 +39,12 @@ function DashboardContent() {
             <BarChartComponent data={cheltuieliSaptamana} /> 
             <LineChartComponent data={evolutieSaseLuni} color="var(--black-color)" />
             <DonutChartComponent data={categoriiCheltuieli} />
+            <ProgressBarComponent 
+                currentValue={2500} 
+                maxValue={5000} 
+                color="#4ECDC4" 
+                height="16px" 
+            />
         </div>
     );
 }
