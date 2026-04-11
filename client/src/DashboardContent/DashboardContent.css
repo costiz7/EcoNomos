@@ -1,0 +1,17 @@
+.dashboard-content-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.dashboard-content-upper-section {
+    flex: 1.1;
+    border: 1px solid red;
+}
+
+.dashboard-content-lower-section {
+    flex: 1;
+    border: 1px solid red;
+}

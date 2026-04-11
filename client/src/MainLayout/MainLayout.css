@@ -54,8 +54,8 @@
 
 .main-layout {
     display: flex;
+    flex-direction: column;
     flex: 1;
-    overflow: hidden;
     position: relative;
 }
 
@@ -104,11 +104,14 @@
 }
 
 .main-layout-content {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     height: 100%;
+    width: 100%;
     overflow-y: auto;
     background-color: var(--white-color);
-    padding: 24px;
+    padding: 12px;
 }
 
 .sidebar-overlay {
@@ -131,11 +134,10 @@
 
 .hamburger-menu.active .line:nth-child(1) {
     transform: translateY(11px) rotate(45deg);
-    /* background-color: var(--cloud-gray) !important; Dacă vrei să își schimbe și culoarea */
 }
 
 .hamburger-menu.active .line:nth-child(2) {
-    opacity: 0; /* Linia din mijloc dispare */
+    opacity: 0;
 }
   
 .hamburger-menu.active .line:nth-child(3) {
