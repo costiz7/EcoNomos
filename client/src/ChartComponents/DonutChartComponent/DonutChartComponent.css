@@ -28,7 +28,7 @@
 
 .donut-label {
     font-size: 0.85rem;
-    color: #64748b;
+    color: var(--black-color);
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 1px;
@@ -38,5 +38,5 @@
 .donut-value {
     font-size: 1.8rem;
     font-weight: 800;
-    color: var(--black-color, #101820);
+    color: var(--black-color);
 }

@@ -17,11 +17,7 @@ function DonutChartComponent({
     if (!data || data.length === 0) return <p>Nu există date.</p>;
 
     const colorArray = Array.isArray(colors) && colors.length > 0 ? colors : ["#000"];
-    
-    // PROTECȚIA 1: Ne asigurăm că adunăm numere, nu string-uri
     const total = data.reduce((acc, item) => acc + (Number(item.value) || 0), 0);
-    
-    // PROTECȚIA 2: Evităm împărțirea la zero dacă totalul e 0
     const safeTotal = total === 0 ? 1 : total;
 
     const baseSize = 320; 
@@ -69,8 +65,6 @@ function DonutChartComponent({
                         const isFaded = focusedIndex !== null && focusedIndex !== index;
                         
                         const sliceColor = colorArray[index % colorArray.length];
-
-                        // Folosim safeTotal pentru a nu crăpa la împărțire
                         const numericValue = Number(item.value) || 0;
                         const percentage = numericValue / safeTotal;
                         const strokeLength = percentage * circumference;
@@ -101,7 +95,6 @@ function DonutChartComponent({
             <div className="donut-center-info">
                 {focusedIndex !== null ? (
                     <>
-                        {/* PROTECȚIA 3: Am pus `?.` (Optional Chaining) în caz că indexul nu mai există */}
                         <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
                             {data[focusedIndex]?.label || "N/A"}
                         </span>

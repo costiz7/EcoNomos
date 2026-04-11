@@ -1,11 +1,9 @@
 .progress-bar-container {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Spațiu între text și bară */
-    width: 100%;
+    gap: 8px;
 }
 
-/* Zona de text (Curent stânga, Maxim dreapta) */
 .progress-labels {
     display: flex;
     justify-content: space-between;
@@ -21,22 +19,19 @@
 
 .progress-max {
     font-weight: 600;
-    color: #94a3b8; /* Un gri deschis */
+    color: #94a3b8;
 }
 
-/* Traseul gri (fundalul barei) */
 .progress-track {
     width: 100%;
-    background-color: #f1f5f9; /* Gri foarte deschis */
-    border-radius: 999px; /* Face capetele perfect rotunde ca niște pastile */
-    overflow: hidden; /* Taie orice ar ieși din colțurile rotunde */
-    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.05); /* O umbră ușoară în interior */
+    background-color: #f1f5f9;
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Partea care se umple */
 .progress-fill {
     height: 100%;
     border-radius: 999px;
-    /* Tranziția dă acel efect satisfăcător de 'încărcare' */
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }

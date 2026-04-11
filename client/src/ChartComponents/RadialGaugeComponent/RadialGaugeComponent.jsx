@@ -4,12 +4,13 @@ import './RadialGaugeComponent.css';
 const RadialGaugeComponent = ({ 
   targetPercentage = 0, 
   totalSegments = 60,
-  color = "var(--black-color)", // Adăugat: Culoarea dinamică pentru bara activă
-  inactiveColor = "#e2e8f0"     // Adăugat: Un gri fin pentru liniuțele inactive (tipic Tailwind/modern UI)
+  color = "var(--black-color)", 
+  inactiveColor = "#e2e8f0",
+  width = "100%",
+  height = "auto"
 }) => {
   const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
 
-  // --- 1. GEOMETRIC CONFIGURATION ---
   const centerCoordinateX = 175;
   const centerCoordinateY = 175; 
   const outerRadius = 150;
@@ -25,7 +26,6 @@ const RadialGaugeComponent = ({
     return angleInDegrees * (Math.PI / 180);
   };
 
-  // --- 2. ANIMATION ENGINE ---
   useEffect(() => {
     if (currentAnimatedPercentage === targetPercentage) return;
 
@@ -55,7 +55,6 @@ const RadialGaugeComponent = ({
     
   }, [targetPercentage]); 
 
-  // --- 3. SEGMENTS (TICKS) CALCULATION ---
   const lineSegments = useMemo(() => {
     const activeSegmentsCount = Math.round((currentAnimatedPercentage / 100) * totalSegments);
     const calculatedSegmentsArray = [];
@@ -72,7 +71,6 @@ const RadialGaugeComponent = ({
         startY: centerCoordinateY + innerRadius * Math.sin(currentAngleInRadians),
         endX: centerCoordinateX + outerRadius * Math.cos(currentAngleInRadians),
         endY: centerCoordinateY + outerRadius * Math.sin(currentAngleInRadians),
-        // MODIFICAT: Folosim culorile primite din props în loc de RGB hardcodat
         segmentColor: isSegmentActive ? color : inactiveColor 
       });
     }
@@ -84,7 +82,6 @@ const RadialGaugeComponent = ({
   const firstSegment = lineSegments[0];
   const lastSegment = lineSegments[lineSegments.length - 1];
 
-  // --- 4. AUTO-ADAPTIVE CROPPING ---
   const viewBoxPadding = 15; 
   const bottomTextSpacing = 30; 
 
@@ -96,11 +93,11 @@ const RadialGaugeComponent = ({
   return (
     <div 
       className="gauge-frame"
-      // ACCESIBILITATE: Adăugăm rolul de grafic/meter pentru cititoarele de ecran
       role="meter" 
       aria-valuenow={Math.round(currentAnimatedPercentage)} 
       aria-valuemin="0" 
       aria-valuemax="100"
+      style={{ width: width, height: height }}
     >
       <svg 
         viewBox={`${viewBoxCoordinateX} ${viewBoxCoordinateY} ${viewBoxTotalWidth} ${viewBoxTotalHeight}`} 
@@ -121,7 +118,6 @@ const RadialGaugeComponent = ({
           />
         ))}
         
-        {/* Main Percentage Text */}
         <text 
           x={centerCoordinateX} 
           y={centerCoordinateY - 20}
@@ -129,26 +125,24 @@ const RadialGaugeComponent = ({
           dominantBaseline="middle"
           fontSize="3.5rem" 
           fontWeight="800" 
-          fill="var(--black-color)" // Textul principal să fie mereu contrastant
+          fill="var(--black-color)"
           style={{ fontFamily: 'inherit' }}
         >
           {Math.round(currentAnimatedPercentage)}%
         </text>
         
-        {/* "0" Label */}
         <text 
           x={firstSegment.endX + 10} 
           y={firstSegment.endY + 20} 
           textAnchor="middle" 
           fontSize="14px" 
           fontWeight="600"
-          fill="#94a3b8" // Un gri mai modern pentru etichete
+          fill="#94a3b8"
           style={{ fontFamily: 'inherit' }}
         >
           0
         </text>
 
-        {/* "100" Label */}
         <text 
           x={lastSegment.endX - 10} 
           y={lastSegment.endY + 20} 
