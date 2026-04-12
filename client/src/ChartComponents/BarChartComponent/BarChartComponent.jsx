@@ -14,7 +14,7 @@ function BarChartComponent({ data, colors = ["var(--black-color)"], width="100px
     }, []);
 
     const maxValue = Math.max(...data.map(item => item.value));
-    if (!data || data.length === 0) {
+    if (!data || data.length === 0 || !Array.isArray(data)) {
          return <p>Nu există date.</p>;
     }
     const colorArray = Array.isArray(colors) ? colors : [colors];

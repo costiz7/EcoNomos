@@ -7,11 +7,25 @@
 }
 
 .dashboard-content-upper-section {
-    flex: 1.1;
-    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
 .dashboard-content-lower-section {
-    flex: 1;
     border: 1px solid red;
+}
+
+.dashboard-upper-card {
+    position: relative;
+    display: flex;
+    background-color: var(--white-color);
+    border: 3px solid var(--black-color);
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    max-width: 500px;
+    height: 300px;
+    flex: 1 1 300px;
 }
