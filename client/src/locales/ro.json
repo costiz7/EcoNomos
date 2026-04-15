@@ -75,5 +75,13 @@
     "menuBudgets": "Bugete",
     "menuProfile": "Profilul Meu",
     "menuSettings": "Setări"
+  },
+  "dashboard": {
+    "welcome": "Salut, utilizatorule!",
+    "distributionTitle": "Distribuție",
+    "evolutionTitle": "Evoluție vs Trecut",
+    "budgetConsumptionTitle": "Grad Consum",
+    "lastMonthLabel": "Luna Trecută",
+    "thisMonthLabel": "Luna Asta"
   }
 }

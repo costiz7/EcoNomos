@@ -1,35 +1,137 @@
+import { useEffect, useState } from 'react';
 import './DashboardContent.css';
 import DonutChartComponent from '../ChartComponents/DonutChartComponent/DonutChartComponent';
 import RadialGaugeComponent from '../ChartComponents/RadialGaugeComponent/RadialGaugeComponent';
 import BarChartComponent from '../ChartComponents/BarChartComponent/BarChartComponent';
+import { useLanguage } from '../context/LanguageContext';
+import { useLoading } from '../context/LoadingContext';
+
+const fetchDonutData = async (token) => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/breakdown`, {
+        headers: { 'token': token }
+    });
+    if(!response.ok) {
+        throw new Error("DONUT_ERROR");
+    }
+    const data = await response.json();
+
+    return data.map(item => ({
+        label: item.category,
+        value: item.total
+    }));
+}
+
+const fetchBarData = async (token) => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/mom`, {
+        headers: { 'token': token }
+    });
+    if (!response.ok) throw new Error('BAR_ERROR');
+    
+    // Return raw data so we can apply dynamic translations in the component rendering
+    return await response.json(); 
+};
+
+const fetchGaugeData = async (token) => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/budgets/status`, {
+        headers: { 'token': token }
+    });
+    if (!response.ok) throw new Error('GAUGE_ERROR');
+    const budgetStatuses = await response.json();
+
+    if (!budgetStatuses || budgetStatuses.length === 0) return 0;
+
+    let totalLimit = 0;
+    let totalSpent = 0;
+
+    budgetStatuses.forEach(budget => {
+        totalLimit += parseFloat(budget.limit) || 0;
+        totalSpent += parseFloat(budget.spent) || 0;
+    });
+
+    if (totalLimit === 0) return 0;
+    return Math.min(100, (totalSpent / totalLimit) * 100);
+};
 
 function DashboardContent() {
+    const { t } = useLanguage();
+    const { setIsLoading } = useLoading();
+    
+    const [dashboardData, setDashboardData] = useState({
+        donut: [],
+        bar: { previousExpense: 0, currentExpense: 0 },
+        gauge: 0
+    });
+
+    useEffect(() => {
+        const loadDashboardData = async () => {
+            setIsLoading(true);
+            const token = localStorage.getItem('token'); 
+
+            if (!token) {
+                console.error("Missing authentication token!");
+                setIsLoading(false);
+                return;
+            }
+
+            const results = await Promise.allSettled([
+                fetchDonutData(token),
+                fetchBarData(token),
+                fetchGaugeData(token)
+            ]);
+
+            setDashboardData({
+                donut: results[0].status === 'fulfilled' ? results[0].value : [],
+                bar: results[1].status === 'fulfilled' ? results[1].value : { previousExpense: 0, currentExpense: 0 },
+                gauge: results[2].status === 'fulfilled' ? results[2].value : 0
+            });
+
+            setIsLoading(false);
+        };
+
+        loadDashboardData();
+    }, [setIsLoading]);
 
     return (
         <div className="dashboard-content-wrapper">
             <div className="welcome-message">
-                <h1>Hello, user!</h1>
+                <h1>{t('dashboard.welcome')}</h1>
             </div>
+            
             <div className="dashboard-content-upper-section">
+                
                 <div id="dashboard-upper-firstcard" className="dashboard-upper-card">
                     <div className="dashboard-upper-card-header">
-                        <h2>Titlu</h2>
+                        <h2>{t('dashboard.distributionTitle')}</h2>
                     </div>
-                    <DonutChartComponent />
+                    <DonutChartComponent data={dashboardData.donut} height="80%" />
                 </div>
+                
                 <div id="dashboard-upper-secondcard" className="dashboard-upper-card">
                     <div className="dashboard-upper-card-header">
-                        <h2>Titlu</h2>
+                        <h2>{t('dashboard.evolutionTitle')}</h2>
                     </div>
-                    <BarChartComponent />
+                    <BarChartComponent 
+                        data={[
+                            { label: t('dashboard.lastMonthLabel'), value: dashboardData.bar.previousExpense },
+                            { label: t('dashboard.thisMonthLabel'), value: dashboardData.bar.currentExpense }
+                        ]} 
+                        height="80%" 
+                    />
                 </div>
+                
                 <div id="dashboard-upper-thirdcard" className="dashboard-upper-card">
                     <div className="dashboard-upper-card-header">
-                        <h2>Titlu</h2>
+                        <h2>{t('dashboard.budgetConsumptionTitle')}</h2>
                     </div>
-                    <RadialGaugeComponent />
+                    <RadialGaugeComponent 
+                        targetPercentage={dashboardData.gauge} 
+                        color={dashboardData.gauge >= 80 ? "#ef4444" : "var(--black-color)"}
+                        height="80%" 
+                    />
                 </div>
+
             </div>
+            
             <div className="dashboard-content-lower-section">
                 <div id="dashboard-lower-firstcard" className="dashboard-lower-card"></div>
                 <div id="dashboard-lower-secondcard" className="dashboard-lower-card"></div>

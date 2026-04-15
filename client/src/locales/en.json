@@ -75,5 +75,13 @@
     "menuBudgets": "Budgets",
     "menuProfile": "My Profile",
     "menuSettings": "Settings"
+  },
+  "dashboard": {
+    "welcome": "Hello, user!",
+    "distributionTitle": "Distribution",
+    "evolutionTitle": "Evolution vs Past",
+    "budgetConsumptionTitle": "Budget Consumption",
+    "lastMonthLabel": "Last Month",
+    "thisMonthLabel": "This Month"
   }
 }
