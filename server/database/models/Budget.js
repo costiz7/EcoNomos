@@ -32,7 +32,7 @@ Budget.init({
     //If this value is NULL it means the budget doesn't have any category assigned to it, so it becomes a global Budget
     categoryId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
     }
 }, {
     sequelize,

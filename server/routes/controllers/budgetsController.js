@@ -1,4 +1,4 @@
-import { Budget, Category } from "../../database/associations.js";
+import { Budget, Category, Transaction } from "../../database/associations.js";
 import { Op } from "sequelize";
 
 /**
@@ -23,14 +23,10 @@ import { Op } from "sequelize";
  */
 const createBudget = async (req, res) => {
     try {
-        const { amount, period, categoryId } = req.body;
+        const { amount, period, categoryId = null } = req.body;
 
         if (!amount) {
             return res.status(400).json({ errorCode: 'MISSING_AMOUNT' });
-        }
-
-        if (!categoryId) {
-            return res.status(400).json({ errorCode: 'MISSING_CATEGORY' });
         }
 
         const existingBudget = await Budget.findOne({
@@ -259,7 +255,14 @@ const checkBudgetStatus = async (req, res) => {
 
         const budgetStatuses = budgets.map(budget => {
             const limit = parseFloat(budget.amount);
-            const spent = expensesByCategory[budget.categoryId] || 0; 
+            let spent = 0;
+            
+            if(budget.categoryId === null) {
+                spent = Object.values(expensesByCategory).reduce((total, suma) => total + suma, 0); 
+            } else {
+                spent = expensesByCategory[budget.categoryId] || 0;
+            }
+
             const remaining = limit - spent;
 
             let percentage = (spent / limit) * 100;
@@ -277,8 +280,8 @@ const checkBudgetStatus = async (req, res) => {
             return {
                 budgetId: budget.id,
                 categoryId: budget.categoryId,
-                categoryName: budget.Category.name,
-                categoryIcon: budget.Category.iconFile,
+                categoryName: budget.Category?.name || 'Global Budget',
+                categoryIcon: budget.Category?.iconFile || 'global_icon',
                 period: budget.period,
                 limit: limit,
                 spent: spent,
