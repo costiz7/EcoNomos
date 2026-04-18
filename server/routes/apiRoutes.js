@@ -16,12 +16,12 @@ router.use(tokenCheck);
 
 //User routes
 router.get('/user', usersController.getProfile);
-router.put('/user', usersController.updateProfile);
+router.patch('/user', usersController.updateProfile);
 
 //Categories routes
 router.get('/categories', categoriesController.getAllCategories);
 router.post('/categories', categoriesController.createCategory);
-router.put('/categories/:id', categoriesController.updateCategory);
+router.patch('/categories/:id', categoriesController.updateCategory);
 router.delete('/categories/:id', categoriesController.deleteCategory);
 
 //Transactions routes

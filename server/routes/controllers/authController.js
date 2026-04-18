@@ -6,6 +6,10 @@ const register = async (req, res) => {
     try {
         const { firstName, lastName, username, email, password, iconFile, language, currency } = req.body;
 
+        if (!firstName || !lastName || !username || !email || !password) {
+            return res.status(400).json({ errorCode: 'MISSING_REQUIRED_FIELDS' });
+        }
+
         const existingUsername = await User.findOne({ where: { username }});
         if(existingUsername) {
             return res.status(400).json({ errorCode: 'USERNAME_TAKEN' });
@@ -32,7 +36,6 @@ const register = async (req, res) => {
 
         res.status(201).json({ message: `Welcome, ${username}!`, newUser });
     } catch (error) {
-        console.error("Error at register:", error);
         res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
@@ -40,6 +43,10 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ errorCode: 'MISSING_CREDENTIALS' });
+        }
 
         const user = await User.findOne({ where: { email } });
         if(!user) {
@@ -63,7 +70,6 @@ const login = async (req, res) => {
 
         res.status(200).json({ token, user: userData });
     } catch (error) {
-        console.error("Error at login:", error);
         res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
     }
 }
