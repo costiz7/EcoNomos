@@ -333,14 +333,14 @@ const getExpenseBreakdown = async (req, res) => {
  *                            with aggregated `income` and `expense` data (status 200),
  *                            or a server error message if the query fails (status 500).
  */
-const getSixMonthsTrend = async (req, res) => {
+const getSevenMonthsTrend = async (req, res) => {
     try {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
         const currentMonth = currentDate.getMonth();
 
         const trendData = [];
-        for(let i = 5; i >= 0; i--) {
+        for(let i = 6; i >= 0; i--) {
             const d = new Date(currentYear, currentMonth - i, 1);
             trendData.push({
                 month: d.getMonth() + 1,
@@ -350,7 +350,7 @@ const getSixMonthsTrend = async (req, res) => {
             });
         }
 
-        const startDate = new Date(currentYear, currentMonth - 5, 1);
+        const startDate = new Date(currentYear, currentMonth - 6, 1);
         const endDate = new Date(currentYear, currentMonth + 1, 0);
 
         const transactions = await Transaction.findAll({
@@ -669,41 +669,61 @@ const generateMockBankData = () => {
         'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz'
     ];
 
+    const incomeSources = [
+        'Salariu S.C. IT Corp SRL', 
+        'Upwork Freelancing', 
+        'Fiverr', 
+        'Bursa', 
+        'Dividende BVB'
+    ];
+
     const transactions = [];
     const endDate = new Date();
     const startDate = new Date();
     
-    // Go back exactly 6 months from today
     startDate.setMonth(startDate.getMonth() - 6);
 
-    // Loop through every single day from startDate to endDate
+    let currentMonthTracker = -1;
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-        
-        // Generate between 1 and 3 transactions for the current day in the loop
-        const transactionsToday = Math.floor(Math.random() * 3) + 1;
+        if (d.getMonth() !== currentMonthTracker) {
+            currentMonthTracker = d.getMonth(); 
+            
+            const incomesThisMonth = Math.floor(Math.random() * 2) + 1; 
+            
+            for(let j = 0; j < incomesThisMonth; j++) {
+                const source = incomeSources[Math.floor(Math.random() * incomeSources.length)];
+                const amount = (Math.random() * (9000 - 3000) + 3000).toFixed(2); 
+                
+                const txDate = new Date(d);
+                txDate.setHours(9, 30); 
 
-        for (let i = 0; i < transactionsToday; i++) {
-            // Pick a random merchant from the list
+                transactions.push({
+                    description: source,
+                    amount: parseFloat(amount),
+                    date: txDate,
+                    source: 'bank'
+                });
+            }
+        }
+
+        const expensesToday = Math.floor(Math.random() * 3) + 1; // 1-3 cheltuieli pe zi
+
+        for (let i = 0; i < expensesToday; i++) {
             const merchant = merchants[Math.floor(Math.random() * merchants.length)];
+            const amount = (Math.random() * (300 - 15) + 15).toFixed(2); // Sume mai realiste pt cafele/cumpărături
             
-            // Generate a random amount between 15.00 and 450.00
-            const amount = (Math.random() * (450 - 15) + 15).toFixed(2);
-            
-            // Set a random time (hour and minute) for the transaction
             const txDate = new Date(d);
             txDate.setHours(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60));
 
-            // Push the generated transaction to our array
             transactions.push({
                 description: merchant,
                 amount: parseFloat(amount),
                 date: txDate,
-                source: 'bank' // Flag indicating this came from the "bank API"
+                source: 'bank'
             });
         }
     }
 
-    // Return the array sorted descending (newest transactions first)
     return transactions.sort((a, b) => b.date - a.date);
 };
 
@@ -741,7 +761,11 @@ const importBankTransactions = async (req, res) => {
             }
         });
 
-        const categoryMap = categories.map(cat => ({ id: cat.id, name: cat.name }));
+        const categoryMap = categories.map(cat => ({ 
+            id: cat.id, 
+            name: cat.name,
+            type: cat.type 
+        }));
         const fallbackCategoryId = categories.length > 0 ? categories[0].id : null;
 
         if (!fallbackCategoryId) {
@@ -819,7 +843,7 @@ export default {
     deleteTransaction, 
     getMonthlyTotals,
     getExpenseBreakdown,
-    getSixMonthsTrend,
+    getSevenMonthsTrend,
     getMonthOverMonthComparison,
     getTopExpenses,
     getRecentTransactions,

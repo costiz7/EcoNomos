@@ -29,7 +29,7 @@ router.get('/transactions', transactionsController.getTransactions);
 router.post('/transactions', transactionsController.addTransaction);
 router.get('/transactions/totals', transactionsController.getMonthlyTotals);
 router.get('/transactions/breakdown', transactionsController.getExpenseBreakdown);
-router.get('/transactions/trend', transactionsController.getSixMonthsTrend);
+router.get('/transactions/trend', transactionsController.getSevenMonthsTrend);
 router.get('/transactions/mom', transactionsController.getMonthOverMonthComparison);
 router.get('/transactions/top', transactionsController.getTopExpenses);
 router.get('/transactions/recent', transactionsController.getRecentTransactions);
