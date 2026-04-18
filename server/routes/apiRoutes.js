@@ -41,13 +41,14 @@ router.post('/transactions/import-bank', transactionsController.importBankTransa
 router.post('/budgets', budgetsController.createBudget);
 router.get('/budgets', budgetsController.getMyBudgets);
 router.get('/budgets/status', budgetsController.checkBudgetStatus);
-router.put('/budgets/:id', budgetsController.modifyBudget);
+router.patch('/budgets/:id', budgetsController.modifyBudget);
 router.delete('/budgets/:id', budgetsController.deleteBudget);
 
 //Saving Goals Routes
 router.post('/savings', savingsController.createGoal);
 router.get('/savings', savingsController.getGoals);
 router.patch('/savings/:id/add', savingsController.addFunds);
+router.patch('/savings/:id/withdraw', savingsController.withdrawFunds);
 router.delete('/savings/:id', savingsController.deleteGoal);
 
 export default router;

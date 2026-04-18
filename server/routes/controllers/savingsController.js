@@ -3,7 +3,7 @@ import { SavingsGoal } from "../../database/associations.js";
 /**
  * Creates a new savings goal for the authenticated user.
  * 
- * The function validates that the required fields (title, target amount, and deadline) 
+ * The function validates that the required fields (name, target amount, and deadline) 
  * are provided and ensures the target amount is greater than zero. If valid, it creates 
  * a new savings goal record in the database with an initial current amount of 0.
  *
@@ -11,7 +11,7 @@ import { SavingsGoal } from "../../database/associations.js";
  * @function createGoal
  * @param {Object} req - The Express request object.
  * @param {Object} req.body - The request body containing savings goal details.
- * @param {string} req.body.title - The title or name of the savings goal.
+ * @param {string} req.body.name - The name or name of the savings goal.
  * @param {number|string} req.body.targetAmount - The financial target to reach (must be greater than 0).
  * @param {string|Date} req.body.deadline - The target date to achieve the goal.
  * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
@@ -22,9 +22,9 @@ import { SavingsGoal } from "../../database/associations.js";
  */
 const createGoal = async (req, res) => {
     try {
-        const { title, targetAmount, deadline } = req.body;
+        const { name, targetAmount, deadline } = req.body;
 
-        if (!title || !targetAmount || !deadline) {
+        if (!name || !targetAmount || !deadline) {
             return res.status(400).json({ errorCode: 'MISSING_GOAL_FIELDS' });
         }
 
@@ -33,7 +33,7 @@ const createGoal = async (req, res) => {
         }
 
         const newGoal = await SavingsGoal.create({
-            title, 
+            name, 
             targetAmount, 
             currentAmount: 0,
             deadline,
@@ -151,7 +151,7 @@ const getGoals = async (req, res) => {
 
             return {
                 id: goal.id,
-                title: goal.title,
+                name: goal.name,
                 targetAmount: target,
                 currentAmount: current,
                 deadline: goal.deadline,
@@ -186,7 +186,7 @@ const getGoals = async (req, res) => {
  *                            an error message if the goal is not found or unauthorized (status 404),
  *                            or a server error message (status 500).
  */
-export const deleteGoal = async (req, res) => {
+const deleteGoal = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -210,9 +210,70 @@ export const deleteGoal = async (req, res) => {
     }
 };
 
+/**
+ * Withdraws funds from a specific savings goal for the authenticated user.
+ * * The function validates that the amount to withdraw is a positive number and ensures
+ * that the user has enough funds in the goal to perform the withdrawal. If valid,
+ * it deducts the amount from the goal's current amount and saves the updated progress.
+ *
+ * @async
+ * @function withdrawFunds
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.params - The route parameters.
+ * @param {number|string} req.params.id - The ID of the savings goal.
+ * @param {Object} req.body - The request body.
+ * @param {number|string} req.body.amountToWithdraw - The amount of funds to withdraw (must be greater than 0).
+ * @param {Object} req.user - The authenticated user object.
+ * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<Object>} Returns a JSON response with a success message and updated goal data (status 200),
+ * or an error message for invalid amounts/insufficient funds (status 400), 
+ * unauthorized/not found goals (status 404), or server errors (status 500).
+ */
+const withdrawFunds = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { amountToWithdraw } = req.body;
+
+        if (!amountToWithdraw || isNaN(amountToWithdraw) || parseFloat(amountToWithdraw) <= 0) {
+            return res.status(400).json({ errorCode: 'INVALID_AMOUNT' });
+        }
+
+        const goal = await SavingsGoal.findOne({
+            where: {
+                id: id,
+                userId: req.user.id
+            }
+        });
+
+        if (!goal) {
+            return res.status(404).json({ errorCode: 'GOAL_NOT_FOUND_OR_UNAUTHORIZED' });
+        }
+
+        const withdrawAmount = parseFloat(amountToWithdraw);
+        const current = parseFloat(goal.currentAmount);
+
+        if (withdrawAmount > current) {
+            return res.status(400).json({ errorCode: 'INSUFFICIENT_FUNDS' });
+        }
+
+        goal.currentAmount = current - withdrawAmount;
+        await goal.save();
+
+        res.status(200).json({
+            message: 'Funds withdrawn successfully.',
+            goal: goal
+        });
+
+    } catch (error) {
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
+    }
+};
+
 export default { 
     createGoal,
     addFunds,
     getGoals,
-    deleteGoal
+    deleteGoal,
+    withdrawFunds
  };
