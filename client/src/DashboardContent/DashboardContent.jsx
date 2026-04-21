@@ -40,6 +40,12 @@ const fetchGaugeData = async (token) => {
 
     if (!budgetStatuses || budgetStatuses.length === 0) return 0;
 
+    const globalBudget = budgetStatuses.find(budget => budget.categoryId === null && budget.period === "monthly");
+
+    if(globalBudget) {
+        return globalBudget.percentage;
+    }
+
     let totalLimit = 0;
     let totalSpent = 0;
 
@@ -49,7 +55,10 @@ const fetchGaugeData = async (token) => {
     });
 
     if (totalLimit === 0) return 0;
-    return Math.min(100, (totalSpent / totalLimit) * 100);
+
+    let percentage = (totalSpent / totalLimit) * 100;
+
+    return Math.round(percentage * 100) / 100;
 };
 
 function DashboardContent() {

@@ -27,6 +27,8 @@ function BarChartComponent({ data=[], colors = ["var(--black-color)"], width="10
                 const barHeightPercentage = (item.value / maxValue) * 100;
                 const barColor = colorArray[index % colorArray.length];
 
+                const displayValue = parseFloat(item.value).toFixed(2);
+
                 return (
                     <div 
                         key={index} 
@@ -35,7 +37,7 @@ function BarChartComponent({ data=[], colors = ["var(--black-color)"], width="10
                         onMouseLeave={() => setFocusedIndex(null)}
                     >
                         <div className={`bar-tooltip ${isFocused ? 'visible' : ''}`}>
-                            <span className="tooltip-value">{item.value}</span>
+                            <span className="tooltip-value">{displayValue} RON</span>
                         </div>
 
                         <div className="bar-track">
