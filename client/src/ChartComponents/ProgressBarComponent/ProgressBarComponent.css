@@ -1,8 +1,10 @@
+/* --- CONTAINER --- */
 .progress-bar-container {
     display: flex;
     flex-direction: column;
     gap: 8px;
 
+    /* Mobile specific fixes */
     -webkit-tap-highlight-color: transparent; 
     -webkit-touch-callout: none; 
     -webkit-user-select: none; 
@@ -11,6 +13,7 @@
     user-select: none;
 }
 
+/* --- LABELS --- */
 .progress-labels {
     display: flex;
     justify-content: space-between;
@@ -29,6 +32,7 @@
     color: #94a3b8;
 }
 
+/* --- TRACK & FILL --- */
 .progress-track {
     width: 100%;
     background-color: #f1f5f9;
@@ -40,5 +44,6 @@
 .progress-fill {
     height: 100%;
     border-radius: 999px;
+    /* Smooth width transition */
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -112,7 +112,7 @@ function DashboardContent() {
                     <div className="dashboard-upper-card-header">
                         <h2>{t('dashboard.distributionTitle')}</h2>
                     </div>
-                    <DonutChartComponent data={dashboardData.donut} size="250"/>
+                    <DonutChartComponent data={dashboardData.donut} size="250px"/>
                 </div>
                 
                 <div id="dashboard-upper-secondcard" className="dashboard-upper-card">

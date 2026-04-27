@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DonutChartComponent.css';
 
 function DonutChartComponent({ 
-    data, 
+    data = [], 
     colors = ["var(--black-color)", "#4ECDC4", "#FF6B6B", "#FFD166", "#118AB2", "#06D6A0"],
-    size = 250
+    unit = "RON",
+    size = "250px"
 }) {
     const [focusedIndex, setFocusedIndex] = useState(null);
     const [isAnimated, setIsAnimated] = useState(false);
@@ -14,37 +15,37 @@ function DonutChartComponent({
         return () => clearTimeout(timeout);
     }, []);
 
-    if (!data || data.length === 0) return <p>Nu există date.</p>;
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        return <p>Nu există date.</p>;
+    }
 
-    const colorArray = Array.isArray(colors) && colors.length > 0 ? colors : ["#000"];
+    const colorArray = Array.isArray(colors) && colors.length > 0 ? colors : ["var(--black-color)"];
     const total = data.reduce((acc, item) => acc + (Number(item.value) || 0), 0);
     const safeTotal = total === 0 ? 1 : total;
 
-    const baseSize = 250; 
-    const scale = size / baseSize;
-
-    const center = size / 2;
-    const strokeWidth = 35 * scale;
-    const radius = 100 * scale;
-    const hoverExpand = 12 * scale;
-    const maskThickness = 120 * scale; 
+    // SVG Internal Coordinates
+    const svgSize = 250; 
+    const center = svgSize / 2;
+    const strokeWidth = 35;
+    const radius = 100;
+    const hoverExpand = 12;
+    const maskThickness = 120; 
     const circumference = 2 * Math.PI * radius;
 
     let cumulativeValue = 0;
 
     return (
         <div 
-            className="donut-chart-container" 
-            style={{ width: `${size}px`, height: `${size}px` }}
+            className="donut-chart-container"
+            style={{ width: size, height: size }} // You control the outer box
         >
             <svg 
-                width={size} 
-                height={size} 
-                viewBox={`0 0 ${size} ${size}`} 
-                style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}
+                viewBox={`0 0 ${svgSize} ${svgSize}`} 
+                className="donut-svg-wrapper"
+                style={{ transform: 'rotate(-90deg)' }} 
             >
                 <defs>
-                    <mask id="sweep-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={size} height={size}>
+                    <mask id="sweep-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={svgSize} height={svgSize}>
                         <circle
                             cx={center}
                             cy={center}
@@ -90,29 +91,33 @@ function DonutChartComponent({
                         );
                     })}
                 </g>
-            </svg>
 
-            <div className="donut-center-info">
-                {focusedIndex !== null ? (
-                    <>
-                        <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
-                            {data[focusedIndex]?.label || "N/A"}
-                        </span>
-                        <span className="donut-value" style={{ fontSize: `${20 * scale}px` }}>
-                            {parseFloat(data[focusedIndex]?.value).toFixed(2) || 0.00} RON
-                        </span>
-                    </>
-                ) : (
-                    <>
-                        <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
-                            Total
-                        </span>
-                        <span className="donut-value" style={{ fontSize: `${20 * scale}px` }}>
-                            {parseFloat(total).toFixed(2)} RON
-                        </span>
-                    </>
-                )}
-            </div>
+                <g 
+                    className="donut-text-group" 
+                    style={{ transform: 'rotate(90deg)', transformOrigin: 'center' }}
+                >
+                    <text 
+                        x={center} 
+                        y={center - 8} 
+                        textAnchor="middle" 
+                        dominantBaseline="central"
+                        className="donut-label-svg"
+                    >
+                        {focusedIndex !== null ? (data[focusedIndex]?.label || "N/A") : "Total"}
+                    </text>
+                    <text 
+                        x={center} 
+                        y={center + 15} 
+                        textAnchor="middle" 
+                        dominantBaseline="central"
+                        className="donut-value-svg"
+                    >
+                        {focusedIndex !== null 
+                            ? parseFloat(data[focusedIndex]?.value || 0).toFixed(2) 
+                            : parseFloat(total).toFixed(2)} {unit}
+                    </text>
+                </g>
+            </svg>
         </div>
     );
 }

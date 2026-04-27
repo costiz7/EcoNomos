@@ -6,11 +6,12 @@ const RadialGaugeComponent = ({
   totalSegments = 60,
   color = "var(--black-color)", 
   inactiveColor = "#e2e8f0",
-  width = "100%",
-  height = "auto"
+  width = "100%", // Container control
+  height = "auto" // Container control
 }) => {
   const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
 
+  // SVG Internal Coordinates
   const centerCoordinateX = 175;
   const centerCoordinateY = 175; 
   const outerRadius = 150;
@@ -22,10 +23,9 @@ const RadialGaugeComponent = ({
   const totalAngleSpanInDegrees = Math.abs(endingAngleInDegrees - startingAngleInDegrees); 
   const degreesPerSegment = totalAngleSpanInDegrees / (totalSegments - 1);
   
-  const convertDegreesToRadians = (angleInDegrees) => {
-    return angleInDegrees * (Math.PI / 180);
-  };
+  const convertDegreesToRadians = (angleInDegrees) => angleInDegrees * (Math.PI / 180);
 
+  // Custom Animation Hook
   useEffect(() => {
     if (currentAnimatedPercentage === targetPercentage) return;
 
@@ -35,12 +35,10 @@ const RadialGaugeComponent = ({
     const startingPercentageValue = currentAnimatedPercentage;
 
     const executeAnimationStep = (currentTimestamp) => {
-      if (!animationStartTime) {
-        animationStartTime = currentTimestamp;
-      }
+      if (!animationStartTime) animationStartTime = currentTimestamp;
       
       const rawAnimationProgress = Math.min((currentTimestamp - animationStartTime) / animationDurationInMilliseconds, 1);
-      const smoothedAnimationProgress = 1 - Math.pow(1 - rawAnimationProgress, 3);
+      const smoothedAnimationProgress = 1 - Math.pow(1 - rawAnimationProgress, 3); // Cubic ease-out
       const newlyCalculatedPercentage = startingPercentageValue + (targetPercentage - startingPercentageValue) * smoothedAnimationProgress;
       
       setCurrentAnimatedPercentage(newlyCalculatedPercentage);
@@ -53,10 +51,14 @@ const RadialGaugeComponent = ({
     animationFrameIdentifier = requestAnimationFrame(executeAnimationStep);
     return () => cancelAnimationFrame(animationFrameIdentifier);
     
-  }, [targetPercentage]); 
+  }, [targetPercentage, currentAnimatedPercentage]); 
 
+  // Calculate lines position and active state
   const lineSegments = useMemo(() => {
-    const activeSegmentsCount = Math.round((currentAnimatedPercentage / 100) * totalSegments);
+    // CAP THE VISUAL PERCENTAGE: Never draw more than 100%, even if the number goes higher
+    const visualPercentage = Math.min(100, currentAnimatedPercentage);
+    const activeSegmentsCount = Math.round((visualPercentage / 100) * totalSegments);
+    
     const calculatedSegmentsArray = [];
     
     for (let segmentIndex = 0; segmentIndex < totalSegments; segmentIndex++) {
@@ -82,9 +84,9 @@ const RadialGaugeComponent = ({
   const firstSegment = lineSegments[0];
   const lastSegment = lineSegments[lineSegments.length - 1];
 
+  // Dynamically calculate the perfect viewBox to frame the semicircle
   const viewBoxPadding = 15; 
   const bottomTextSpacing = 30; 
-
   const viewBoxCoordinateX = centerCoordinateX - outerRadius - viewBoxPadding;
   const viewBoxCoordinateY = centerCoordinateY - outerRadius - viewBoxPadding;
   const viewBoxTotalWidth = (outerRadius * 2) + (viewBoxPadding * 2);
@@ -97,12 +99,12 @@ const RadialGaugeComponent = ({
       aria-valuenow={Math.round(currentAnimatedPercentage)} 
       aria-valuemin="0" 
       aria-valuemax="100"
-      style={{ width: width, height: height }}
+      style={{ width: width, height: height }} // Control from props
     >
       <svg 
         viewBox={`${viewBoxCoordinateX} ${viewBoxCoordinateY} ${viewBoxTotalWidth} ${viewBoxTotalHeight}`} 
         preserveAspectRatio="xMidYMid meet"
-        style={{ width: '100%', height: 'auto', display: 'block' }} 
+        className="gauge-svg"
       >
         {lineSegments.map((segment) => (
           <line
@@ -112,45 +114,33 @@ const RadialGaugeComponent = ({
             x2={segment.endX}
             y2={segment.endY}
             stroke={segment.segmentColor}
-            strokeWidth="4"
-            strokeLinecap="round" 
-            style={{ transition: 'stroke 0.0s ease' }} 
+            className="gauge-line"
           />
         ))}
         
+        {/* Main Center Text (Can exceed 100) */}
         <text 
           x={centerCoordinateX} 
           y={centerCoordinateY - 20}
-          textAnchor="middle" 
-          dominantBaseline="middle"
-          fontSize="3.5rem" 
-          fontWeight="800" 
-          fill="var(--black-color)"
-          style={{ fontFamily: 'inherit' }}
+          className="gauge-text-main"
         >
           {Math.round(currentAnimatedPercentage)}%
         </text>
         
+        {/* Min Label */}
         <text 
           x={firstSegment.endX + 10} 
           y={firstSegment.endY + 20} 
-          textAnchor="middle" 
-          fontSize="14px" 
-          fontWeight="600"
-          fill="#94a3b8"
-          style={{ fontFamily: 'inherit' }}
+          className="gauge-text-label"
         >
           0
         </text>
 
+        {/* Max Label */}
         <text 
           x={lastSegment.endX - 10} 
           y={lastSegment.endY + 20} 
-          textAnchor="middle" 
-          fontSize="14px" 
-          fontWeight="600"
-          fill="#94a3b8"
-          style={{ fontFamily: 'inherit' }}
+          className="gauge-text-label"
         >
           100
         </text>
