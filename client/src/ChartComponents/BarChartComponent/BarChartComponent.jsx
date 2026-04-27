@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './BarChartComponent.css';
 
-function BarChartComponent({ data=[], colors = ["var(--black-color)"], width="100px", height="250px" }) {
+function BarChartComponent({ data=[], colors = ["var(--black-color)"], width="100px", height="250px", gap="8px" }) {
     const [focusedIndex, setFocusedIndex] = useState(null);
     const [isAnimated, setIsAnimated] = useState(false);
 
@@ -20,7 +20,7 @@ function BarChartComponent({ data=[], colors = ["var(--black-color)"], width="10
     const colorArray = Array.isArray(colors) ? colors : [colors];
 
     return (
-        <div className="bar-chart-container" style={{ width, height }}>
+        <div className="bar-chart-container" style={{ width, height, gap }}>
             {data.map((item, index) => {
                 const isFocused = focusedIndex === index;
                 const isFaded = focusedIndex !== null && focusedIndex !== index;

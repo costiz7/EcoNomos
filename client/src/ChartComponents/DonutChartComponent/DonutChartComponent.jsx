@@ -4,7 +4,7 @@ import './DonutChartComponent.css';
 function DonutChartComponent({ 
     data, 
     colors = ["var(--black-color)", "#4ECDC4", "#FF6B6B", "#FFD166", "#118AB2", "#06D6A0"],
-    size = 320
+    size = 250
 }) {
     const [focusedIndex, setFocusedIndex] = useState(null);
     const [isAnimated, setIsAnimated] = useState(false);
@@ -20,7 +20,7 @@ function DonutChartComponent({
     const total = data.reduce((acc, item) => acc + (Number(item.value) || 0), 0);
     const safeTotal = total === 0 ? 1 : total;
 
-    const baseSize = 320; 
+    const baseSize = 250; 
     const scale = size / baseSize;
 
     const center = size / 2;
@@ -98,8 +98,8 @@ function DonutChartComponent({
                         <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
                             {data[focusedIndex]?.label || "N/A"}
                         </span>
-                        <span className="donut-value" style={{ fontSize: `${28 * scale}px` }}>
-                            {data[focusedIndex]?.value || 0}
+                        <span className="donut-value" style={{ fontSize: `${20 * scale}px` }}>
+                            {parseFloat(data[focusedIndex]?.value).toFixed(2) || 0.00} RON
                         </span>
                     </>
                 ) : (
@@ -107,8 +107,8 @@ function DonutChartComponent({
                         <span className="donut-label" style={{ fontSize: `${14 * scale}px` }}>
                             Total
                         </span>
-                        <span className="donut-value" style={{ fontSize: `${28 * scale}px` }}>
-                            {total}
+                        <span className="donut-value" style={{ fontSize: `${20 * scale}px` }}>
+                            {parseFloat(total).toFixed(2)} RON
                         </span>
                     </>
                 )}
