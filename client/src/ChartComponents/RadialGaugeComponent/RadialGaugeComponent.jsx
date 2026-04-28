@@ -31,7 +31,7 @@ const RadialGaugeComponent = ({
 
     let animationFrameIdentifier;
     let animationStartTime = null;
-    const animationDurationInMilliseconds = 600;
+    const animationDurationInMilliseconds = 400;
     const startingPercentageValue = currentAnimatedPercentage;
 
     const executeAnimationStep = (currentTimestamp) => {

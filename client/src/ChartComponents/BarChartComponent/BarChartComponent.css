@@ -41,15 +41,13 @@
 
 .bar-fill {
     width: 100%;
-    /* max-width a fost mutat în JSX pentru a fi controlat prin props */
     border-radius: 6px 6px 0 0;
     transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- LABELS & TOOLTIPS --- */
 .bar-label {
-    margin-top: 10px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--black-color);
     text-transform: capitalize;

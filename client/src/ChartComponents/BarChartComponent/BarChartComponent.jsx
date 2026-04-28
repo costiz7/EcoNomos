@@ -66,7 +66,7 @@ function BarChartComponent({
                                     height: isAnimated ? `${barHeightPercentage}%` : '0%',
                                     backgroundColor: barColor,
                                     transitionDelay: `${index * 50}ms`,
-                                    maxWidth: barThickness // Controlled dynamically by the prop
+                                    width: barThickness // Controlled dynamically by the prop
                                 }}
                             ></div>
                         </div>

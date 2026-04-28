@@ -6,6 +6,30 @@ import BarChartComponent from '../ChartComponents/BarChartComponent/BarChartComp
 import { useLanguage } from '../context/LanguageContext';
 import { useLoading } from '../context/LoadingContext';
 
+const fetchRecentTransactions = async(token) => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/recent`, {
+        headers: { 'token' : token }
+    });
+    if(!response.ok) {
+        throw new Error("RECENT_TRANSACTIONS_ERROR");
+    }
+    const data = await response.json();
+
+    return data.reduce((acc, obj) => {
+        acc.push({
+            id: obj.id,
+            amount: obj.amount,
+            date: obj.date,
+            description: obj.description,
+            source: obj.source,
+            name: obj.Category?.name,
+            iconFile: obj.Category?.iconFile,
+            type: obj.Category?.type
+        });
+        return acc;
+    }, []);
+}
+
 const fetchDonutData = async (token) => {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/breakdown`, {
         headers: { 'token': token }
@@ -103,7 +127,7 @@ function DashboardContent() {
     return (
         <div className="dashboard-content-wrapper">
             <div className="welcome-message">
-                <h1>{t('dashboard.welcome')}</h1>
+                <h1>{t('dashboard.welcome')}, {JSON.parse(localStorage.user).username}</h1>
             </div>
             
             <div className="dashboard-content-upper-section">
@@ -124,7 +148,9 @@ function DashboardContent() {
                             { label: t('dashboard.lastMonthLabel'), value: dashboardData.bar.previousExpense },
                             { label: t('dashboard.thisMonthLabel'), value: dashboardData.bar.currentExpense }
                         ]} 
-                        height="80%" 
+                        gap='60px'
+                        barThickness='100px'
+                        colors = {["var(--red-color)", "var(--blue-color)"]} 
                     />
                 </div>
                 
@@ -142,8 +168,9 @@ function DashboardContent() {
             </div>
             
             <div className="dashboard-content-lower-section">
-                <div id="dashboard-lower-firstcard" className="dashboard-lower-card"></div>
-                <div id="dashboard-lower-secondcard" className="dashboard-lower-card"></div>
+                <div id="dashboard-lower-firstcard" className="dashboard-lower-card">
+
+                </div>
             </div>
         </div>
     );

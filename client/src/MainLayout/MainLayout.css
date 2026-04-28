@@ -110,7 +110,7 @@
     height: 100%;
     width: 100%;
     background-color: var(--white-color);
-    padding: 20px;
+    padding: 12px 30px;
 }
 
 .sidebar-overlay {
