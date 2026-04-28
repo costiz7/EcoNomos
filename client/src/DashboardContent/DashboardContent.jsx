@@ -92,7 +92,8 @@ function DashboardContent() {
     const [dashboardData, setDashboardData] = useState({
         donut: [],
         bar: { previousExpense: 0, currentExpense: 0 },
-        gauge: 0
+        gauge: 0,
+        recent: []
     });
 
     useEffect(() => {
@@ -109,13 +110,15 @@ function DashboardContent() {
             const results = await Promise.allSettled([
                 fetchDonutData(token),
                 fetchBarData(token),
-                fetchGaugeData(token)
+                fetchGaugeData(token),
+                fetchRecentTransactions(token)
             ]);
 
             setDashboardData({
                 donut: results[0].status === 'fulfilled' ? results[0].value : [],
                 bar: results[1].status === 'fulfilled' ? results[1].value : { previousExpense: 0, currentExpense: 0 },
-                gauge: results[2].status === 'fulfilled' ? results[2].value : 0
+                gauge: results[2].status === 'fulfilled' ? results[2].value : 0,
+                recent: results[3].status === 'fulfilled' ? results[3].value : []
             });
 
             setIsLoading(false);
@@ -127,7 +130,7 @@ function DashboardContent() {
     return (
         <div className="dashboard-content-wrapper">
             <div className="welcome-message">
-                <h1>{t('dashboard.welcome')}, {JSON.parse(localStorage.user).username}</h1>
+                <h1>{t('dashboard.welcome')}, {localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""}</h1>
             </div>
             
             <div className="dashboard-content-upper-section">
@@ -169,7 +172,19 @@ function DashboardContent() {
             
             <div className="dashboard-content-lower-section">
                 <div id="dashboard-lower-firstcard" className="dashboard-lower-card">
-
+                    <div className="dashboard-lower-card-header">
+                        <h2>{t('dashboard.recentTitle')}</h2>
+                    </div>
+                    <div className="dashboard-recent-transactions-list">
+                        {
+                            dashboardData.recent.length > 0 ? dashboardData.recent.map(transaction => (
+                                <div className="dashboard-recent-transaction" key={transaction.id}></div>
+                            )) 
+                            : 
+                            <p>Nu exista date.</p>
+                        }
+                    </div>
+                    
                 </div>
             </div>
         </div>

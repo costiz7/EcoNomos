@@ -82,6 +82,7 @@
     "evolutionTitle": "Month over month",
     "budgetConsumptionTitle": "Monthly budget consumption",
     "lastMonthLabel": "Last Month",
-    "thisMonthLabel": "This Month"
+    "thisMonthLabel": "This Month",
+    "recentTitle": "Recent transactions"
   }
 }
