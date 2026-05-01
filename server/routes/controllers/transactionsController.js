@@ -837,6 +837,152 @@ const importBankTransactions = async (req, res) => {
     }
 };
 
+/**
+ * Endpoint called at login to generate missing transactions up to the current day,
+ * BUT only if the user has already performed the initial bank data import.
+ *
+ * @async
+ * @function syncDailyTransactions
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ */
+const syncDailyTransactions = async (req, res) => {
+    try {
+        // 1. Check if the user has performed the initial bank data import
+        const user = await User.findByPk(req.user.id);
+        
+        if (!user.hasImportedBankData) {
+            // Return 200 OK to prevent login errors; simply inform that no sync is needed.
+            return res.status(200).json({ 
+                message: "Bank synchronization is not enabled for this account.", 
+                count: 0 
+            });
+        }
+
+        const currentDate = new Date();
+        currentDate.setHours(23, 59, 59, 999);
+
+        // 2. Find the user's most recent transaction
+        const lastTransaction = await Transaction.findOne({
+            where: { userId: req.user.id },
+            order: [['date', 'DESC']]
+        });
+
+        // If the flag is true but there are no transactions, stop execution to prevent errors.
+        if (!lastTransaction || !lastTransaction.date) {
+            return res.status(200).json({ 
+                message: "No transaction history found for synchronization.", 
+                count: 0 
+            });
+        }
+
+        // 3. Set the start date: the day after the last recorded transaction
+        let startDate = new Date(lastTransaction.date);
+        startDate.setDate(startDate.getDate() + 1);
+        startDate.setHours(0, 0, 0, 0);
+
+        // If we are already up to date, stop execution
+        if (startDate > currentDate) {
+            return res.status(200).json({ 
+                message: "The account is already up to date.", 
+                count: 0 
+            });
+        }
+
+        // 4. Generate raw mock transactions for the missing days
+        const merchants = [
+            'Lidl', 'Kaufland', 'Mega Image', 'Carrefour', 'Auchan',
+            'Uber', 'Bolt', 'OMV', 'Petrom', 'Rompetrol',
+            'Netflix', 'Spotify', 'Cinema City', 'Steam',
+            'E.ON', 'Enel', 'Digi', 'Vodafone', 'Orange',
+            'Zara', 'H&M', 'Nike', 'Emag', 'Altex',
+            'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz'
+        ];
+
+        const rawTransactions = [];
+
+        for (let d = new Date(startDate); d <= currentDate; d.setDate(d.getDate() + 1)) {
+            const expensesToday = Math.floor(Math.random() * 3) + 1; 
+
+            for (let i = 0; i < expensesToday; i++) {
+                const merchant = merchants[Math.floor(Math.random() * merchants.length)];
+                const amount = (Math.random() * (250 - 15) + 15).toFixed(2); 
+                
+                const txDate = new Date(d);
+                txDate.setHours(Math.floor(Math.random() * 20) + 6, Math.floor(Math.random() * 60));
+
+                rawTransactions.push({
+                    description: merchant,
+                    amount: parseFloat(amount),
+                    date: txDate,
+                    source: 'bank'
+                });
+            }
+        }
+
+        if (rawTransactions.length === 0) {
+            return res.status(200).json({ 
+                message: "No new transactions to generate.", 
+                count: 0 
+            });
+        }
+
+        // 5. Categorize transactions using Google Gemini AI
+        const uniqueMerchants = [...new Set(rawTransactions.map(tx => tx.description))];
+        const categories = await Category.findAll({
+            where: { [Op.or]: [{ userId: req.user.id }, { userId: null }] }
+        });
+
+        const categoryMap = categories.map(cat => ({ id: cat.id, name: cat.name, type: cat.type }));
+        const fallbackCategoryId = categories.length > 0 ? categories[0].id : null;
+
+        if (!fallbackCategoryId) {
+             return res.status(400).json({ errorCode: 'NO_CATEGORIES_FOUND' });
+        }
+
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        const prompt = `
+        You are a financial API categorization tool.
+        I will provide a list of merchant names and a list of available categories with their IDs.
+        Your task is to match each merchant to the single most appropriate category ID.
+        
+        Merchants: ${JSON.stringify(uniqueMerchants)}
+        Categories: ${JSON.stringify(categoryMap)}
+        
+        Rules:
+        - Return ONLY a raw JSON object.
+        - The keys must be the exact merchant names.
+        - The values must be the integer category ID.
+        - Do NOT include markdown code blocks (\`\`\`json) or any conversational text.
+        `;
+
+        const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt });
+        let responseText = response.text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const merchantCategoryMapping = JSON.parse(responseText);
+
+        // 6. Map the AI results and save transactions to the database
+        const finalTransactions = rawTransactions.map(tx => ({
+            amount: tx.amount,
+            date: tx.date,
+            description: tx.description,
+            categoryId: merchantCategoryMapping[tx.description] || fallbackCategoryId,
+            source: tx.source,
+            userId: req.user.id
+        }));
+
+        await Transaction.bulkCreate(finalTransactions);
+
+        res.status(200).json({
+            message: `Daily sync complete. Added ${finalTransactions.length} transactions.`,
+            count: finalTransactions.length
+        });
+
+    } catch (error) {
+        console.error("Error at syncDailyTransactions:", error);
+        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
+    }
+};
+
 export default { 
     getTransactions, 
     addTransaction, 
@@ -848,5 +994,6 @@ export default {
     getTopExpenses,
     getRecentTransactions,
     getDailyAverage,
-    importBankTransactions
+    importBankTransactions,
+    syncDailyTransactions
  };
