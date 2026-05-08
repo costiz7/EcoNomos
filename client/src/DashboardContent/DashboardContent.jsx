@@ -178,7 +178,9 @@ function DashboardContent() {
                     <div className="dashboard-recent-transactions-list">
                         {
                             dashboardData.recent.length > 0 ? dashboardData.recent.map(transaction => (
-                                <div className="dashboard-recent-transaction" key={transaction.id}></div>
+                                <div className="dashboard-recent-transaction" key={transaction.id}>
+                                    
+                                </div>
                             )) 
                             : 
                             <p>Nu exista date.</p>
