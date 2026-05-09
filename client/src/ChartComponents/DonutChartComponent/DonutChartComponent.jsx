@@ -3,7 +3,7 @@ import './DonutChartComponent.css';
 
 function DonutChartComponent({ 
     data = [], 
-    colors = ["var(--black-color)", "#4ECDC4", "#FF6B6B", "#FFD166", "#118AB2", "#06D6A0"],
+    colors = ["var(--red-color)", "var(--orange-color)", "var(--yellow-color)", "var(--green-color)", "var(--light-blue-color)", "var(--dark-blue-color)", "var(--purple-color)"],
     unit = "RON",
     size = "250px"
 }) {

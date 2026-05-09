@@ -3,6 +3,7 @@ import './DashboardContent.css';
 import DonutChartComponent from '../ChartComponents/DonutChartComponent/DonutChartComponent';
 import RadialGaugeComponent from '../ChartComponents/RadialGaugeComponent/RadialGaugeComponent';
 import BarChartComponent from '../ChartComponents/BarChartComponent/BarChartComponent';
+import CategoryIcon from '../Icons/Categories/CategoryIcon';
 import { useLanguage } from '../context/LanguageContext';
 import { useLoading } from '../context/LoadingContext';
 
@@ -89,6 +90,11 @@ function DashboardContent() {
     const { t } = useLanguage();
     const { setIsLoading } = useLoading();
     
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem("user");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+
     const [dashboardData, setDashboardData] = useState({
         donut: [],
         bar: { previousExpense: 0, currentExpense: 0 },
@@ -130,7 +136,8 @@ function DashboardContent() {
     return (
         <div className="dashboard-content-wrapper">
             <div className="welcome-message">
-                <h1>{t('dashboard.welcome')}, {localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""}</h1>
+                {/* 2. Acum folosim obiectul `user` direct, mult mai elegant */}
+                <h1>{t('dashboard.welcome')}, {user ? user.username : ""}</h1>
             </div>
             
             <div className="dashboard-content-upper-section">
@@ -179,7 +186,17 @@ function DashboardContent() {
                         {
                             dashboardData.recent.length > 0 ? dashboardData.recent.map(transaction => (
                                 <div className="dashboard-recent-transaction" key={transaction.id}>
-                                    
+                                    <div className="recent-transaction-icon-file">
+                                        <div className="recent-right-side">
+                                            <CategoryIcon iconFile={transaction.iconFile} style={{ height: "35px", width: "auto" }}/>
+                                            <p className="recent-transaction-description">{transaction.description}</p>       
+                                        </div>
+                                        <div className="recent-left-side">
+                                            <div className="recent-transaction-amount">
+                                                {transaction.amount} {user ? user.currency : "RON"}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             )) 
                             : 
