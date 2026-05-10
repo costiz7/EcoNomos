@@ -6,6 +6,7 @@ import BarChartComponent from '../ChartComponents/BarChartComponent/BarChartComp
 import CategoryIcon from '../Icons/Categories/CategoryIcon';
 import { useLanguage } from '../context/LanguageContext';
 import { useLoading } from '../context/LoadingContext';
+import Transaction from '../Transaction/Transaction';
 
 const fetchRecentTransactions = async(token) => {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/recent`, {
@@ -185,19 +186,7 @@ function DashboardContent() {
                     <div className="dashboard-recent-transactions-list">
                         {
                             dashboardData.recent.length > 0 ? dashboardData.recent.map(transaction => (
-                                <div className="dashboard-recent-transaction" key={transaction.id}>
-                                    <div className="recent-transaction-icon-file">
-                                        <div className="recent-right-side">
-                                            <CategoryIcon iconFile={transaction.iconFile} style={{ height: "35px", width: "auto" }}/>
-                                            <p className="recent-transaction-description">{transaction.description}</p>       
-                                        </div>
-                                        <div className="recent-left-side">
-                                            <div className="recent-transaction-amount">
-                                                {transaction.amount} {user ? user.currency : "RON"}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <Transaction key={transaction.id} transaction={transaction} user={user}/>
                             )) 
                             : 
                             <p>Nu exista date.</p>

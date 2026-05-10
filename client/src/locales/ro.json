@@ -84,5 +84,13 @@
     "lastMonthLabel": "Luna Trecută",
     "thisMonthLabel": "Luna Asta",
     "recentTitle": "Tranzacții recente"
+  },
+  "transaction": {
+    "description": "Descriere",
+    "amount": "Suma",
+    "date": "Data",
+    "category": "Categorie",
+    "type": "Tip",
+    "source": "Sursa"
   }
 }

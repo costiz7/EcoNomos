@@ -84,5 +84,13 @@
     "lastMonthLabel": "Last Month",
     "thisMonthLabel": "This Month",
     "recentTitle": "Recent transactions"
+  },
+  "transaction": {
+    "description": "Description",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "type": "Type",
+    "source": "Source"
   }
 }

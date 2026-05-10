@@ -42,5 +42,32 @@
     border-radius: 10px;
     box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
     border: 4px solid var(--black-color);
-    min-height: 220px;
+    height: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.dashboard-lower-card > .dashboard-lower-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2px 0px;
+}
+
+.dashboard-lower-card > .dashboard-recent-transactions-list {
+    position: relative;
+    width: 100%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--black-color) transparent;
+    user-select: none;
+}
+
+.dashboard-recent-transactions-list {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
