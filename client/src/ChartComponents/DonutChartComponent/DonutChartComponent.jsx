@@ -11,9 +11,15 @@ function DonutChartComponent({
     const [isAnimated, setIsAnimated] = useState(false);
 
     useEffect(() => {
+        if (!data || data.length === 0) {
+            setIsAnimated(false);
+            return;
+        }
+
         const timeout = setTimeout(() => setIsAnimated(true), 50);
+        
         return () => clearTimeout(timeout);
-    }, []);
+    }, [data]);
 
     if (!data || !Array.isArray(data) || data.length === 0) {
         return <p>Nu există date.</p>;
