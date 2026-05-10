@@ -9,7 +9,7 @@ import { useLoading } from '../context/LoadingContext';
 import Transaction from '../Transaction/Transaction';
 
 const fetchRecentTransactions = async(token) => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/recent`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions`, {
         headers: { 'token' : token }
     });
     if(!response.ok) {

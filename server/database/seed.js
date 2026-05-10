@@ -10,7 +10,19 @@ export const seedCategories = async () => {
             { name: 'entertainment', type: 'expense', iconFile: 'icon_entertainment' },
             { name: 'shopping', type: 'expense', iconFile: 'icon_shopping' },
             { name: 'health', type: 'expense', iconFile: 'icon_health' },
-            { name: 'salary', type: 'income', iconFile: 'icon_salary' }
+
+            { name: 'housing', type: 'expense', iconFile: 'icon_housing' },
+            { name: 'travel', type: 'expense', iconFile: 'icon_travel' },
+            { name: 'education', type: 'expense', iconFile: 'icon_education' },
+            { name: 'personal_care', type: 'expense', iconFile: 'icon_personal_care' },
+            { name: 'pets', type: 'expense', iconFile: 'icon_pets' },
+            { name: 'gifts', type: 'expense', iconFile: 'icon_gifts' },
+            { name: 'investments', type: 'expense', iconFile: 'icon_investments' },
+            
+            { name: 'salary', type: 'income', iconFile: 'icon_salary' },
+            { name: 'freelance', type: 'income', iconFile: 'icon_freelance' },
+            { name: 'dividends', type: 'income', iconFile: 'icon_dividends' },
+            { name: 'refunds', type: 'income', iconFile: 'icon_refunds' }
         ];
 
         for (const cat of defaultCategories) {

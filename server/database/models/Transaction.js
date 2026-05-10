@@ -22,8 +22,12 @@ Transaction.init({
         defaultValue: DataTypes.NOW,
         allowNull: false
     },
-    description: {
+    title: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+    description: {
+        type: DataTypes.TEXT,
         allowNull: true,
         defaultValue: ''
     },

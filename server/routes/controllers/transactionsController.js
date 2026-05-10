@@ -91,7 +91,11 @@ const getTransactions = async (req, res) => {
  */
 const addTransaction = async (req, res) => {
     try {
-        const { amount, date, description, categoryId } = req.body;
+        const { amount, date, title, description, categoryId } = req.body;
+
+        if(!title) {
+            return res.status(400).json({ errorCode: 'MISSING_TITLE' });
+        }
 
         if(!amount) {
             return res.status(400).json({ errorCode: 'MISSING_AMOUNT' });
@@ -119,6 +123,7 @@ const addTransaction = async (req, res) => {
             amount,
             date,
             description,
+            title,
             userId: req.user.id,
             categoryId
         });
@@ -661,33 +666,43 @@ export const getDailyAverage = async (req, res) => {
  */
 const generateMockBankData = () => {
     const merchants = [
-        'Lidl', 'Kaufland', 'Mega Image', 'Carrefour', 'Auchan',
-        'Uber', 'Bolt', 'OMV', 'Petrom', 'Rompetrol',
-        'Netflix', 'Spotify', 'Cinema City', 'Steam',
-        'E.ON', 'Enel', 'Digi', 'Vodafone', 'Orange',
-        'Zara', 'H&M', 'Nike', 'Emag', 'Altex',
-        'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz'
+            'Lidl', 'Kaufland', 'Mega Image', 'Carrefour', 'Auchan', 'Profi', 'Penny', 'Freshful',
+            'Uber', 'Bolt', 'OMV', 'Petrom', 'Rompetrol', 'MOL', 'CFR Călători', 'STB',
+            'Netflix', 'Spotify', 'Cinema City', 'Steam', 'HBO Max', 'Disney+', 'PlayStation',
+            'E.ON', 'Enel', 'Digi', 'Vodafone', 'Orange', 'Telekom', 'Engie', 'Hidroelectrica',
+            'Zara', 'H&M', 'Nike', 'Emag', 'Altex', 'Flanco', 'PC Garage', 'Notino', 'Sephora',
+            'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz', 'Burger King', 'Pizza Hut',
+            'Regina Maria', 'MedLife', 'Sanador', 'Farmacia Tei', 'Catena', 'Dr. Max', 'Help Net',
+            'World Class', 'Stay Fit', 'Decathlon', 'ESX',
+            'Dedeman', 'IKEA', 'Leroy Merlin', 'Jysk', 'Brico Depot',
+            'Booking.com', 'Airbnb', 'Wizz Air', 'Ryanair', 'Tarom'
     ];
 
     const incomeSources = [
-        'Salariu S.C. IT Corp SRL', 
-        'Upwork Freelancing', 
-        'Fiverr', 
-        'Bursa', 
-        'Dividende BVB'
+        'IT Corp LLC Salary',       
+        'Upwork Freelancing',       
+        'Fiverr Contract',          
+        'Stock Market Dividends',   
+        'Tax Refund'                
     ];
 
     const transactions = [];
     const endDate = new Date();
     const startDate = new Date();
     
-    startDate.setMonth(startDate.getMonth() - 6);
+    // Set for 7 full months
+    startDate.setMonth(startDate.getMonth() - 7);
 
     let currentMonthTracker = -1;
+    
+    // Loop through every single day
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        
+        // 1. Generate INCOMES (once per month)
         if (d.getMonth() !== currentMonthTracker) {
             currentMonthTracker = d.getMonth(); 
             
+            // 1 to 2 incomes per month
             const incomesThisMonth = Math.floor(Math.random() * 2) + 1; 
             
             for(let j = 0; j < incomesThisMonth; j++) {
@@ -698,7 +713,8 @@ const generateMockBankData = () => {
                 txDate.setHours(9, 30); 
 
                 transactions.push({
-                    description: source,
+                    title: source,
+                    description: 'Monthly income deposit',
                     amount: parseFloat(amount),
                     date: txDate,
                     source: 'bank'
@@ -706,17 +722,19 @@ const generateMockBankData = () => {
             }
         }
 
-        const expensesToday = Math.floor(Math.random() * 3) + 1; // 1-3 cheltuieli pe zi
+        // 2. Generate EXPENSES
+        const expensesToday = Math.floor(Math.random() * 4) + 2; 
 
         for (let i = 0; i < expensesToday; i++) {
             const merchant = merchants[Math.floor(Math.random() * merchants.length)];
-            const amount = (Math.random() * (300 - 15) + 15).toFixed(2); // Sume mai realiste pt cafele/cumpărături
+            const amount = (Math.random() * (300 - 15) + 15).toFixed(2);
             
             const txDate = new Date(d);
             txDate.setHours(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60));
 
             transactions.push({
-                description: merchant,
+                title: merchant,
+                description: `POS Transaction - ${merchant}`,
                 amount: parseFloat(amount),
                 date: txDate,
                 source: 'bank'
@@ -724,6 +742,7 @@ const generateMockBankData = () => {
         }
     }
 
+    // Sort descending by date
     return transactions.sort((a, b) => b.date - a.date);
 };
 
@@ -749,7 +768,7 @@ const importBankTransactions = async (req, res) => {
         const rawTransactions = generateMockBankData();
 
         // 1. Extract unique merchants to optimize the AI prompt payload
-        const uniqueMerchants = [...new Set(rawTransactions.map(tx => tx.description))];
+        const uniqueMerchants = [...new Set(rawTransactions.map(tx => tx.title))];
 
         // 2. Fetch all available categories for this user (both global and custom)
         const categories = await Category.findAll({
@@ -807,11 +826,12 @@ const importBankTransactions = async (req, res) => {
 
         // 5. Apply the AI mapping to all raw transactions
         const finalTransactions = rawTransactions.map(tx => {
-            const mappedCategoryId = merchantCategoryMapping[tx.description];
+            const mappedCategoryId = merchantCategoryMapping[tx.title];
             
             return {
                 amount: tx.amount,
                 date: tx.date,
+                title: tx.title,
                 description: tx.description,
                 categoryId: mappedCategoryId || fallbackCategoryId, // Fallback if AI misses one
                 source: tx.source,
@@ -891,18 +911,58 @@ const syncDailyTransactions = async (req, res) => {
 
         // 4. Generate raw mock transactions for the missing days
         const merchants = [
-            'Lidl', 'Kaufland', 'Mega Image', 'Carrefour', 'Auchan',
-            'Uber', 'Bolt', 'OMV', 'Petrom', 'Rompetrol',
-            'Netflix', 'Spotify', 'Cinema City', 'Steam',
-            'E.ON', 'Enel', 'Digi', 'Vodafone', 'Orange',
-            'Zara', 'H&M', 'Nike', 'Emag', 'Altex',
-            'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz'
+            'Lidl', 'Kaufland', 'Mega Image', 'Carrefour', 'Auchan', 'Profi', 'Penny', 'Freshful',
+            'Uber', 'Bolt', 'OMV', 'Petrom', 'Rompetrol', 'MOL', 'CFR Călători', 'STB',
+            'Netflix', 'Spotify', 'Cinema City', 'Steam', 'HBO Max', 'Disney+', 'PlayStation',
+            'E.ON', 'Enel', 'Digi', 'Vodafone', 'Orange', 'Telekom', 'Engie', 'Hidroelectrica',
+            'Zara', 'H&M', 'Nike', 'Emag', 'Altex', 'Flanco', 'PC Garage', 'Notino', 'Sephora',
+            'KFC', 'McDonalds', 'Starbucks', 'Glovo', 'Tazz', 'Burger King', 'Pizza Hut',
+            'Regina Maria', 'MedLife', 'Sanador', 'Farmacia Tei', 'Catena', 'Dr. Max', 'Help Net',
+            'World Class', 'Stay Fit', 'Decathlon', 'ESX',
+            'Dedeman', 'IKEA', 'Leroy Merlin', 'Jysk', 'Brico Depot',
+            'Booking.com', 'Airbnb', 'Wizz Air', 'Ryanair', 'Tarom'
+        ];
+
+        const incomeSources = [
+            'IT Corp LLC Salary', 
+            'Upwork Freelancing', 
+            'Fiverr Contract', 
+            'Stock Market Dividends', 
+            'Tax Refund'
         ];
 
         const rawTransactions = [];
+        
+        // Tracking the month to know when to inject incomes during sync
+        let currentMonthTracker = startDate.getMonth() - 1; 
 
         for (let d = new Date(startDate); d <= currentDate; d.setDate(d.getDate() + 1)) {
-            const expensesToday = Math.floor(Math.random() * 3) + 1; 
+            
+            // 4a. Incomes generation
+            if (d.getMonth() !== currentMonthTracker) {
+                currentMonthTracker = d.getMonth(); 
+                
+                const incomesThisMonth = Math.floor(Math.random() * 2) + 1; 
+                
+                for(let j = 0; j < incomesThisMonth; j++) {
+                    const source = incomeSources[Math.floor(Math.random() * incomeSources.length)];
+                    const amount = (Math.random() * (9000 - 3000) + 3000).toFixed(2); 
+                    
+                    const txDate = new Date(d);
+                    txDate.setHours(9, 30); 
+    
+                    rawTransactions.push({
+                        title: source,
+                        description: 'Monthly income deposit',
+                        amount: parseFloat(amount),
+                        date: txDate,
+                        source: 'bank'
+                    });
+                }
+            }
+
+            // 4b. Expenses generation (Updated to 2-5 per day)
+            const expensesToday = Math.floor(Math.random() * 4) + 2; 
 
             for (let i = 0; i < expensesToday; i++) {
                 const merchant = merchants[Math.floor(Math.random() * merchants.length)];
@@ -912,7 +972,8 @@ const syncDailyTransactions = async (req, res) => {
                 txDate.setHours(Math.floor(Math.random() * 20) + 6, Math.floor(Math.random() * 60));
 
                 rawTransactions.push({
-                    description: merchant,
+                    title: merchant,
+                    description: `POS Transaction - ${merchant}`,
                     amount: parseFloat(amount),
                     date: txDate,
                     source: 'bank'
@@ -928,7 +989,7 @@ const syncDailyTransactions = async (req, res) => {
         }
 
         // 5. Categorize transactions using Google Gemini AI
-        const uniqueMerchants = [...new Set(rawTransactions.map(tx => tx.description))];
+        const uniqueMerchants = [...new Set(rawTransactions.map(tx => tx.title))];
         const categories = await Category.findAll({
             where: { [Op.or]: [{ userId: req.user.id }, { userId: null }] }
         });
@@ -964,8 +1025,9 @@ const syncDailyTransactions = async (req, res) => {
         const finalTransactions = rawTransactions.map(tx => ({
             amount: tx.amount,
             date: tx.date,
+            title: tx.title,
             description: tx.description,
-            categoryId: merchantCategoryMapping[tx.description] || fallbackCategoryId,
+            categoryId: merchantCategoryMapping[tx.title] || fallbackCategoryId,
             source: tx.source,
             userId: req.user.id
         }));
