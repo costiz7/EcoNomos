@@ -26,45 +26,80 @@ import { GoogleGenAI } from '@google/genai';
  */
 const getTransactions = async (req, res) => {
     try {
-        const { month, year, categoryId, type } = req.query;
+        let { 
+            month, 
+            year, 
+            categoryId, 
+            type, 
+            page = 1, 
+            limit = 20 
+        } = req.query;
+
+        page = parseInt(page);
+        limit = parseInt(limit);
+        const offset = (page - 1) * limit;
 
         const whereClause = {
             userId: req.user.id
         };
 
-        const categoryInclude = {
-            model: Category,
-            attributes: ['name', 'iconFile', 'type']
-        };
-
-        if(month && year) {
+        if (month && year) {
             const startDate = new Date(year, month - 1, 1);
-            const endDate = new Date(year, month, 0);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
 
             whereClause.date = {
                 [Op.between]: [startDate, endDate]
-            }
+            };
+        }
+
+        if (categoryId) {
+            const categoryIds = Array.isArray(categoryId) 
+                ? categoryId 
+                : categoryId.toString().split(',');
+            
+            whereClause.categoryId = {
+                [Op.in]: categoryIds
+            };
+        }
+
+        const categoryInclude = {
+            model: Category,
+            attributes: ['name', 'iconFile', 'type'],
+            where: {}
         };
 
-        if(categoryId) {
-            whereClause.categoryId = categoryId;
+        if (type) {
+            categoryInclude.where.type = type;
+        } else {
+            delete categoryInclude.where;
         }
 
-        if(type) {
-            categoryInclude.where = { type: type };
-        }
-
-        const transactions = await Transaction.findAll({
+        const { count, rows } = await Transaction.findAndCountAll({
             where: whereClause,
             include: [categoryInclude],
-            order: [['date', 'DESC'], ['createdAt', 'DESC']]
+            order: [['date', 'DESC'], ['createdAt', 'DESC']],
+            limit: limit,
+            offset: offset,
+            distinct: true 
         });
 
-        res.status(200).json(transactions);
+        res.status(200).json({
+            transactions: rows,
+            pagination: {
+                totalItems: count,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page,
+                itemsPerPage: limit
+            }
+        });
+
     } catch (error) {
-        res.status(500).json({ errorCode: 'SERVER_ERROR', error: error.message });
+        res.status(500).json({ 
+            errorCode: 'SERVER_ERROR', 
+            error: error.message 
+        });
     }
-}
+};
 
 /**
  * Creates a new transaction for the authenticated user.
