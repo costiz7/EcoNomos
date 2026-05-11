@@ -5,6 +5,16 @@ import SalaryIcon from "./SalaryIcon.jsx";
 import ShoppingIcon from "./ShoppingIcon.jsx";
 import TransportIcon from "./TransportIcon.jsx";
 import UtilitiesIcon from "./UtilitiesIcon.jsx";
+import HousingIcon from "./HousingIcon.jsx";
+import TravelIcon from "./TravelIcon.jsx";
+import EducationIcon from "./EducationIcon.jsx";
+import PersonalCareIcon from "./PersonalCareIcon.jsx";
+import PetsIcon from "./PetsIcon.jsx";
+import GiftsIcon from "./GiftsIcon.jsx";
+import InvestmentsIcon from "./InvestmentsIcon.jsx";
+import FreelanceIcon from "./FreelanceIcon.jsx";
+import DividendsIcon from "./DividendsIcon.jsx";
+import RefundsIcon from "./RefundsIcon.jsx";
 
 function CategoryIcon({ iconFile, className, style }) {
     switch(iconFile) {
@@ -20,8 +30,28 @@ function CategoryIcon({ iconFile, className, style }) {
             return <ShoppingIcon className={ className } style={ style } /> 
         case "icon_health":
             return <HealthIcon className={ className } style={ style } /> 
+        case "icon_housing":
+            return <HousingIcon className={ className } style={ style } />
+        case "icon_travel":
+            return <TravelIcon className={ className } style={ style } />
+        case "icon_education":
+            return <EducationIcon className={ className } style={ style } />
+        case "icon_personal_care":
+            return <PersonalCareIcon className={ className } style={ style } />
+        case "icon_pets":
+            return <PetsIcon className={ className } style={ style } />
+        case "icon_gifts":
+            return <GiftsIcon className={ className } style={ style } />
+        case "icon_investments":
+            return <InvestmentsIcon className={ className } style={ style } />
         case "icon_salary":
             return <SalaryIcon className={ className } style={ style } />
+        case "icon_freelance":
+            return <FreelanceIcon className={ className } style={ style } />
+        case "icon_dividends":
+            return <DividendsIcon className={ className } style={ style } />
+        case "icon_refunds":
+            return <RefundsIcon className={ className } style={ style } />
         default:
             return null;  
     }
