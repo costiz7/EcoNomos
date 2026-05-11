@@ -42,7 +42,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, language } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({ errorCode: 'MISSING_CREDENTIALS' });
@@ -56,6 +56,11 @@ const login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch) {
             return res.status(400).json({ errorCode: 'INVALID_CREDENTIALS' });
+        }
+
+        if (language && user.language !== language) {
+            user.language = language;
+            await user.save();
         }
 
         const token = jwt.sign(

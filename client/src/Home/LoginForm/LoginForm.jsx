@@ -5,7 +5,7 @@ import { useLanguage } from '../../context/LanguageContext.jsx';
 import { useLoading } from '../../context/LoadingContext.jsx';
 
 function LoginForm({ onSwitchToRegister }) {
-    const { t } = useLanguage();
+    const { t, currentLang } = useLanguage();
     const { setIsLoading } = useLoading(); 
     
     const [email, setEmail] = useState('');
@@ -26,7 +26,7 @@ function LoginForm({ onSwitchToRegister }) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password, language: currentLang })
             });
 
             const data = await response.json();
