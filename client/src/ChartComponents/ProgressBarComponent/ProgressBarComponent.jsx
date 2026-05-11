@@ -24,11 +24,19 @@ function ProgressBarComponent({
     const displayCurrent = parseFloat(numericCurrent).toFixed(2);
     const displayMax = parseFloat(numericMax).toFixed(2);
 
-    // 4. Trigger animation on mount or value change
+    // 4. Initial animation trigger & data readiness optimization
     useEffect(() => {
+        // If there is no max value (data not loaded or missing), reset animation and wait
+        if (numericMax <= 0) {
+            setAnimatedWidth(0);
+            return;
+        }
+
+        // Once data is available, trigger the animation after a short delay
         const timeout = setTimeout(() => setAnimatedWidth(percentage), 50);
+        
         return () => clearTimeout(timeout);
-    }, [percentage]);
+    }, [percentage, numericMax]);
 
     return (
         <div 

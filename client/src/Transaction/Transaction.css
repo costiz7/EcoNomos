@@ -22,18 +22,18 @@
     filter: brightness(0.9);
 }
 
-.transaction-header > .header-right-side {
+.transaction-header > .header-left-side {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
-    font-weight: 500;
+    font-weight: 900;
     font-size: 1.1rem;
     letter-spacing: 1.5px;
 }
 
-.transaction-header > .header-left-side {
+.transaction-header > .header-right-side {
     position: relative;
     font-weight: bold;
     font-size: 1.1rem;

@@ -11,17 +11,21 @@ function Transaction({ transaction, user }) {
         setIsExpanded(!isExpanded);
     }
 
+    const isIncome = transaction.type === 'income';
+    const amountColor = isIncome ? 'var(--green-color)' : 'var(--red-color)';
+    const amountSign = isIncome ? '+' : '-';
+
     return (
         <>
             <div className="transaction-wrapper">
                 <div className="transaction-header" onClick={toggleExpansion}>
-                    <div className="header-right-side">
+                    <div className="header-left-side">
                         <CategoryIcon iconFile={transaction.iconFile} style={{ height: "35px", width: "auto" }}/>
                         <p className="header-transaction-title">{transaction.title}</p>       
                     </div>
-                    <div className="header-left-side">
-                        <div className="header-transaction-amount">
-                            {transaction.amount} {user ? user.currency : "RON"}
+                    <div className="header-right-side">
+                        <div className="header-transaction-amount" style={{ color: amountColor, fontWeight: 'bold' }}>
+                            {amountSign} {transaction.amount} {user ? user.currency : "RON"}
                         </div>
                     </div>
                 </div>
@@ -32,7 +36,9 @@ function Transaction({ transaction, user }) {
                             <span className="body-detail-value">{transaction.description || "-"}</span>
 
                             <span className="body-detail-label">{t('transaction.amount')}</span>
-                            <span className="body-detail-value">{transaction.amount} {user ? user.currency : "RON"}</span>
+                            <span className="body-detail-value" style={{ color: amountColor, fontWeight: 'bold' }}>
+                                {amountSign} {transaction.amount} {user ? user.currency : "RON"}
+                            </span>
 
                             <span className="body-detail-label">{t('transaction.date')}</span>
                             <span className="body-detail-value">{transaction.date}</span>

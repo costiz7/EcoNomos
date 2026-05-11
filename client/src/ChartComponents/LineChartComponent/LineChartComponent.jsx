@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LineChartComponent.css';
 
 function LineChartComponent({ 
     data = [], 
     color = "var(--black-color)",
-    width = "100%", // Restored your control
-    height = "250px", // Restored your control
-    unit = "RON" // Reusability
+    width = "100%", 
+    height = "250px", 
+    unit = "RON" 
 }) {
     const [hoveredPoint, setHoveredPoint] = useState(null);
+    const [isAnimated, setIsAnimated] = useState(false);
 
-    // Guard clause: Line charts need at least 2 points to draw a path
+    // 1. Initial animation trigger & data readiness optimization
+    useEffect(() => {
+        // If there is no data or not enough data points, reset animation and wait
+        if (!data || !Array.isArray(data) || data.length < 2) {
+            setIsAnimated(false);
+            return;
+        }
+
+        // Once data is available, trigger the animation after a short delay
+        const timeout = setTimeout(() => setIsAnimated(true), 50);
+        
+        return () => clearTimeout(timeout);
+    }, [data]);
+
+    // 2. Guard clause: Line charts need at least 2 points to draw a path
     if (!data || !Array.isArray(data) || data.length < 2) {
-        return <p>Nu există suficiente date pentru un grafic.</p>;
+        return <p>Not enough data for a chart.</p>;
     }
 
-    // SVG Internal Coordinates
+    // 3. SVG Internal Coordinates
     const svgWidth = 800;
     const svgHeight = 250;
     const paddingX = 40; 
@@ -48,18 +63,23 @@ function LineChartComponent({
                     </linearGradient>
                 </defs>
 
-                <path 
-                    d={fillPath} 
-                    fill="url(#lineGradient)" 
-                    className="line-fill-anim" 
-                />
+                {/* Render the paths only when isAnimated is true to trigger CSS @keyframes on mount */}
+                {isAnimated && (
+                    <>
+                        <path 
+                            d={fillPath} 
+                            fill="url(#lineGradient)" 
+                            className="line-fill-anim" 
+                        />
 
-                <path 
-                    d={linePath} 
-                    fill="none" 
-                    stroke={color} 
-                    className="line-stroke-anim" 
-                />
+                        <path 
+                            d={linePath} 
+                            fill="none" 
+                            stroke={color} 
+                            className="line-stroke-anim" 
+                        />
+                    </>
+                )}
 
                 {points.map((p, i) => {
                     const isHovered = hoveredPoint === i;
@@ -71,6 +91,11 @@ function LineChartComponent({
                             className="point-group" 
                             onMouseEnter={() => setHoveredPoint(i)} 
                             onMouseLeave={() => setHoveredPoint(null)}
+                            // Smooth fade-in for the points to match the line drawing
+                            style={{ 
+                                opacity: isAnimated ? 1 : 0, 
+                                transition: 'opacity 0.6s ease-in 0.3s' 
+                            }} 
                         >
                             {isHovered && (
                                 <line 

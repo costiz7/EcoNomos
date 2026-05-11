@@ -10,7 +10,21 @@ const RadialGaugeComponent = ({
   height = "auto" // Container control
 }) => {
   const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
+  const [delayedTarget, setDelayedTarget] = useState(0);
 
+  // 1. Initial animation trigger & data readiness optimization
+  useEffect(() => {
+    // If there is no valid target percentage, reset and wait
+    if (targetPercentage <= 0) {
+        setDelayedTarget(0);
+        return;
+    }
+
+    // Once data is available, set the actual target after a short delay
+    const timeout = setTimeout(() => setDelayedTarget(targetPercentage), 50);
+    
+    return () => clearTimeout(timeout);
+  }, [targetPercentage]); 
   // SVG Internal Coordinates
   const centerCoordinateX = 175;
   const centerCoordinateY = 175; 
@@ -25,9 +39,9 @@ const RadialGaugeComponent = ({
   
   const convertDegreesToRadians = (angleInDegrees) => angleInDegrees * (Math.PI / 180);
 
-  // Custom Animation Hook
+  // 2. Custom Animation Hook (now tracks the delayedTarget instead of raw targetPercentage)
   useEffect(() => {
-    if (currentAnimatedPercentage === targetPercentage) return;
+    if (currentAnimatedPercentage === delayedTarget) return;
 
     let animationFrameIdentifier;
     let animationStartTime = null;
@@ -39,7 +53,7 @@ const RadialGaugeComponent = ({
       
       const rawAnimationProgress = Math.min((currentTimestamp - animationStartTime) / animationDurationInMilliseconds, 1);
       const smoothedAnimationProgress = 1 - Math.pow(1 - rawAnimationProgress, 3); // Cubic ease-out
-      const newlyCalculatedPercentage = startingPercentageValue + (targetPercentage - startingPercentageValue) * smoothedAnimationProgress;
+      const newlyCalculatedPercentage = startingPercentageValue + (delayedTarget - startingPercentageValue) * smoothedAnimationProgress;
       
       setCurrentAnimatedPercentage(newlyCalculatedPercentage);
 
@@ -51,9 +65,9 @@ const RadialGaugeComponent = ({
     animationFrameIdentifier = requestAnimationFrame(executeAnimationStep);
     return () => cancelAnimationFrame(animationFrameIdentifier);
     
-  }, [targetPercentage, currentAnimatedPercentage]); 
+  }, [delayedTarget, currentAnimatedPercentage]); 
 
-  // Calculate lines position and active state
+  // 3. Calculate lines position and active state
   const lineSegments = useMemo(() => {
     // CAP THE VISUAL PERCENTAGE: Never draw more than 100%, even if the number goes higher
     const visualPercentage = Math.min(100, currentAnimatedPercentage);
@@ -133,7 +147,7 @@ const RadialGaugeComponent = ({
           y={firstSegment.endY + 20} 
           className="gauge-text-label"
         >
-          0
+          0%
         </text>
 
         {/* Max Label */}
@@ -142,7 +156,7 @@ const RadialGaugeComponent = ({
           y={lastSegment.endY + 20} 
           className="gauge-text-label"
         >
-          100
+          100%
         </text>
       </svg>
     </div>
