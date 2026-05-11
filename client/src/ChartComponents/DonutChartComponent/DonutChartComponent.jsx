@@ -3,7 +3,10 @@ import './DonutChartComponent.css';
 
 function DonutChartComponent({ 
     data = [], 
-    colors = ["var(--red-color)", "var(--orange-color)", "var(--yellow-color)", "var(--green-color)", "var(--light-blue-color)", "var(--dark-blue-color)", "var(--purple-color)"],
+    colors = ["var(--red-color)", "var(--orange-color)", "var(--yellow-color)", "var(--green-color)", "var(--light-blue-color)", "var(--dark-blue-color)", "var(--purple-color)",
+        "var(--light-red-color)", "var(--dark-orange-color)", "var(--light-yellow-color)", "var(--dark-green-color)", "var(--blue-color)", "var(--dark-purple-color)",
+        "var(--dark-red-color)", "var(--light-orange-color)", "var(--dark-yellow-color)", "var(--light-green-color)", "var(--light-purple-color)"
+    ],
     unit = "RON",
     size = "250px"
 }) {

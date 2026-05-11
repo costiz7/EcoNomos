@@ -17,7 +17,7 @@ function Transaction({ transaction, user }) {
                 <div className="transaction-header" onClick={toggleExpansion}>
                     <div className="header-right-side">
                         <CategoryIcon iconFile={transaction.iconFile} style={{ height: "35px", width: "auto" }}/>
-                        <p className="header-transaction-description">{transaction.description}</p>       
+                        <p className="header-transaction-title">{transaction.title}</p>       
                     </div>
                     <div className="header-left-side">
                         <div className="header-transaction-amount">
@@ -29,7 +29,7 @@ function Transaction({ transaction, user }) {
                     <div className="transaction-body">
                         <div className="body-transaction-details">
                             <span className="body-detail-label">{t('transaction.description')}</span>
-                            <span className="body-detail-value">{transaction.description}</span>
+                            <span className="body-detail-value">{transaction.description || "-"}</span>
 
                             <span className="body-detail-label">{t('transaction.amount')}</span>
                             <span className="body-detail-value">{transaction.amount} {user ? user.currency : "RON"}</span>
@@ -38,7 +38,10 @@ function Transaction({ transaction, user }) {
                             <span className="body-detail-value">{transaction.date}</span>
 
                             <span className="body-detail-label">{t('transaction.category')}</span>
-                            <span className="body-detail-value">{transaction.name}</span>
+                            <span className="body-detail-value">{t(`categories.${transaction.name}`) !== `categories.${transaction.name}` 
+                                                                ? t(`categories.${transaction.name}`) 
+                                                                : transaction.name}
+                            </span>
 
                             <span className="body-detail-label">{t('transaction.type')}</span>
                             <span className="body-detail-value">{transaction.type}</span>

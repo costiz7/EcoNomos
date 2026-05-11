@@ -9,7 +9,7 @@ import { useLoading } from '../context/LoadingContext';
 import Transaction from '../Transaction/Transaction';
 
 const fetchRecentTransactions = async(token) => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/recent`, {
         headers: { 'token' : token }
     });
     if(!response.ok) {
@@ -22,6 +22,7 @@ const fetchRecentTransactions = async(token) => {
             id: obj.id,
             amount: obj.amount,
             date: obj.date,
+            title: obj.title,
             description: obj.description,
             source: obj.source,
             name: obj.Category?.name,
@@ -32,7 +33,7 @@ const fetchRecentTransactions = async(token) => {
     }, []);
 }
 
-const fetchDonutData = async (token) => {
+const fetchDonutData = async (token, t) => {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/breakdown`, {
         headers: { 'token': token }
     });
@@ -42,7 +43,9 @@ const fetchDonutData = async (token) => {
     const data = await response.json();
 
     return data.map(item => ({
-        label: item.category,
+        label: t(`categories.${item.category}`) !== `categories.${item.category}` 
+                ? t(`categories.${item.category}`) 
+                : item.category,
         value: item.total
     }));
 }
@@ -115,7 +118,7 @@ function DashboardContent() {
             }
 
             const results = await Promise.allSettled([
-                fetchDonutData(token),
+                fetchDonutData(token, t),
                 fetchBarData(token),
                 fetchGaugeData(token),
                 fetchRecentTransactions(token)
@@ -172,7 +175,8 @@ function DashboardContent() {
                     <RadialGaugeComponent 
                         targetPercentage={dashboardData.gauge} 
                         color={dashboardData.gauge >= 80 ? "#ef4444" : "var(--black-color)"}
-                        height="80%" 
+                        height="100%" 
+                        width="85%"
                     />
                 </div>
 
