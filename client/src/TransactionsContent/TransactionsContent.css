@@ -1,0 +1,162 @@
+.transactions-content-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Baza comună pentru carduri */
+.transactions-filter-card,
+.transactions-list-card {
+    position: relative;
+    background-color: var(--white-color);
+    border: 4px solid var(--black-color);
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Padding doar pentru cardul de filtre */
+.transactions-filter-card {
+    padding: 10px 20px 20px 20px;
+}
+
+/* Fără padding aici ca tranzacțiile să se lipească de margini */
+.transactions-list-card {
+    flex: 1;
+    min-height: 500px;
+    padding: 0px; 
+    overflow: hidden; /* Important ca să păstreze colțurile rotunjite */
+}
+
+/* Header-ul comun */
+.transactions-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0px 20px 0px;
+}
+
+/* Header-ul listei puțin mai strâns, ca în dashboard */
+.transactions-list-card .transactions-card-header {
+    padding: 15px 0px 10px 0px; 
+}
+
+.transactions-card-header > h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--black-color);
+}
+
+.transactions-filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-item > label {
+    font-weight: bold;
+    color: var(--black-color);
+    font-size: 1.1rem;
+}
+
+.apply-filters-btn {
+    height: 50px;
+    padding: 0 25px;
+    background-color: var(--black-color);
+    color: var(--white-color);
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: 3px solid var(--black-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 200ms ease;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+}
+
+.apply-filters-btn:hover {
+    background-color: var(--white-color);
+    color: var(--black-color);
+}
+
+/* Container-ul tranzacțiilor */
+.transactions-list {
+    position: relative;
+    width: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--black-color) transparent;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.no-transactions-message {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--black-color);
+    margin-top: 40px;
+}
+
+/* Paginarea primește acum padding, pentru că l-am scos de pe cardul părinte */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 0px;
+    border-top: 4px solid var(--black-color); 
+}
+
+.pagination-btn {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border: 3px solid var(--black-color);
+    border-radius: 5px;
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: 200ms ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--black-color);
+    color: var(--white-color);
+}
+
+.pagination-btn.active {
+    background-color: var(--black-color);
+    color: var(--white-color);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--black-color);
+    color: var(--black-color);
+}
+
+.pagination-dots {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--black-color);
+    user-select: none;
+}

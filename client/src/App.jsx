@@ -3,6 +3,7 @@ import Home from "./Home/Home.jsx"
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import MainLayout from "./MainLayout/MainLayout.jsx";
 import DashboardContent from "./DashboardContent/DashboardContent.jsx";
+import TransactionsContent from "./TransactionsContent/TransactionsContent.jsx";
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
           <Route element={ <ProtectedRoute/> }>
             <Route element={ <MainLayout /> }>
               <Route path="/dashboard" element={ <DashboardContent /> }/>
-              <Route path="/transactions" element=""/>
+              <Route path="/transactions" element={ <TransactionsContent /> }/>
               <Route path="/statistics" element=""/>
               <Route path="/savings" element=""/>
               <Route path="/budgets" element="" />
