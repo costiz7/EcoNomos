@@ -170,3 +170,74 @@
 .logoutBtn:hover {
     filter:brightness(0.7);
 }
+
+@media (max-width: 500px) {
+    .main-layout-topbar {
+        height: 60px;
+        padding: 0px 8px;
+    }
+
+    .main-layout-content {
+        padding: 12px 0px;
+    }
+
+    .logoutBtn {
+        padding: 3px 5px;
+        font-size: 0.7rem;
+    }
+
+    .topbar-left-side {
+        gap: 10px;
+    }
+
+    .topbar-left-side > .universal-content {
+        gap: 2px;
+    }
+
+    .topbar-left-side > .universal-content > h2 {
+        font-size: 0.8rem;
+        font-weight: 900;
+    }
+
+    .hamburger-menu {
+        gap: 4px;
+    }
+
+    .hamburger-menu .line {
+        width: 20px;
+        height: 4px;
+    }
+
+    .hamburger-menu.active .line:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    
+    .hamburger-menu.active .line:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .main-layout-sidebar {
+        top: 60px;       
+        width: 250px;
+        height: calc(100vh - 60px);
+    }
+
+    .main-layout-sidebar a {
+        font-size: 1rem;
+        padding: 7px 10px;
+    }
+
+    .sidebar-icons {
+        width: 28px;
+        margin-right: 15px;
+    }
+
+    .sidebar-overlay {
+        top: 60px;
+        height: calc(100vh - 60px); 
+    }
+
+    .logo-icon {
+        width: 35px !important;
+    }
+}

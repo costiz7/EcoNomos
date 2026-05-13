@@ -110,7 +110,6 @@ function TransactionsContent() {
     // Initial fetch when the component mounts
     useEffect(() => {
         fetchTransactions(1, appliedFilters);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Handler for the "Apply Filters" button

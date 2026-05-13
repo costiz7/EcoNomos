@@ -3,10 +3,9 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
 }
 
-/* Baza comună pentru carduri */
 .transactions-filter-card,
 .transactions-list-card {
     position: relative;
@@ -19,34 +18,28 @@
     width: 100%;
 }
 
-/* Padding doar pentru cardul de filtre */
 .transactions-filter-card {
-    padding: 10px 20px 20px 20px;
+    padding: 10px 20px 10px 20px;
 }
 
-/* Fără padding aici ca tranzacțiile să se lipească de margini */
 .transactions-list-card {
     flex: 1;
     min-height: 500px;
-    padding: 0px; 
-    overflow: hidden; /* Important ca să păstreze colțurile rotunjite */
+    overflow: hidden;
 }
 
-/* Header-ul comun */
 .transactions-card-header {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 10px 0px 20px 0px;
+    padding: 0px 0px 10px 0px;
 }
 
-/* Header-ul listei puțin mai strâns, ca în dashboard */
 .transactions-list-card .transactions-card-header {
-    padding: 15px 0px 10px 0px; 
+    padding: 10px 0px 10px 0px; 
 }
 
 .transactions-card-header > h2 {
-    margin: 0;
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--black-color);
@@ -55,7 +48,7 @@
 .transactions-filters-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
     align-items: flex-end;
     justify-content: center;
 }
@@ -63,7 +56,7 @@
 .filter-item {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 1px;
     flex: 1;
     min-width: 180px;
 }
@@ -71,11 +64,14 @@
 .filter-item > label {
     font-weight: bold;
     color: var(--black-color);
-    font-size: 1.1rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
 }
 
 .apply-filters-btn {
-    height: 50px;
+    position: relative;
+    bottom: 10px;
+    height: 41px;
     padding: 0 25px;
     background-color: var(--black-color);
     color: var(--white-color);
@@ -86,15 +82,13 @@
     border-radius: 5px;
     cursor: pointer;
     transition: 200ms ease;
-    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
 .apply-filters-btn:hover {
-    background-color: var(--white-color);
-    color: var(--black-color);
+    filter: brightness(0.7);
 }
 
-/* Container-ul tranzacțiilor */
 .transactions-list {
     position: relative;
     width: 100%;
@@ -114,14 +108,13 @@
     margin-top: 40px;
 }
 
-/* Paginarea primește acum padding, pentru că l-am scos de pe cardul părinte */
 .pagination-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     padding: 15px 0px;
-    border-top: 4px solid var(--black-color); 
+    border-top: 1px solid var(--black-color); 
 }
 
 .pagination-btn {
@@ -157,6 +150,91 @@
 .pagination-dots {
     font-weight: bold;
     font-size: 1.2rem;
+    letter-spacing: 2px;
     color: var(--black-color);
     user-select: none;
+}
+
+@media (max-width: 750px) {
+    .pagination-container {
+        gap: 10px;
+        padding: 10px 0px;
+        width: 100%; 
+    }
+
+    .pagination-btn {
+        font-size: 0.9rem;
+        padding: 5px 8px;
+    }
+
+    .pagination-dots {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+    }
+    
+}
+
+@media (max-width: 500px) {
+    .pagination-container {
+        gap: 5px;
+        padding: 8px 0px;
+        width: 100%; 
+    }
+
+    .pagination-btn {
+        font-size: 0.9rem;
+        padding: 2px 7px;
+    }
+
+    .pagination-dots {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+
+    .transactions-filter-card,
+    .transactions-list-card {
+        border: none;
+        border-bottom: 4px solid var(--black-color);
+        border-radius: 0px;
+        box-shadow: none;
+    }
+
+    .transactions-list-card {
+        border-bottom: none;
+    }
+
+    .transactions-filter-card {
+        padding: 0px 10px 5px 10px;
+    }
+
+    .transactions-card-header {
+        padding: 0px 0px 0px 0px;
+    }
+
+    .transactions-list-card .transactions-card-header {
+        padding: 0px 0px 10px 0px; 
+        display: none;
+    }
+
+    .transactions-card-header > h2 {
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+        
+    }
+
+    .transactions-filters-container {
+        gap: 10px;
+    }
+
+    .filter-item > label {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    .apply-filters-btn {
+        height: 35px;
+        padding: 0 20px;
+        font-size: 0.8rem;
+        margin-top: 10px;
+    }   
 }
