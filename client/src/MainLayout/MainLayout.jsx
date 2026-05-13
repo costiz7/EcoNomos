@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import './MainLayout.css';
@@ -10,10 +11,12 @@ import SavingsIcon from "../Icons/SavingsIcon";
 import BudgetsIcon from "../Icons/BudgetsIcon";
 import ProfileIcon from "../Icons/ProfileIcon";
 import SettingsIcon from "../Icons/SettingsIcon";
+import LogoutIcon from "../Icons/LogoutIcon";
 
 function MainLayout() {
     const location = useLocation();
     const { t } = useLanguage();
+    const navigate = useNavigate();
 
     const [ isSidebarOpen, setIsSidebarOpen ] = useState(false);
 
@@ -34,6 +37,12 @@ function MainLayout() {
         }
     };
 
+    function logoutHandle() {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        navigate('/', { replace: true });
+    }
+
     return (
         <>
         <div className="main-layout-wrapper">
@@ -50,7 +59,10 @@ function MainLayout() {
                     </div>
                 </div>
                 <div className="topbar-right-side">
-                    {/*Avatar Profile */}
+                    <button onClick={logoutHandle} className="logoutBtn">
+                        Log out
+                        <LogoutIcon style={{height: "30px"}}/>
+                    </button>
                 </div>
             </div>
             <div className="main-layout">
