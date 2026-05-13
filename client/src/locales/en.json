@@ -79,6 +79,22 @@
     "dividends": "Dividends",
     "refunds": "Refunds"
   },
+  "transactions": {
+    "filtersTitle": "Filters",
+    "typeLabel": "Type",
+    "categoryLabel": "Category",
+    "yearLabel": "Year",
+    "monthLabel": "Month",
+    "all": "All",
+    "income": "Income",
+    "expense": "Expense",
+    "selectYearFirst": "Select Year First",
+    "applyBtn": "Apply Filters",
+    "listTitle": "Transactions",
+    "noData": "No transactions found.",
+    "prevBtn": "Previous",
+    "nextBtn": "Next"
+  },
   "errors": {
     "SERVER_ERROR": "An internal server error occurred. Please try again later.",
     "NETWORK_ERROR": "Cannot connect to the server. Please check your internet connection.",

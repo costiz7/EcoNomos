@@ -43,13 +43,22 @@ const getTransactions = async (req, res) => {
             userId: req.user.id
         };
 
-        if (month && year) {
-            const startDate = new Date(year, month - 1, 1);
-            const endDate = new Date(year, month, 0, 23, 59, 59);
-
-            whereClause.date = {
-                [Op.between]: [startDate, endDate]
-            };
+        if (year) {
+            if (month) {
+                const startDate = new Date(year, month - 1, 1);
+                const endDate = new Date(year, month, 0, 23, 59, 59);
+                
+                whereClause.date = {
+                    [Op.between]: [startDate, endDate]
+                };
+            } else {
+                const startDate = new Date(year, 0, 1);
+                const endDate = new Date(year, 11, 31, 23, 59, 59);
+                
+                whereClause.date = {
+                    [Op.between]: [startDate, endDate]
+                };
+            }
         }
 
         if (categoryId) {

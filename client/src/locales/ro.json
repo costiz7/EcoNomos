@@ -79,6 +79,22 @@
     "dividends": "Dividende",
     "refunds": "Rambursări"
   },
+  "transactions": {
+    "filtersTitle": "Filtre",
+    "typeLabel": "Tip",
+    "categoryLabel": "Categorie",
+    "yearLabel": "An",
+    "monthLabel": "Lună",
+    "all": "Toate",
+    "income": "Venituri",
+    "expense": "Cheltuieli",
+    "selectYearFirst": "Selectează anul mai întâi",
+    "applyBtn": "Aplică Filtre",
+    "listTitle": "Tranzacții",
+    "noData": "Nu au fost găsite tranzacții.",
+    "prevBtn": "Înapoi",
+    "nextBtn": "Înainte"
+  },
   "errors": {
     "SERVER_ERROR": "A apărut o eroare la server. Te rugăm să încerci mai târziu.",
     "NETWORK_ERROR": "Nu mă pot conecta la server. Verifică conexiunea la internet.",
