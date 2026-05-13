@@ -5,7 +5,7 @@ function LogoutIcon({ className, style }) {
             style={style} 
             viewBox="0 0 32 32" 
             xmlns="http://www.w3.org/2000/svg"
-            fill="var(--white-color)"
+            fill="var(--black-color)"
         >
             <path d="M18,27H14.88A2.79,2.79,0,0,1,12,24.31V19h2v5.31a.81.81,0,0,0,.88.69H18Z" />
             <path d="M29,22H27V5.69A.81.81,0,0,0,26.13,5H14.88a.81.81,0,0,0-.88.69V11H12V5.69A2.79,2.79,0,0,1,14.88,3H26.13A2.79,2.79,0,0,1,29,5.69Z" />

@@ -73,3 +73,37 @@
     font-weight: 400;
     color: var(--black-color);
 }
+
+@media (max-width: 700px) {
+    .transaction-header {
+        padding: 7px 10px;
+    }
+
+    .transaction-header > .header-left-side {
+        gap: 10px;
+        font-weight: 900;
+        font-size: 0.9rem;
+        letter-spacing: 0px;
+    }
+
+    .transaction-header > .header-right-side {
+        font-size: 0.9rem;
+        letter-spacing: 0px;
+    }
+
+    .transaction-body-wrapper.expanded {
+        max-height: 350px;
+    }
+
+    .transaction-body {
+        padding: 8px 0px;
+    }
+
+    .body-detail-label {
+        font-size: 0.9rem;
+    }
+
+    .body-detail-value {
+        font-size: 0.9rem;
+    }
+}

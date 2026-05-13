@@ -4,7 +4,7 @@ import { useState } from 'react';
 function Dropdown({ 
     dataArr=[], 
     width=200, 
-    height=50, 
+    height=40, 
     displayLabel="Select", 
     labelKey = 'denumire', 
     onSelect,

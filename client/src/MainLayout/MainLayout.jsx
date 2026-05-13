@@ -54,15 +54,15 @@ function MainLayout() {
                         <div className="line"></div>
                     </div>
                     <div className="universal-content">
-                        <LogoIcon style={{ width: '50px', height: 'auto' }} className="logo-icon"/>
+                        <LogoIcon className="logo-icon"/>
                         <h2>/{getPageTitle().toLowerCase()}</h2>
                     </div>
                 </div>
                 <div className="topbar-right-side">
                     <button onClick={logoutHandle} className="logoutBtn">
-                        Log out
-                        <LogoutIcon className="logo-icon" style={{height: "30px"}}/>
+                        <LogoutIcon className="logout-icon" />
                     </button>
+                    
                 </div>
             </div>
             <div className="main-layout">

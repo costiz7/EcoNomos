@@ -19,7 +19,7 @@
 }
 
 .transactions-filter-card {
-    padding: 10px 20px 10px 20px;
+    padding: 10px 20px 20px 20px;
 }
 
 .transactions-list-card {
@@ -224,6 +224,9 @@
 
     .transactions-filters-container {
         gap: 10px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .filter-item > label {
@@ -231,10 +234,14 @@
         letter-spacing: 1px;
     }
 
+    .filter-item {
+        min-width: 220px;
+    }
+
     .apply-filters-btn {
-        height: 35px;
+        height: 45px;
         padding: 0 20px;
-        font-size: 0.8rem;
+        font-size: 01rem;
         margin-top: 10px;
     }   
 }
