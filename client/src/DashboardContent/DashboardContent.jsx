@@ -175,8 +175,6 @@ function DashboardContent() {
                     <RadialGaugeComponent 
                         targetPercentage={dashboardData.gauge} 
                         color={dashboardData.gauge >= 80 ? "#ef4444" : "var(--black-color)"}
-                        height="100%" 
-                        width="85%"
                     />
                 </div>
 

@@ -6,8 +6,9 @@ const RadialGaugeComponent = ({
   totalSegments = 60,
   color = "var(--black-color)", 
   inactiveColor = "#e2e8f0",
-  width = "auto", // Container control
-  height = "auto" // Container control
+  // Sizing logic aligned with BarChart and LineChart components
+  width = "100%", 
+  height = "250px" 
 }) => {
   const [currentAnimatedPercentage, setCurrentAnimatedPercentage] = useState(0);
   const [delayedTarget, setDelayedTarget] = useState(0);
@@ -25,6 +26,7 @@ const RadialGaugeComponent = ({
     
     return () => clearTimeout(timeout);
   }, [targetPercentage]); 
+
   // SVG Internal Coordinates
   const centerCoordinateX = 175;
   const centerCoordinateY = 175; 
@@ -39,7 +41,7 @@ const RadialGaugeComponent = ({
   
   const convertDegreesToRadians = (angleInDegrees) => angleInDegrees * (Math.PI / 180);
 
-  // 2. Custom Animation Hook (now tracks the delayedTarget instead of raw targetPercentage)
+  // 2. Custom Animation Hook
   useEffect(() => {
     if (currentAnimatedPercentage === delayedTarget) return;
 
@@ -69,7 +71,7 @@ const RadialGaugeComponent = ({
 
   // 3. Calculate lines position and active state
   const lineSegments = useMemo(() => {
-    // CAP THE VISUAL PERCENTAGE: Never draw more than 100%, even if the number goes higher
+    // Cap the visual percentage: Never draw more than 100%, even if the numeric value exceeds it
     const visualPercentage = Math.min(100, currentAnimatedPercentage);
     const activeSegmentsCount = Math.round((visualPercentage / 100) * totalSegments);
     
@@ -113,7 +115,7 @@ const RadialGaugeComponent = ({
       aria-valuenow={Math.round(currentAnimatedPercentage)} 
       aria-valuemin="0" 
       aria-valuemax="100"
-      style={{ width: width, height: height }} // Control from props
+      style={{ width: width, height: height }} // Standardized control from props
     >
       <svg 
         viewBox={`${viewBoxCoordinateX} ${viewBoxCoordinateY} ${viewBoxTotalWidth} ${viewBoxTotalHeight}`} 
@@ -132,7 +134,7 @@ const RadialGaugeComponent = ({
           />
         ))}
         
-        {/* Main Center Text (Can exceed 100) */}
+        {/* Main Center Text */}
         <text 
           x={centerCoordinateX} 
           y={centerCoordinateY - 20}
@@ -141,7 +143,7 @@ const RadialGaugeComponent = ({
           {Math.round(currentAnimatedPercentage)}%
         </text>
         
-        {/* Min Label */}
+        {/* Min Boundary Label */}
         <text 
           x={firstSegment.endX + 10} 
           y={firstSegment.endY + 20} 
@@ -150,7 +152,7 @@ const RadialGaugeComponent = ({
           0%
         </text>
 
-        {/* Max Label */}
+        {/* Max Boundary Label */}
         <text 
           x={lastSegment.endX - 10} 
           y={lastSegment.endY + 20} 
