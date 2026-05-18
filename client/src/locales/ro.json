@@ -115,6 +115,18 @@
     "topExpensesTitle": "Top Cele Mai Mari Cheltuieli",
     "noData": "Nu au fost găsite date."
   },
+  "settings": {
+    "pageTitle": "Setări",
+    "bankSyncTitle": "Sincronizare Bancară",
+    "bankSyncDesc": "Conectează-te la banca ta pentru a importa automat istoricul tranzacțiilor. Această acțiune utilizează AI pentru a-ți categorisi cheltuielile.",
+    "syncBtn": "Sincronizează cu Banca",
+    "syncedBtn": "Sincronizat & Activ",
+    "modalTitle": "Ești sigur?",
+    "modalDesc": "Această acțiune va importa tranzacțiile tale bancare din ultimele 7 luni și va activa sincronizarea zilnică. Vrei să continui?",
+    "modalNo": "Nu",
+    "modalYes": "Da, Sincronizează",
+    "syncSuccess": "Datele bancare au fost importate cu succes!"
+  },
   "errors": {
     "SERVER_ERROR": "A apărut o eroare la server. Te rugăm să încerci mai târziu.",
     "NETWORK_ERROR": "Nu mă pot conecta la server. Verifică conexiunea la internet.",

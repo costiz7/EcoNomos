@@ -109,11 +109,23 @@
     "expenseTrendTitle": "Expense Development (7 Mo)",
     "breakdownTitle": "Expense Breakdown",
     "momTitle": "Month over Month",
-    "previousMonth": "Prev Month",
-    "currentMonth": "Current Month",
+    "previousMonth": "Last Month",
+    "currentMonth": "This Month",
     "budgetConsumptionTitle": "Budget Consumption",
     "topExpensesTitle": "Top Biggest Expenses",
     "noData": "No transactions found."
+  },
+  "settings": {
+    "pageTitle": "Settings",
+    "bankSyncTitle": "Bank Synchronization",
+    "bankSyncDesc": "Connect to your bank to automatically import your transaction history. This action uses AI to categorize your expenses.",
+    "syncBtn": "Sync with Bank",
+    "syncedBtn": "Synced & Active",
+    "modalTitle": "Are you sure?",
+    "modalDesc": "This will import your bank transactions from the last 7 months and activate daily synchronization. Do you want to continue?",
+    "modalNo": "No",
+    "modalYes": "Yes, Sync",
+    "syncSuccess": "Bank data imported successfully!"
   },
   "errors": {
     "SERVER_ERROR": "An internal server error occurred. Please try again later.",

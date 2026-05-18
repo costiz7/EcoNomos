@@ -7,7 +7,6 @@
     width: 100%;
 }
 
-/* Neubrutalist Base Cards definitions matching custom styles */
 .statistics-filter-card,
 .statistics-large-card,
 .statistics-grid-card,
@@ -23,7 +22,6 @@
     width: 100%;
 }
 
-/* Filter Module Cards overrides */
 .statistics-filter-card {
     padding: 10px 20px 20px 20px;
 }
@@ -70,7 +68,6 @@
     color: var(--black-color);
 }
 
-/* Headers structures */
 .statistics-card-header {
     width: 100%;
     display: flex;
@@ -86,7 +83,6 @@
     text-align: center;
 }
 
-/* Totals Metrics Structure (4 Mini Cards Row) */
 .statistics-totals-row {
     display: flex;
     gap: 20px;
@@ -115,7 +111,6 @@
     color: var(--black-color);
 }
 
-/* Double Trends Row Layout */
 .statistics-charts-row {
     display: flex;
     gap: 25px;
@@ -129,7 +124,6 @@
     padding: 0px 15px 15px 15px;
 }
 
-/* Breakdown / Donut / Gauge Semicircle Layout Row Grid */
 .statistics-breakdown-row {
     display: flex;
     gap: 25px;
@@ -144,17 +138,29 @@
     align-items: center;
 }
 
-/* Top Transactions Module List Cards matching lower-card format */
-/* We keep padding 0 here so the Transaction component borders go edge-to-edge */
 .statistics-top-card {
-    padding: 0px; 
-    overflow: hidden;
-}
-
-.statistics-top-list {
+    position: relative;
+    background-color: var(--white-color);
+    border: 4px solid var(--black-color);
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding: 0px; 
+    overflow: hidden;
+    height: 270px; 
+}
+
+.statistics-top-list {
+    position: relative;
+    width: 100%;
+    overflow-y: scroll; 
+    scrollbar-width: thin; 
+    scrollbar-color: var(--black-color) transparent;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .no-statistics-message {
@@ -166,7 +172,6 @@
     margin: 0;
 }
 
-/* === Responsive Media Query Adaptations === */
 @media (max-width: 500px) {
     .statistics-content-wrapper {
         gap: 15px;

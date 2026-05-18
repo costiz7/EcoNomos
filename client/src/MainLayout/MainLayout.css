@@ -126,10 +126,10 @@
     background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(2px);
     opacity: 0;
-    animation: fadeInOverlay 300ms forwards ease-in-out;
+    animation: fadeInSidebarOverlay 300ms forwards ease-in-out;
 }
 
-@keyframes fadeInOverlay {
+@keyframes fadeInSidebarOverlay {
     from { opacity: 0; }
     to { opacity: 1; }
 }

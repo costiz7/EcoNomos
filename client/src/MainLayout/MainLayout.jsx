@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
@@ -23,6 +23,28 @@ function MainLayout() {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     }
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+
+            if (parsedUser.hasImportedBankData) {
+                const token = localStorage.getItem('token');
+                
+                fetch(`${import.meta.env.VITE_API_URL}/api/transactions/dailysync`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': token
+                    }
+                })
+                .then(res => res.json())
+                .then(data => console.log("Daily Sync Status:", data.message))
+                .catch(err => console.error("Daily Sync Failed:", err));
+            }
+        }
+    }, []);
 
     const getPageTitle = () => {
         switch(location.pathname) {
@@ -90,11 +112,14 @@ function MainLayout() {
                         <SettingsIcon className="sidebar-icons" style={{ color: "var(--black-color)" }}/>{t('layout.menuSettings')}
                     </Link>}
                 </div>
+                
                 <div className="main-layout-content">
                     <Outlet />
                 </div>
             </div>
         </div>
+
+        {/* OVERLAY MUTAT COMPLET ÎN AFARA STRUCTURII FLEXBOX */}
         {isSidebarOpen && (
             <div className="sidebar-overlay" onClick={toggleSidebar}></div>
         )}
