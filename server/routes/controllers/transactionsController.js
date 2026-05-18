@@ -365,42 +365,59 @@ const getExpenseBreakdown = async (req, res) => {
 }
 
 /**
- * Retrieves income and expense trends for the past six months.
- * 
- * The function generates a timeline covering the current month and the five 
- * preceding months. It fetches all transactions for the authenticated user 
- * within this period, categorizes them as income or expense, and aggregates 
- * the total amounts for each month.
- *
- * @async
- * @function getSixMonthsTrend
+ * Retrieves income and expense trends for a 7-month window leading up to the selected timeframe.
+ * If no filters are provided, it dynamically anchors to the user's most recent transaction date.
+ * * @async
+ * @function getSevenMonthsTrend
  * @param {Object} req - The Express request object.
- * @param {Object} req.user - The authenticated user object (provided by authentication middleware).
- * @param {number|string} req.user.id - The ID of the authenticated user.
+ * @param {Object} req.query - URL query parameters containing optional month and year.
  * @param {Object} res - The Express response object.
- * @returns {Promise<Object>} Returns a JSON array containing six objects (one for each month) 
- *                            with aggregated `income` and `expense` data (status 200),
- *                            or a server error message if the query fails (status 500).
  */
 const getSevenMonthsTrend = async (req, res) => {
     try {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth();
+        const { month, year } = req.query;
+        let targetMonth, targetYear;
 
+        if (year && month) {
+            targetYear = parseInt(year);
+            targetMonth = parseInt(month) - 1; // JavaScript months are 0-indexed
+        } else if (year && !month) {
+            targetYear = parseInt(year);
+            targetMonth = 11; // Anchor to December if only the year is selected
+        } else {
+            // No filters applied. Find the most recent transaction date for this user.
+            const latestTransaction = await Transaction.findOne({
+                where: { userId: req.user.id },
+                order: [['date', 'DESC']]
+            });
+
+            if (latestTransaction) {
+                const latestDate = new Date(latestTransaction.date);
+                targetYear = latestDate.getFullYear();
+                targetMonth = latestDate.getMonth();
+            } else {
+                // New user with 0 transactions. Fallback to current date to show flat lines.
+                const currentDate = new Date();
+                targetYear = currentDate.getFullYear();
+                targetMonth = currentDate.getMonth();
+            }
+        }
+
+        // 1. Generate the 7-month bucket sequence dynamically backwards from the anchor date
         const trendData = [];
         for(let i = 6; i >= 0; i--) {
-            const d = new Date(currentYear, currentMonth - i, 1);
+            const d = new Date(targetYear, targetMonth - i, 1);
             trendData.push({
                 month: d.getMonth() + 1,
                 year: d.getFullYear(),
-                income: 0,
-                expense: 0
+                income: 0,   // Initializes flat at the ground
+                expense: 0   // Initializes flat at the ground
             });
         }
 
-        const startDate = new Date(currentYear, currentMonth - 6, 1);
-        const endDate = new Date(currentYear, currentMonth + 1, 0);
+        // 2. Set the strict boundaries for the database window search
+        const startDate = new Date(targetYear, targetMonth - 6, 1);
+        const endDate = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59);
 
         const transactions = await Transaction.findAll({
             where: {
@@ -417,6 +434,8 @@ const getSevenMonthsTrend = async (req, res) => {
             ]
         });
 
+        // 3. Aggregate transaction data into corresponding timeline buckets
+        // Months without transactions will remain 0, keeping the line flat.
         transactions.forEach(transaction => {
             const tDate = new Date(transaction.date);
             const tMonth = tDate.getMonth() + 1;

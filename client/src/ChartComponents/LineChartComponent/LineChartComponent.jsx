@@ -1,15 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import './LineChartComponent.css';
 
 function LineChartComponent({ 
     data = [], 
     color = "var(--black-color)",
+    gradientColor, // Optional: if you want the gradient to be a different color than the line
+    lineThickness = 2, // Controls the stroke width of the line
+    pointRadius, // Optional: custom radius for the point
+    hoverPointRadius, // Optional: custom radius for the point when hovered
     width = "100%", 
     height = "250px", 
     unit = "RON" 
 }) {
     const [hoveredPoint, setHoveredPoint] = useState(null);
     const [isAnimated, setIsAnimated] = useState(false);
+    
+    // Generate a unique ID for this instance to prevent SVG gradient conflicts 
+    // when rendering multiple charts on the same page.
+    const chartId = useId(); 
+    const gradientId = `lineGradient-${chartId.replace(/:/g, "")}`;
+
+    // Smart fallbacks: if specific props aren't provided, scale them based on line thickness
+    const actualGradientColor = gradientColor || color;
+    const actualPointRadius = pointRadius || (lineThickness + 2);
+    const actualHoverPointRadius = hoverPointRadius || (actualPointRadius + 3);
 
     // 1. Initial animation trigger & data readiness optimization
     useEffect(() => {
@@ -57,9 +71,9 @@ function LineChartComponent({
         >
             <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="line-chart-svg">
                 <defs>
-                    <linearGradient id="lineGradient" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stopColor={color} stopOpacity="0.2" />
-                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                    <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stopColor={actualGradientColor} stopOpacity="0.2" />
+                        <stop offset="100%" stopColor={actualGradientColor} stopOpacity="0" />
                     </linearGradient>
                 </defs>
 
@@ -68,7 +82,7 @@ function LineChartComponent({
                     <>
                         <path 
                             d={fillPath} 
-                            fill="url(#lineGradient)" 
+                            fill={`url(#${gradientId})`} 
                             className="line-fill-anim" 
                         />
 
@@ -76,6 +90,9 @@ function LineChartComponent({
                             d={linePath} 
                             fill="none" 
                             stroke={color} 
+                            strokeWidth={lineThickness} // Applied dynamic line thickness
+                            strokeLinecap="round" // Makes line ends smoother
+                            strokeLinejoin="round" // Makes line corners smoother
                             className="line-stroke-anim" 
                         />
                     </>
@@ -101,13 +118,15 @@ function LineChartComponent({
                                 <line 
                                     x1={p.x} y1={paddingY} 
                                     x2={p.x} y2={svgHeight - paddingY} 
+                                    strokeWidth={1}
+                                    strokeDasharray="4 4" // Gives a dotted line effect for the hover guide
                                     className="hover-guideline"
                                 />
                             )}
                             
                             <circle 
                                 cx={p.x} cy={p.y} 
-                                r={isHovered ? 7 : 4} 
+                                r={isHovered ? actualHoverPointRadius : actualPointRadius} // Applied dynamic radii
                                 fill={color} 
                                 className="line-point"
                             />

@@ -1,0 +1,202 @@
+.statistics-content-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Neubrutalist Base Cards definitions matching custom styles */
+.statistics-filter-card,
+.statistics-large-card,
+.statistics-grid-card,
+.statistics-top-card,
+.stat-mini-card {
+    position: relative;
+    background-color: var(--white-color);
+    border: 4px solid var(--black-color);
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Filter Module Cards overrides */
+.statistics-filter-card {
+    padding: 10px 20px 20px 20px;
+}
+
+.statistics-filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-item > label {
+    font-weight: bold;
+    color: var(--black-color);
+    font-size: 1.1rem;
+}
+
+.apply-filters-btn {
+    height: 50px;
+    padding: 0 25px;
+    background-color: var(--black-color);
+    color: var(--white-color);
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: 3px solid var(--black-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 200ms ease;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+}
+
+.apply-filters-btn:hover {
+    background-color: var(--white-color);
+    color: var(--black-color);
+}
+
+/* Headers structures */
+.statistics-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0px 10px 0px;
+}
+
+.statistics-card-header > h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--black-color);
+    text-align: center;
+}
+
+/* Totals Metrics Structure (4 Mini Cards Row) */
+.statistics-totals-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.stat-mini-card {
+    flex: 1;
+    min-width: 220px;
+    padding: 15px 20px;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.stat-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.stat-card-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--black-color);
+}
+
+/* Double Trends Row Layout */
+.statistics-charts-row {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.statistics-large-card {
+    flex: 1;
+    min-width: 320px;
+    padding: 0px 15px 15px 15px;
+}
+
+/* Breakdown / Donut / Gauge Semicircle Layout Row Grid */
+.statistics-breakdown-row {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.statistics-grid-card {
+    flex: 1;
+    min-width: 280px;
+    padding: 0px 15px 15px 15px;
+    align-items: center;
+}
+
+/* Top Transactions Module List Cards matching lower-card format */
+/* We keep padding 0 here so the Transaction component borders go edge-to-edge */
+.statistics-top-card {
+    padding: 0px; 
+    overflow: hidden;
+}
+
+.statistics-top-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.no-statistics-message {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--black-color);
+    padding: 30px 0px;
+    margin: 0;
+}
+
+/* === Responsive Media Query Adaptations === */
+@media (max-width: 500px) {
+    .statistics-content-wrapper {
+        gap: 15px;
+    }
+
+    .statistics-totals-row,
+    .statistics-charts-row,
+    .statistics-breakdown-row {
+        gap: 15px;
+    }
+
+    .statistics-filter-card,
+    .statistics-large-card,
+    .statistics-grid-card,
+    .statistics-top-card {
+        border: none;
+        border-bottom: 4px solid var(--black-color);
+        border-radius: 0px;
+        box-shadow: none;
+    }
+    
+    .statistics-top-card {
+        border-bottom: none;
+    }
+
+    .statistics-filter-card {
+        padding: 10px 15px;
+    }
+
+    .stat-mini-card {
+        border-radius: 6px;
+    }
+}

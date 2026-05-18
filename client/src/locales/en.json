@@ -95,6 +95,26 @@
     "prevBtn": "Previous",
     "nextBtn": "Next"
   },
+  "statistics": {
+    "filtersTitle": "Filters",
+    "yearLabel": "Year",
+    "monthLabel": "Month",
+    "all": "All",
+    "applyBtn": "Apply Filters",
+    "incomeTitle": "Income",
+    "expenseTitle": "Expenses",
+    "balanceTitle": "Total Balance",
+    "dailyAverage": "Daily Average",
+    "incomeTrendTitle": "Income Development (7 Mo)",
+    "expenseTrendTitle": "Expense Development (7 Mo)",
+    "breakdownTitle": "Expense Breakdown",
+    "momTitle": "Month over Month",
+    "previousMonth": "Prev Month",
+    "currentMonth": "Current Month",
+    "budgetConsumptionTitle": "Budget Consumption",
+    "topExpensesTitle": "Top Biggest Expenses",
+    "noData": "No transactions found."
+  },
   "errors": {
     "SERVER_ERROR": "An internal server error occurred. Please try again later.",
     "NETWORK_ERROR": "Cannot connect to the server. Please check your internet connection.",

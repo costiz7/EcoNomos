@@ -95,6 +95,26 @@
     "prevBtn": "Înapoi",
     "nextBtn": "Înainte"
   },
+  "statistics": {
+    "filtersTitle": "Filtre",
+    "yearLabel": "An",
+    "monthLabel": "Lună",
+    "all": "Toate",
+    "applyBtn": "Aplică Filtre",
+    "incomeTitle": "Venituri",
+    "expenseTitle": "Cheltuieli",
+    "balanceTitle": "Balanță Totală",
+    "dailyAverage": "Medie Zilnică",
+    "incomeTrendTitle": "Evoluție Venituri (7 Luni)",
+    "expenseTrendTitle": "Evoluție Cheltuieli (7 Luni)",
+    "breakdownTitle": "Distribuție Cheltuieli",
+    "momTitle": "Comparație Lunară",
+    "previousMonth": "Luna Trecută",
+    "currentMonth": "Luna Curentă",
+    "budgetConsumptionTitle": "Consum Bugete",
+    "topExpensesTitle": "Top Cele Mai Mari Cheltuieli",
+    "noData": "Nu au fost găsite date."
+  },
   "errors": {
     "SERVER_ERROR": "A apărut o eroare la server. Te rugăm să încerci mai târziu.",
     "NETWORK_ERROR": "Nu mă pot conecta la server. Verifică conexiunea la internet.",
