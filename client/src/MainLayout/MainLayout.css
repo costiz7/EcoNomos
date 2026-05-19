@@ -39,6 +39,12 @@
     font-weight: 500;
 }
 
+.topbar-right-side {
+    position: relative;
+    display: flex;
+    gap: 15px;
+}
+
 .hamburger-menu {
     display: flex;
     flex-direction: column;
@@ -157,6 +163,7 @@
 
     border: solid 3px var(--black-color);
     border-radius: 50px;
+    background-color: var(--white-color);
     box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     transition: all 200ms ease-out;

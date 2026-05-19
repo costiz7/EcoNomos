@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import './MainLayout.css';
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
 import LogoIcon from "../Icons/LogoIcon";
 import DashboardIcon from "../Icons/DashboardIcon";
 import TransactionsIcon from "../Icons/TransactionsIcon";
@@ -81,6 +83,8 @@ function MainLayout() {
                     </div>
                 </div>
                 <div className="topbar-right-side">
+                    <ThemeSwitcher />
+                    <LanguageSwitcher />
                     <button onClick={logoutHandle} className="logoutBtn">
                         <LogoutIcon className="logout-icon" />
                     </button>

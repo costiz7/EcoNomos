@@ -124,7 +124,7 @@
     "modalTitle": "Are you sure?",
     "modalDesc": "This will import your bank transactions from the last 7 months and activate daily synchronization. Do you want to continue?",
     "modalNo": "No",
-    "modalYes": "Yes, Sync",
+    "modalYes": "Yes",
     "syncSuccess": "Bank data imported successfully!"
   },
   "errors": {

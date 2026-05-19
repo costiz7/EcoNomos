@@ -1,0 +1,33 @@
+/* Global variables override for Dark Mode */
+:root.dark-theme {
+    /* Swapping the actual values of your main design tokens globally */
+    --black-color: #ffffff;
+    --white-color: #444444;
+}
+
+/* Button style matching the neobrutalist design system layout */
+.theme-toggle-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border: solid 3px var(--black-color);
+    border-radius: 50px;
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 200ms ease-out;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle-btn svg {
+    width: 24px;
+    height: 24px;
+}

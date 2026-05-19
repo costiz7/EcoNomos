@@ -124,7 +124,7 @@
     "modalTitle": "Ești sigur?",
     "modalDesc": "Această acțiune va importa tranzacțiile tale bancare din ultimele 7 luni și va activa sincronizarea zilnică. Vrei să continui?",
     "modalNo": "Nu",
-    "modalYes": "Da, Sincronizează",
+    "modalYes": "Da",
     "syncSuccess": "Datele bancare au fost importate cu succes!"
   },
   "errors": {

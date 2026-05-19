@@ -28,6 +28,15 @@
   padding: 0;
 }
 
+*, *::before, *::after {
+    transition: background-color 200ms ease-out, 
+                color 200ms ease-out, 
+                border-color 200ms ease-out, 
+                fill 200ms ease-out, 
+                stroke 200ms ease-out,
+                box-shadow 200ms ease-out;
+}
+
 body {
   min-height: 100vh;
   color: var(--black-color);

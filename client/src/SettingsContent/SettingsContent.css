@@ -7,13 +7,6 @@
     width: 100%;
 }
 
-.settings-header > h2 {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--black-color);
-    margin: 0;
-}
-
 /* Base Settings Card */
 .settings-card {
     position: relative;
@@ -25,14 +18,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 40px;
     width: 100%;
     flex-wrap: wrap;
 }
 
 .settings-card-info {
     flex: 2;
-    min-width: 250px;
 }
 
 .settings-card-info > h3 {
@@ -44,7 +36,7 @@
 
 .settings-card-info > p {
     margin: 0;
-    color: #475569;
+    color: var(--black-color);
     font-size: 1rem;
     line-height: 1.5;
 }
@@ -56,16 +48,15 @@
     min-width: 150px;
 }
 
-/* Sync Button */
 .sync-btn {
-    padding: 12px 25px;
+    padding: 10px 20px;
     background-color: var(--black-color);
     color: var(--white-color);
     font-family: inherit;
     font-size: 1.1rem;
     font-weight: bold;
     border: 3px solid var(--black-color);
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
     transition: 200ms ease;
@@ -73,8 +64,7 @@
 }
 
 .sync-btn:not(:disabled):hover {
-    background-color: var(--white-color);
-    color: var(--black-color);
+    filter: brightness(0.6);
 }
 
 .sync-btn.synced {
@@ -86,7 +76,6 @@
     opacity: 0.8;
 }
 
-/* === MODAL OVERLAY & TIMED CSS TRANSITIONS === */
 .sync-modal-overlay {
     position: fixed;
     top: 0;
@@ -98,12 +87,10 @@
     align-items: center;
     z-index: 9999;
     
-    /* Overlay fluid ease-in entry transition */
     animation: fadeInModalOverlay 0.4s ease forwards;
 }
 
 .sync-modal-overlay.closing {
-    /* Overlay fluid fade out escape window transition */
     animation: fadeOutModalOverlay 0.4s ease forwards;
 }
 
@@ -118,16 +105,13 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     
-    /* Smashes card from bottom-up on entry with a slight neubrutalist bounce */
-    animation: slideInUpModal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
+    animation: slideInUpModal 0.4s forwards;
 }
 
-/* Nested target selector to trigger the exit animation on the card when closing state maps */
 .sync-modal-overlay.closing .sync-modal-card {
-    /* Launches the card vertically upwards into space with high acceleration easing */
-    animation: slideOutUpModal 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+    animation: slideOutUpModal 0.4s forwards;
 }
 
 .sync-modal-card > h3 {
@@ -139,13 +123,13 @@
 .sync-modal-card > p {
     margin: 0;
     font-size: 1.05rem;
-    color: #475569;
+    color: var(--black-color);
 }
 
 .sync-modal-actions {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 30px;
     margin-top: 10px;
 }
 
@@ -168,19 +152,18 @@
 }
 
 .modal-btn-no:hover {
-    background-color: #f1f5f9;
+    filter: brightness(0.7);
 }
 
 .modal-btn-yes {
-    background-color: var(--red-color);
-    color: var(--black-color);
+    background-color: var(--black-color);
+    color: var(--white-color);
 }
 
 .modal-btn-yes:hover {
-    filter: brightness(0.9);
+    filter: brightness(0.6);
 }
 
-/* === TIMELINE KEYFRAMES ANIMATIONS === */
 @keyframes fadeInModalOverlay {
     from { 
         background-color: rgba(0, 0, 0, 0); 
