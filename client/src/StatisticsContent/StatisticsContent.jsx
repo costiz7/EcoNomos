@@ -286,7 +286,7 @@ function StatisticsContent() {
                     </div>
                     <RadialGaugeComponent 
                         targetPercentage={statsData.budgetGaugeValue} 
-                        color={statsData.budgetGaugeValue >= 80 ? "#ef4444" : "var(--black-color)"}
+                        color={statsData.budgetGaugeValue >= 80 ? "var(--red-color)" : "var(--green-color)"}
                     />
                 </div>
             </div>

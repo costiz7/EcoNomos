@@ -1,3 +1,7 @@
+.language-switcher-wrapper {
+    position: relative;
+}
+
 .current-language-btn {
     position: relative;
     display: flex;
@@ -65,4 +69,28 @@
 .icon-small {
     width: 30px;
     height: 30px;
+}
+
+@media(max-width: 500px) {
+    .current-language-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .language-dropdown {
+        top: 50px;
+        left: 0px;
+        width: 40px;
+        height: 80px;
+    }
+
+    .icon-large {
+        width: 25px;
+        height: 25px;
+    }
+
+    .icon-small {
+        width: 25px;
+        height: 25px;
+    }
 }

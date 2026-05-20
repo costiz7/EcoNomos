@@ -83,7 +83,7 @@ function MainLayout() {
                     </div>
                 </div>
                 <div className="topbar-right-side">
-                    <ThemeSwitcher />
+                    <ThemeSwitcher className="themeBtn"/>
                     <LanguageSwitcher />
                     <button onClick={logoutHandle} className="logoutBtn">
                         <LogoutIcon className="logout-icon" />

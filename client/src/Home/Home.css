@@ -56,6 +56,14 @@
     background-color: var(--white-color);
 }
 
+.home-theme-switcher {
+    position: absolute;
+    top: 20px;
+    left: 90px;
+    z-index: 10;
+    background-color: var(--white-color);
+}
+
 @media(max-width: 1150px) {
     .home-upper-section-wrapper {
         position: relative;

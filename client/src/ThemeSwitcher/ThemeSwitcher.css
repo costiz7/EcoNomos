@@ -1,10 +1,39 @@
-/* Global variables override for Dark Mode */
+/* Global variables override for Dark Mode - Midnight Black & Distinct Accents */
 :root.dark-theme {
-    /* Swapping the actual values of your main design tokens globally */
-    --black-color: #ffffff;
-    --white-color: #444444;
-}
+    /* 1. Main Background and Text/Borders */
+    --white-color: #121418; /* Elegant midnight black */
+    --black-color: #b2bcce; /* Soft silver for borders and text */
 
+    /* 2. Red Theme */
+    --light-red-color: #91262f; /* Brightened dark brick so it stands out */
+    --red-color: #e55a62;       
+    --dark-red-color: #fcb1b5;  
+
+    /* 3. Orange Theme */
+    --light-orange-color: #955528;
+    --orange-color: #eb7a36;
+    --dark-orange-color: #fcccaf;
+
+    /* 4. Yellow Theme */
+    --light-yellow-color: #8b7222;
+    --yellow-color: #dcb329;
+    --dark-yellow-color: #fce186;
+
+    /* 5. Green Theme */
+    --light-green-color: #214d2b;
+    --green-color: #6bb377;
+    --dark-green-color: #aae0b4;
+
+    /* 6. Blue Theme */
+    --light-blue-color: #1a4257;
+    --blue-color: #4b9bbf;
+    --dark-blue-color: #aed9ed;
+
+    /* 7. Purple Theme */
+    --light-purple-color: #402963;
+    --purple-color: #926add;
+    --dark-purple-color: #cfb8fa;
+}
 /* Button style matching the neobrutalist design system layout */
 .theme-toggle-btn {
     display: flex;
@@ -30,4 +59,11 @@
 .theme-toggle-btn svg {
     width: 24px;
     height: 24px;
+}
+
+@media(max-width: 500px) {
+    .theme-toggle-btn {
+        width: 40px;
+        height: 40px;
+    }
 }

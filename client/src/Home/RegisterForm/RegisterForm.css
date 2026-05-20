@@ -91,6 +91,8 @@
     font-size: 1rem;
     outline: none;
     border: solid 3px var(--black-color);
+    background-color: var(--white-color);
+    color: var(--black-color);
     border-radius: 5px;
     box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
 }
@@ -119,6 +121,7 @@
     font-weight: 500;
     outline: none;
     border: solid 3px var(--black-color);
+    color: var(--black-color);
     border-radius: 5px;
     box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
     background-color: var(--white-color);
